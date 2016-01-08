@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record xmlns="http://www.loc.gov/MARC21/slim">
+  <leader>xxxxxntm a22yyyyy c 4500</leader>
+  <controlfield tag="001">722181507</controlfield>
+  <controlfield tag="003">DE-601</controlfield>
+  <controlfield tag="005">20150128152124.0</controlfield>
+  <controlfield tag="008">120823m18611871gw            000 0 lat d</controlfield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(DE-599)GBV722181507</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">GBVCP</subfield>
+    <subfield code="b">ger</subfield>
+    <subfield code="c">GBVCP</subfield>
+    <subfield code="e">rakwb</subfield>
+  </datafield>
+  <datafield tag="041" ind1="0" ind2=" ">
+    <subfield code="a">lat</subfield>
+    <subfield code="a">ger</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Pichler, Pauline</subfield>
+    <subfield code="e">Besitzer</subfield>
+    <subfield code="0">(DE-601)722181795</subfield>
+    <subfield code="0">(DE-588)1025374479</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">[Stammbuch Pauline Pichler]</subfield>
+    <subfield code="h">Manuskript</subfield>
+  </datafield>
+  <datafield tag="250" ind1=" " ind2=" ">
+    <subfield code="a">[Handschrift]</subfield>
+  </datafield>
+  <datafield tag="260" ind1="3" ind2=" ">
+    <subfield code="a">[S.l.]</subfield>
+    <subfield code="c">[1861-1871]</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">22 Bl.</subfield>
+    <subfield code="b">Ill.</subfield>
+    <subfield code="c">9,4 x 15,4 cm</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Einband: Pappkassette in Buchform, mit braunem blindgeprägtem Leder bezogen; silberfarbene Metallrädchen auf Vorder- und Rückdeckel</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Enth. auch leere Bl.</subfield>
+  </datafield>
+  <datafield tag="520" ind1=" " ind2=" ">
+    <subfield code="a">Beschreibung: Loseblattsammlung mit 14 Eintragungen, viele davon für „Pauline“. Schutzdeckel mit Kupferstich, 1 Aquarell, 1 Stahlstich, 5 Stanzpapiere. Im vorderen Deckel hs. Vermerk der Eignerin von 1896 über die Schenkung des Stammbuches von ihrem Vater, Gottlob Pichler aus Hohenwittlingen bei Urach.</subfield>
+  </datafield>
+  <datafield tag="520" ind1=" " ind2=" ">
+    <subfield code="a">Eintragungsorte u.a.: Bad Boll, Horkheim, Bad Urach, Wittlingen</subfield>
+  </datafield>
+  <datafield tag="787" ind1="0" ind2="8">
+    <subfield code="i">Digitalisierte Ausg.: </subfield>
+    <subfield code="t">Pichler, Pauline: [Stammbuch Pauline Pichler]</subfield>
+    <subfield code="w">(DE-601)816683220</subfield>
+  </datafield>
+  <datafield tag="900" ind1=" " ind2=" ">
+    <subfield code="a">GBV</subfield>
+    <subfield code="b">HAAB Weimar &lt;32&gt;</subfield>
+    <subfield code="d">!TRE! Stb 1130</subfield>
+    <subfield code="x">N</subfield>
+    <subfield code="z">N</subfield>
+    <subfield code="f">Digitalisat vorhanden</subfield>
+    <subfield code="f">Ex. beschädigt: kaputtes Seidenbändchen (Seidenbändchen in Pergamintüte beiliegend)</subfield>
+  </datafield>
+  <datafield tag="950" ind1=" " ind2=" ">
+    <subfield code="a">Illustrationen, Techniken: Stahlstich: 19. Jh.; Aquarell: 19. Jh.; Oblate: 19. Jh.; Stanzpapier: 19. Jh.</subfield>
+    <subfield code="2">61</subfield>
+  </datafield>
+  <datafield tag="950" ind1=" " ind2=" ">
+    <subfield code="a">Illustrationen, Motive: Bibel: Mariae Verkündigung; Freundschaftsdenkmal; Urne; Freundschaftstempel; Paar: am Stadtrand</subfield>
+    <subfield code="2">61</subfield>
+  </datafield>
+  <datafield tag="954" ind1=" " ind2=" ">
+    <subfield code="0">HAAB Weimar &lt;32&gt;</subfield>
+    <subfield code="a">61</subfield>
+    <subfield code="b">1321640250</subfield>
+    <subfield code="c">01</subfield>
+    <subfield code="f">TRE</subfield>
+    <subfield code="d">Stb 1130</subfield>
+    <subfield code="e">i</subfield>
+    <subfield code="k">Digitalisat vorhanden</subfield>
+    <subfield code="k">Ex. beschädigt: kaputtes Seidenbändchen (Seidenbändchen in Pergamintüte beiliegend)</subfield>
+    <subfield code="x">0032</subfield>
+  </datafield>
+</record>
