@@ -763,6 +763,15 @@
         <metadata>ISOCountryCode</metadata>
     </Group>
 
+    <Group>
+        <Name>Verlag</Name>
+        <language name="de">Verlag</language>
+        <language name="en">Verlag</language>
+        <metadata>PlaceOfPublication</metadata>
+        <metadata>PublisherName</metadata>
+        <metadata>PublicationYear</metadata>
+    </Group>
+
 
 	<!-- ########################################################################## ## Logical document structure types ## ########################################################################## -->
     <DocStrctType anchor="true">
@@ -821,10 +830,6 @@
         <metadata num="1o">_ManifestationType</metadata>
         <metadata num="*">Note</metadata>
     </DocStrctType>
-
-
-
-
 
     <DocStrctType>
         <Name>Acknowledgment</Name>
@@ -1291,6 +1296,8 @@
         <metadata num="1o">PublisherName</metadata>
         <metadata num="*">Sponsorship</metadata>
         <metadata num="*">Note</metadata>
+        <group num="*" DefaultDisplay="true">Verlag</group>
+
     </DocStrctType>
     <DocStrctType>
         <Name>TranscriptManifestation</Name>
@@ -4710,6 +4717,48 @@
 
                 <separator>; </separator>
             </Person>
+
+            <Group>
+                <Name>Verlag</Name>
+                <Metadata>
+                    <Name>PlaceOfPublication</Name>
+                    <field>
+                        <fieldMainTag>260</fieldMainTag>
+                        <fieldSubTag>a</fieldSubTag>
+                        <!-- number, blank or any -->
+                        <fieldInd1>any</fieldInd1>
+                        <fieldInd2>any</fieldInd2>
+                    </field>
+                    <separateEntries>true</separateEntries>
+                </Metadata>
+
+
+                <Metadata>
+                    <Name>PublisherName</Name>
+                    <field>
+                        <fieldMainTag>260</fieldMainTag>
+                        <fieldSubTag>b</fieldSubTag>
+                        <!-- number, blank or any -->
+                        <fieldInd1>any</fieldInd1>
+                        <fieldInd2>any</fieldInd2>
+                    </field>
+                    <separateEntries>true</separateEntries>
+                </Metadata>
+
+                <Metadata>
+                    <Name>PublicationYear</Name>
+                    <field>
+                        <fieldMainTag>260</fieldMainTag>
+                        <fieldSubTag>c</fieldSubTag>
+                        <!-- number, blank or any -->
+                        <fieldInd1>any</fieldInd1>
+                        <fieldInd2>any</fieldInd2>
+                    </field>
+                    <separateEntries>true</separateEntries>
+                </Metadata>
+
+            </Group>
+
 
             <DocStruct>
                 <Name>Manuscript</Name>

@@ -19,6 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import de.intranda.ugh.extension.util.GroupConfigurationItem;
 import de.intranda.ugh.extension.util.MarcField;
 import de.intranda.ugh.extension.util.DocstructConfigurationItem;
 import de.intranda.ugh.extension.util.MetadataConfigurationItem;
@@ -41,10 +42,10 @@ import ugh.exceptions.WriteException;
 
 public class MarcFileformat implements Fileformat {
 
-    protected static final String PREFS_MARC_METADATA_NAME = "Metadata";
-    protected static final String PREFS_MARC_DOCTSRUCT_NAME = "Docstruct";
-    protected static final String PREFS_MARC_PERSON_NAME = "Person";
-    //    protected static final String PREFS_MARC_GROUP_NAME = "Group";
+    public static final String PREFS_MARC_METADATA_NAME = "Metadata";
+    public static final String PREFS_MARC_DOCTSRUCT_NAME = "Docstruct";
+    public static final String PREFS_MARC_PERSON_NAME = "Person";
+    public static final String PREFS_MARC_GROUP_NAME = "Group";
 
     protected static final String MARC_PREFS_NODE_NAME_STRING = "Marc";
     protected static final String MARC_PREFS_NODE_COLLECTION_STRING = "collection";
@@ -80,9 +81,11 @@ public class MarcFileformat implements Fileformat {
     private Perl5Util perlUtil;
     private DigitalDocument digDoc = new DigitalDocument();
 
-    private List<MetadataConfigurationItem> metadataList = new LinkedList<MetadataConfigurationItem>();
-    private List<MetadataConfigurationItem> personList = new LinkedList<MetadataConfigurationItem>();
+    private List<MetadataConfigurationItem> metadataList = new LinkedList<>();
+    private List<MetadataConfigurationItem> personList = new LinkedList<>();
     private List<DocstructConfigurationItem> docstructList = new LinkedList<>();
+
+    private List<GroupConfigurationItem> groupList = new LinkedList<>();
 
     private static final Logger logger = Logger.getLogger(ugh.dl.DigitalDocument.class);
 
@@ -116,6 +119,9 @@ public class MarcFileformat implements Fileformat {
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_MARC_DOCTSRUCT_NAME)) {
                     DocstructConfigurationItem docstruct = new DocstructConfigurationItem(n);
                     docstructList.add(docstruct);
+                } else if (n.getNodeName().equalsIgnoreCase(PREFS_MARC_GROUP_NAME)) {
+                    GroupConfigurationItem item = new GroupConfigurationItem(n);
+                    groupList.add(item);
                 }
             }
         }
@@ -135,9 +141,9 @@ public class MarcFileformat implements Fileformat {
 
     public static void main(String[] args) throws PreferencesException, ReadException {
         Prefs prefs = new Prefs();
-        prefs.loadPrefs("/home/robert/workspace-git/UghMarcFileformat/wellcome_marc.xml");
+        prefs.loadPrefs("/home/robert/git/ugh-extension-marc/UghMarcFileformat/wellcome_marc.xml");
         MarcFileformat ff = new MarcFileformat(prefs);
-        ff.read("/home/robert/workspace-git/UghMarcFileformat/MARC21.xml");
+        ff.read("/home/robert/git/ugh-extension-marc/UghMarcFileformat/MARC21.xml");
         DocStruct ds = ff.getDigitalDocument().getLogicalDocStruct();
         System.out.println(ds.getType().getName());
         if (ds.getAllMetadata() != null) {
@@ -148,6 +154,14 @@ public class MarcFileformat implements Fileformat {
         if (ds.getAllPersons() != null) {
             for (Person md : ds.getAllPersons()) {
                 System.out.println(md.getRole() + ": " + md.getLastname() + ", " + md.getFirstname() + " " + md.getAuthorityValue());
+            }
+        }
+        if (ds.getAllMetadataGroups() != null) {
+            for (MetadataGroup mg : ds.getAllMetadataGroups()) {
+                System.out.println("group: " + mg.getType().getName());
+                for (Metadata md : mg.getMetadataList()) {
+                    System.out.println(md.getType().getName() + ": " + md.getValue() + " " + md.getAuthorityValue());
+                }
             }
         }
     }
@@ -186,20 +200,24 @@ public class MarcFileformat implements Fileformat {
                                 ds = parseMarcRecord(n);
                                 // It's the first one, so this becomes the
                                 // toplogical structural entity.
-                                if (dsOld == null) {
-                                    this.digDoc.setLogicalDocStruct(ds);
-                                    dsTop = ds;
-                                } else {
-                                    dsOld.addChild(ds);
+                                if (ds != null) {
+                                    if (dsOld == null) {
+                                        this.digDoc.setLogicalDocStruct(ds);
+                                        dsTop = ds;
+                                    } else {
+                                        dsOld.addChild(ds);
+                                    }
+                                    dsOld = ds;
+                                    ds = null;
                                 }
-                                dsOld = ds;
-                                ds = null;
                             }
                         }
                     }
                 } else if (nodename.equals(MARC_PREFS_NODE_RECORD_STRING)) {
                     ds = parseMarcRecord(ppr);
-                    this.digDoc.setLogicalDocStruct(ds);
+                    if (ds != null) {
+                        this.digDoc.setLogicalDocStruct(ds);
+                    }
                 }
             }
 
@@ -236,9 +254,8 @@ public class MarcFileformat implements Fileformat {
             }
         }
         ds = parseDocstruct(leader, controlfields);
-// TODO get identifier from controlfield 001 ?
-        
-        
+        // TODO get identifier from controlfield 001 ?
+
         if (ds == null) {
             // No DocStruct found, this is a serious problem; as I do not know
             // to where I should attach the metadata.
@@ -246,14 +263,14 @@ public class MarcFileformat implements Fileformat {
             return null;
         }
 
-        List<Metadata> metadataList = parseMetadata(datafields);
-        List<Person> allPer = parsePersons(datafields);
+        List<Metadata> metadata = parseMetadata(datafields, metadataList);
+        List<Person> allPer = parsePersons(datafields, personList);
         // Contains all metadata groups.
         List<MetadataGroup> allGroups = parseGroups(datafields);
 
         // Add metadata to DocStruct.
-        if (metadataList != null) {
-            for (Metadata md2 : metadataList) {
+        if (metadata != null) {
+            for (Metadata md2 : metadata) {
                 try {
                     ds.addMetadata(md2);
                 } catch (MetadataTypeNotAllowedException e) {
@@ -301,11 +318,62 @@ public class MarcFileformat implements Fileformat {
     }
 
     private List<MetadataGroup> parseGroups(List<Node> datafields) {
-        // TODO Auto-generated method stub
-        return null;
+        List<MetadataGroup> groups = new ArrayList<>();
+        for (GroupConfigurationItem gci : groupList) {
+            List<Metadata> mList = new ArrayList<>();
+            List<Person> pList = new ArrayList<>();
+            if (!gci.getMetadataList().isEmpty()) {
+                mList = parseMetadata(datafields, gci.getMetadataList());
+            }
+            if (!gci.getPersonList().isEmpty()) {
+                pList = parsePersons(datafields, gci.getPersonList());
+            }
+            if (!mList.isEmpty() || !pList.isEmpty()) {
+                try {
+                    MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName(gci.getGroupName()));
+                    for (Metadata md : mList) {
+
+                        List<Metadata> mdl = mg.getMetadataByType(md.getType().getName());
+                        boolean added = false;
+                        for (Metadata metadata : mdl) {
+                            if (StringUtils.isBlank(metadata.getValue()) && StringUtils.isBlank(metadata.getAuthorityValue())) {
+                                added = true;
+                                metadata.setValue(md.getValue());
+                                metadata.setAutorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
+                            }
+                        }
+                        if (!added) {
+                            mg.addMetadata(md);
+                        }
+                    }
+                    for (Person p : pList) {
+                        List<Person> pl = mg.getPersonByType(p.getType().getName());
+                        boolean added = false;
+                        for (Person per : pl) {
+
+                            if (StringUtils.isBlank(per.getFirstname()) && StringUtils.isBlank(per.getLastname())
+                                    && StringUtils.isBlank(per.getAuthorityValue())) {
+                                added = true;
+                                per.setFirstname(p.getFirstname());
+                                per.setLastname(p.getLastname());
+                                per.setAutorityFile(p.getAuthorityID(), p.getAuthorityURI(), p.getAuthorityValue());
+                            }
+                        }
+                        if (!added) {
+                            mg.addPerson(p);
+                        }
+                    }
+                    groups.add(mg);
+                } catch (MetadataTypeNotAllowedException e) {
+                    logger.error(e);
+                }
+            }
+        }
+
+        return groups;
     }
 
-    private List<Person> parsePersons(List<Node> datafields) {
+    private List<Person> parsePersons(List<Node> datafields, List<MetadataConfigurationItem> personList) {
         List<Person> person = new ArrayList<>();
 
         for (MetadataConfigurationItem mmo : personList) {
@@ -423,7 +491,7 @@ public class MarcFileformat implements Fileformat {
         return person;
     }
 
-    private List<Metadata> parseMetadata(List<Node> datafields) {
+    private List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
         List<Metadata> metadata = new ArrayList<>();
         // TODO bei Haupttitel automatisch Sortiertitel erzeugen (ind1 auswerten und Anzahl abschneiden)
 
