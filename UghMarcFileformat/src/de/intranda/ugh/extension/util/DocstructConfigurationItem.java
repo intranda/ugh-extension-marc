@@ -11,6 +11,7 @@ public @Data class DocstructConfigurationItem {
     private String internalName = "";
     private String leader6 = "";
     private String leader7 = "";
+    private String leader19 = "";
     private String field007_0 = "";
     private String field007_1 = "";
     private String field008_21 = "";
@@ -27,6 +28,8 @@ public @Data class DocstructConfigurationItem {
                     leader6 = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_LEADER_7)) {
                     leader7 = MarcFileformat.readTextNode(n);
+                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_LEADER_19)) {
+                    leader19 = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_CONTROLFIELD_007_0)) {
                     field007_0 = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_CONTROLFIELD_007_1)) {

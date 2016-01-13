@@ -144,6 +144,12 @@
         <language name="es">Fecha digitalización</language>
     </MetadataType>
     <MetadataType>
+        <Name>Classification</Name>
+        <language name="de">Classification</language>
+        <language name="en">Classification</language>
+    </MetadataType>
+
+    <MetadataType>
         <Name>pathimagefiles</Name>
         <language name="de">Pfad der Imagedaten</language>
         <language name="en">Path of image data</language>
@@ -4637,6 +4643,29 @@
                 <separateEntries>true</separateEntries>
             </Metadata>
 
+            <Metadata>
+                <Name>TitleDocMainShort</Name>
+                <field>
+                    <fieldMainTag>245</fieldMainTag>
+                    <fieldSubTag>x</fieldSubTag>
+                    <!-- number, blank or any -->
+                    <fieldInd1>any</fieldInd1>
+                    <fieldInd2>any</fieldInd2>
+                </field>
+                <separateEntries>true</separateEntries>
+            </Metadata>
+
+            <Metadata>
+                <Name>CatalogIDDigital</Name>
+                <field>
+                    <fieldMainTag>001</fieldMainTag>
+                    <fieldSubTag>a</fieldSubTag>
+                    <!-- number, blank or any -->
+                    <fieldInd1>any</fieldInd1>
+                    <fieldInd2>any</fieldInd2>
+                </field>
+                <separateEntries>true</separateEntries>
+            </Metadata>
 
 
             <Metadata>
@@ -4718,6 +4747,8 @@
                 <separator>; </separator>
             </Person>
 
+
+
             <Group>
                 <Name>Verlag</Name>
                 <Metadata>
@@ -4758,7 +4789,28 @@
                 </Metadata>
 
             </Group>
+<!-- 
+MBW: 598701702
+xxxxxnam a22yyyyy ca4500
+volume: 841415854
+xxxxxnam a22yyyyy cc4500
+monograph: 517154005
+xxxxxnmm a22yyyyy c 4500
+ -->
 
+            <DocStruct>
+                <Name>Volume</Name>
+                <leader6>a</leader6>
+                <leader7>m</leader7>
+                <leader19>c</leader19>
+            </DocStruct>
+
+            <DocStruct>
+                <Name>MultiVolumeWork</Name>
+                <leader6>a</leader6>
+                <leader7>m</leader7>
+                <leader19>a</leader19>
+            </DocStruct>
 
             <DocStruct>
                 <Name>Manuscript</Name>
@@ -4770,12 +4822,17 @@
                 <Name>Monograph</Name>
                 <leader6>a</leader6>
                 <leader7>m</leader7>
+                <leader19></leader19>
                 <field007_0></field007_0>
                 <field007_1></field007_1>
                 <field008_21></field008_21>
             </DocStruct>
 
-
+            <DocStruct>
+                <Name>Monograph</Name>
+                <leader6>m</leader6>
+                <leader7>m</leader7>
+            </DocStruct>
 
         </Marc>
 

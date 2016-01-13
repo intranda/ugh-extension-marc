@@ -73,6 +73,7 @@ public class MarcFileformat implements Fileformat {
 
     public static final String PREFS_MARC_LEADER_6 = "leader6";
     public static final String PREFS_MARC_LEADER_7 = "leader7";
+    public static final String PREFS_MARC_LEADER_19 = "leader19";
     public static final String PREFS_MARC_CONTROLFIELD_007_0 = "field007_0";
     public static final String PREFS_MARC_CONTROLFIELD_007_1 = "field007_1";
     public static final String PREFS_MARC_CONTROLFIELD_008_21 = "field008_21";
@@ -175,7 +176,6 @@ public class MarcFileformat implements Fileformat {
 
         DocStruct ds = null;
         DocStruct dsOld = null;
-        DocStruct dsTop = null;
 
         logger.info("Parsing marcxml record");
 
@@ -203,7 +203,6 @@ public class MarcFileformat implements Fileformat {
                                 if (ds != null) {
                                     if (dsOld == null) {
                                         this.digDoc.setLogicalDocStruct(ds);
-                                        dsTop = ds;
                                     } else {
                                         dsOld.addChild(ds);
                                     }
@@ -254,7 +253,6 @@ public class MarcFileformat implements Fileformat {
             }
         }
         ds = parseDocstruct(leader, controlfields);
-        // TODO get identifier from controlfield 001 ?
 
         if (ds == null) {
             // No DocStruct found, this is a serious problem; as I do not know
@@ -262,7 +260,7 @@ public class MarcFileformat implements Fileformat {
             logger.error("Marcxml record read, but no DocStruct found!");
             return null;
         }
-
+        
         List<Metadata> metadata = parseMetadata(datafields, metadataList);
         List<Person> allPer = parsePersons(datafields, personList);
         // Contains all metadata groups.
@@ -493,7 +491,6 @@ public class MarcFileformat implements Fileformat {
 
     private List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
         List<Metadata> metadata = new ArrayList<>();
-        // TODO bei Haupttitel automatisch Sortiertitel erzeugen (ind1 auswerten und Anzahl abschneiden)
 
         for (MetadataConfigurationItem mmo : metadataList) {
 
@@ -663,12 +660,17 @@ public class MarcFileformat implements Fileformat {
                 if (StringUtils.isNotBlank(dci.getField007_0()) && (field007 == null || !(dci.getField007_0().toCharArray()[0] == field007[0]))) {
                     match = false;
                 }
+                // leadder 19
+                if (StringUtils.isNotBlank(dci.getLeader19()) && !(dci.getLeader19().toCharArray()[0] == leaderChars[19])) {
+                    match = false;
+                }
                 //        leaderChar6 and leaderChar7
                 if (!(dci.getLeader6().toCharArray()[0] == leaderChars[6]) || !(dci.getLeader7().toCharArray()[0] == leaderChars[7])) {
                     match = false;
                 }
                 if (match) {
                     ds = digDoc.createDocStruct(prefs.getDocStrctTypeByName(dci.getInternalName()));
+                    break;
                 }
 
             }
