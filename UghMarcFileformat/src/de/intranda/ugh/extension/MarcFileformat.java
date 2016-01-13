@@ -260,7 +260,7 @@ public class MarcFileformat implements Fileformat {
             logger.error("Marcxml record read, but no DocStruct found!");
             return null;
         }
-        
+
         List<Metadata> metadata = parseMetadata(datafields, metadataList);
         List<Person> allPer = parsePersons(datafields, personList);
         // Contains all metadata groups.
@@ -545,7 +545,7 @@ public class MarcFileformat implements Fileformat {
                                         if (StringUtils.isBlank(mmo.getIdentifierConditionField())
                                                 || perlUtil.match(mmo.getIdentifierConditionField(), currentIdentifier)) {
 
-                                            if (StringUtils.isBlank(mmo.getIdentifierReplacement())) {
+                                            if (!StringUtils.isBlank(mmo.getIdentifierReplacement())) {
                                                 currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
                                             }
                                             identifier = currentIdentifier;
@@ -607,7 +607,7 @@ public class MarcFileformat implements Fileformat {
                     if (!expansion.isEmpty()) {
                         if (expansion.contains(",")) {
                             lastname = expansion.substring(0, expansion.indexOf(",")).trim();
-                            firstname = expansion.substring(expansion.indexOf(",")).trim();
+                            firstname = expansion.substring(expansion.indexOf(",") + 1).trim();
                         } else {
                             lastname = expansion;
                         }
