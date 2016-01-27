@@ -140,33 +140,6 @@ public class MarcFileformat implements Fileformat {
         return null;
     }
 
-    public static void main(String[] args) throws PreferencesException, ReadException {
-        Prefs prefs = new Prefs();
-        prefs.loadPrefs("/home/robert/git/ugh-extension-marc/UghMarcFileformat/wellcome_marc.xml");
-        MarcFileformat ff = new MarcFileformat(prefs);
-        ff.read("/home/robert/git/ugh-extension-marc/UghMarcFileformat/MARC21.xml");
-        DocStruct ds = ff.getDigitalDocument().getLogicalDocStruct();
-        System.out.println(ds.getType().getName());
-        if (ds.getAllMetadata() != null) {
-            for (Metadata md : ds.getAllMetadata()) {
-                System.out.println(md.getType().getName() + ": " + md.getValue() + " " + md.getAuthorityValue());
-            }
-        }
-        if (ds.getAllPersons() != null) {
-            for (Person md : ds.getAllPersons()) {
-                System.out.println(md.getRole() + ": " + md.getLastname() + ", " + md.getFirstname() + " " + md.getAuthorityValue());
-            }
-        }
-        if (ds.getAllMetadataGroups() != null) {
-            for (MetadataGroup mg : ds.getAllMetadataGroups()) {
-                System.out.println("group: " + mg.getType().getName());
-                for (Metadata md : mg.getMetadataList()) {
-                    System.out.println(md.getType().getName() + ": " + md.getValue() + " " + md.getAuthorityValue());
-                }
-            }
-        }
-    }
-
     @Override
     public DigitalDocument getDigitalDocument() throws PreferencesException {
         return digDoc;
@@ -304,9 +277,6 @@ public class MarcFileformat implements Fileformat {
                     ds.addMetadataGroup(mdg);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    logger.warn(message, e);
-                } catch (IncompletePersonObjectException e) {
-                    String message = "Ignoring IncompletePersonObjectException at OPAC import!";
                     logger.warn(message, e);
                 }
             }
