@@ -1,5 +1,27 @@
 package de.intranda.ugh.extension;
-
+/******************************************************************************
+ * Copyright notice
+ *
+ * (c) 2016 intranda GmbH, Göttingen
+ *  www.intranda.com
+ *
+ * All rights reserved
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ * 
+ * The GNU Lesser General Public License can be found at
+ * http://www.gnu.org/licenses/lgpl-3.0
+ *
+ * This Library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * This copyright notice MUST APPEAR in all copies of this file!
+ ******************************************************************************/
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -599,7 +621,14 @@ public class MarcFileformat implements Fileformat {
     }
 
     private DocStruct parseDocstruct(Node leader, List<Node> controlfields) {
-        char[] leaderChars = readTextNode(leader).toCharArray();
+        // fix for wrong leader in SWB
+        String leaderValue = "";
+        NodeList nl = leader.getChildNodes();
+        if (nl.getLength() > 0) {
+            Node n = nl.item(0);
+            leaderValue = n.getNodeValue();
+        }
+        char[] leaderChars = leaderValue.toCharArray();
         char[] field007 = null;
         char[] field008 = null;
 
@@ -651,73 +680,7 @@ public class MarcFileformat implements Fileformat {
 
         return ds;
     }
-
-    //    /**
-    //     * All logic for determining the document type of a MARC21 dataset.
-    //     *
-    //     * @param leaderChars
-    //     * @param field007
-    //     * @param field008
-    //     * @return
-    //     */
-    //    protected static String determineDocType(char[] leaderChars, String field007, String field008) {
-    //        String dsElementType = "123";
-    //
-    //        //        String dsElementType2 = DataManager.getInstance().getPicaPlusTagByMARC21("leader$" + leaderChars[7] + leaderChars[21]);
-    //
-    //        // 007
-    //        if (field007 != null) {
-    //            String ds2 =
-    //DataManager.getInstance().getPicaPlusTagByMARC21(
-    //                            "ds2" + String.valueOf(leaderChars[6]) + String.valueOf(field007.charAt(0)) + String.valueOf(field007.charAt(1)));
-    //            if (ds2 != null) {
-    //                dsElementType = dsElementType.replace("2", ds2);
-    //            }
-    //        }
-    //
-    //        // 008
-    //        if (field008 != null) {
-    //            String ds2 =
-    //DataManager.getInstance().getPicaPlusTagByMARC21("ds2" + String.valueOf(leaderChars[7]) + String.valueOf(field008.charAt(21)));
-    //            // logger.debug("ds2" + String.valueOf(leaderChars[7]) + String.valueOf(valueChars[21]));
-    //            if (ds2 != null) {
-    //                dsElementType = dsElementType.replace("2", ds2);
-    //            }
-    //        }
-    //
-    //        if (dsElementType.charAt(0) == '1') {
-    //            String ds1 = DataManager.getInstance().getPicaPlusTagByMARC21("ds1" + String.valueOf(leaderChars[6]));
-    //            if (ds1 != null) {
-    //                dsElementType = dsElementType.replace("1", ds1);
-    //            }
-    //        }
-    //        if (dsElementType.charAt(1) == '2') {
-    //            String ds2 = DataManager.getInstance().getPicaPlusTagByMARC21("ds2" + String.valueOf(leaderChars[7]));
-    //            if (ds2 != null) {
-    //                dsElementType = dsElementType.replace("2", ds2);
-    //            }
-    //        }
-    //        if (dsElementType.charAt(2) == '3') {
-    //            dsElementType = dsElementType.replace("3", "u");
-    //        }
-    //
-    //        // Override the collected type if there is an exact mapping (leader chars 6-7 and field 007)
-    //        String overrideKey =
-    //                new StringBuilder("L").append(String.valueOf(leaderChars[6])).append(String.valueOf(leaderChars[7])).append("007").append(field007)
-    //                        .toString().trim();
-    //        String overrideValue = DataManager.getInstance().getPicaPlusTagByMARC21(overrideKey);
-    //        if (overrideValue != null) {
-    //            dsElementType = overrideValue;
-    //        }
-    //
-    //        // Prepublication level
-    //        if (leaderChars[5] == 'n' && leaderChars[17] == '8') {
-    //            dsElementType.replace("3", "a");
-    //        }
-    //
-    //        return dsElementType;
-    //    } 
-
+    
     @Override
     public boolean read(String filename) throws ReadException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -779,5 +742,4 @@ public class MarcFileformat implements Fileformat {
         this.prefs = prefs;
 
     }
-
 }
