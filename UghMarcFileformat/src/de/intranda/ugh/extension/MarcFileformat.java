@@ -3,7 +3,7 @@ package de.intranda.ugh.extension;
  * Copyright notice
  *
  * (c) 2016 intranda GmbH, Göttingen
- *  www.intranda.com
+ * http://www.intranda.com
  *
  * All rights reserved
  *
