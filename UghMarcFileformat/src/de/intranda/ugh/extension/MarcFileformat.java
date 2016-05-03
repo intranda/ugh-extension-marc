@@ -1,4 +1,5 @@
 package de.intranda.ugh.extension;
+
 /******************************************************************************
  * Copyright notice
  *
@@ -530,8 +531,8 @@ public class MarcFileformat implements Fileformat {
                                             }
                                         }
 
-                                    } else if (StringUtils.isNotBlank(mmo.getIdentifierField())
-                                            && mmo.getIdentifierField().equals(code.getNodeValue())) {
+                                    }
+                                    if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
 
                                         String currentIdentifier = readTextNode(subfield);
                                         if (StringUtils.isBlank(mmo.getIdentifierConditionField())
@@ -542,7 +543,8 @@ public class MarcFileformat implements Fileformat {
                                             }
                                             identifier = currentIdentifier;
                                         }
-                                    } else if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
+                                    }
+                                    if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
                                         condition = readTextNode(subfield);
                                     }
 
@@ -680,7 +682,7 @@ public class MarcFileformat implements Fileformat {
 
         return ds;
     }
-    
+
     @Override
     public boolean read(String filename) throws ReadException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -740,6 +742,11 @@ public class MarcFileformat implements Fileformat {
     @Override
     public void setPrefs(Prefs prefs) throws PreferencesException {
         this.prefs = prefs;
+
+    }
+
+    
+    public void setGoobiID(String goobiId) {
 
     }
 }
