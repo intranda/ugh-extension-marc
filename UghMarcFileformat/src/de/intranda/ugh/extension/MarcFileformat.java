@@ -157,7 +157,7 @@ public class MarcFileformat implements Fileformat {
         NodeList nl = inNode.getChildNodes();
         if (nl.getLength() > 0) {
             Node n = nl.item(0);
-            return n.getNodeValue().trim();
+            return n.getNodeValue();
         }
 
         return null;
@@ -342,8 +342,8 @@ public class MarcFileformat implements Fileformat {
                         boolean added = false;
                         for (Person per : pl) {
 
-                            if (StringUtils.isBlank(per.getFirstname()) && StringUtils.isBlank(per.getLastname())
-                                    && StringUtils.isBlank(per.getAuthorityValue())) {
+                            if (StringUtils.isBlank(per.getFirstname()) && StringUtils.isBlank(per.getLastname()) && StringUtils.isBlank(per
+                                    .getAuthorityValue())) {
                                 added = true;
                                 per.setFirstname(p.getFirstname());
                                 per.setLastname(p.getLastname());
@@ -368,13 +368,13 @@ public class MarcFileformat implements Fileformat {
         List<Person> person = new ArrayList<>();
 
         for (MetadataConfigurationItem mmo : personList) {
-            String firstname = "";
-            String lastname = "";
-            String expansion = "";
-
-            String identifier = "";
-            String condition = "";
             for (Node node : datafields) {
+                String firstname = "";
+                String lastname = "";
+                String expansion = "";
+
+                String identifier = "";
+                String condition = "";
                 NamedNodeMap nnm = node.getAttributes();
                 Node tagNode = nnm.getNamedItem("tag");
                 Node ind1Node = nnm.getNamedItem("ind1");
@@ -397,89 +397,112 @@ public class MarcFileformat implements Fileformat {
                                 if (subfield.getNodeType() == Node.ELEMENT_NODE) {
                                     NamedNodeMap attributes = subfield.getAttributes();
                                     Node code = attributes.getNamedItem("code");
-                                    if (StringUtils.isNotBlank(mf.getExpansion()) && mf.getExpansion().equals(code.getNodeValue())) {
-                                        if (expansion.isEmpty()) {
-                                            expansion = readTextNode(subfield);
-                                        } else {
-                                            if (mmo.isSeparateEntries()) {
-                                                // create element 
-                                                Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
-                                                if (md != null) {
-                                                    person.add(md);
+
+                                    if (!mf.getFirstname().isEmpty()) {
+                                        for (String nodeName : mf.getFirstname()) {
+                                            if (nodeName.equals(code.getNodeValue())) {
+                                                if (firstname.isEmpty()) {
+                                                    firstname = readTextNode(subfield);
+                                                } else {
+                                                    if (mmo.isSeparateEntries()) {
+                                                        // create element 
+                                                        Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
+                                                        if (md != null) {
+                                                            person.add(md);
+                                                        }
+                                                        firstname = readTextNode(subfield);
+                                                    } else {
+                                                        firstname = firstname + mmo.getSeparator() + readTextNode(subfield);
+                                                    }
                                                 }
 
-                                                expansion = readTextNode(subfield);
-                                            } else {
-                                                expansion = expansion + mmo.getSeparator() + readTextNode(subfield);
                                             }
                                         }
                                     }
-                                    if (StringUtils.isNotBlank(mf.getFirstname()) && mf.getFirstname().equals(code.getNodeValue())) {
-                                        if (firstname.isEmpty()) {
-                                            firstname = readTextNode(subfield);
-                                        } else {
-                                            if (mmo.isSeparateEntries()) {
-                                                // create element 
-                                                Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
-                                                if (md != null) {
-                                                    person.add(md);
+                                    if (!mf.getLastname().isEmpty()) {
+                                        for (String nodeName : mf.getLastname()) {
+                                            if (nodeName.equals(code.getNodeValue())) {
+                                                if (lastname.isEmpty()) {
+                                                    lastname = readTextNode(subfield);
+                                                } else {
+                                                    if (mmo.isSeparateEntries()) {
+                                                        // create element 
+                                                        Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
+                                                        if (md != null) {
+                                                            person.add(md);
+                                                        }
+
+                                                        lastname = readTextNode(subfield);
+                                                    } else {
+                                                        lastname = lastname + mmo.getSeparator() + readTextNode(subfield);
+                                                    }
                                                 }
 
-                                                firstname = readTextNode(subfield);
-                                            } else {
-                                                firstname = firstname + mmo.getSeparator() + readTextNode(subfield);
                                             }
                                         }
-
-                                    }
-                                    if (StringUtils.isNotBlank(mf.getLastname()) && mf.getLastname().equals(code.getNodeValue())) {
-                                        if (lastname.isEmpty()) {
-                                            lastname = readTextNode(subfield);
-                                        } else {
-                                            if (mmo.isSeparateEntries()) {
-                                                // create element 
-                                                Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
-                                                if (md != null) {
-                                                    person.add(md);
-                                                }
-
-                                                lastname = readTextNode(subfield);
-                                            } else {
-                                                lastname = lastname + mmo.getSeparator() + readTextNode(subfield);
-                                            }
-                                        }
-
                                     }
 
-                                    else if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
+                                    if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
 
                                         String currentIdentifier = readTextNode(subfield);
-                                        if (StringUtils.isBlank(mmo.getIdentifierConditionField())
-                                                || perlUtil.match(mmo.getIdentifierConditionField(), currentIdentifier)) {
+                                        if (StringUtils.isBlank(mmo.getIdentifierConditionField()) || perlUtil.match(mmo
+                                                .getIdentifierConditionField(), currentIdentifier)) {
 
                                             if (StringUtils.isNotBlank(mmo.getIdentifierReplacement())) {
                                                 currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
                                             }
                                             identifier = currentIdentifier;
                                         }
-                                    } else if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
+                                    }
+                                    if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
                                         condition = readTextNode(subfield);
                                     }
+                                }
+                            }
 
+                            if (StringUtils.isBlank(lastname) && !mf.getExpansion().isEmpty()) {
+                                for (int i = 0; i < subfieldList.getLength(); i++) {
+                                    Node subfield = subfieldList.item(i);
+                                    if (subfield.getNodeType() == Node.ELEMENT_NODE) {
+                                        NamedNodeMap attributes = subfield.getAttributes();
+                                        Node code = attributes.getNamedItem("code");
+
+                                        for (String exp : mf.getExpansion()) {
+                                            if (exp.equals(code.getNodeValue())) {
+
+                                                //                                    if (StringUtils.isNotBlank(mf.getExpansion()) && mf.getExpansion().equals(code.getNodeValue())) {
+                                                if (expansion.isEmpty()) {
+                                                    expansion = readTextNode(subfield);
+                                                } else {
+                                                    if (mmo.isSeparateEntries()) {
+                                                        // create element 
+                                                        Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
+                                                        if (md != null) {
+                                                            person.add(md);
+                                                        }
+
+                                                        expansion = readTextNode(subfield);
+                                                    } else {
+                                                        expansion = expansion + mmo.getSeparator() + readTextNode(subfield);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-
                     }
                 }
 
-            }
-            Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
-            if (md != null) {
-                person.add(md);
+                Person md = createPerson(mmo, firstname, lastname, expansion, identifier, condition);
+                if (md != null) {
+                    person.add(md);
+                }
             }
         }
         return person;
+
     }
 
     private List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
@@ -514,6 +537,7 @@ public class MarcFileformat implements Fileformat {
                                 if (subfield.getNodeType() == Node.ELEMENT_NODE) {
                                     NamedNodeMap attributes = subfield.getAttributes();
                                     Node code = attributes.getNamedItem("code");
+
                                     if (mf.getFieldSubTag().equals(code.getNodeValue())) {
                                         if (value.isEmpty()) {
                                             value = readTextNode(subfield);
@@ -532,11 +556,12 @@ public class MarcFileformat implements Fileformat {
                                         }
 
                                     }
+
                                     if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
 
                                         String currentIdentifier = readTextNode(subfield);
-                                        if (StringUtils.isBlank(mmo.getIdentifierConditionField())
-                                                || perlUtil.match(mmo.getIdentifierConditionField(), currentIdentifier)) {
+                                        if (StringUtils.isBlank(mmo.getIdentifierConditionField()) || perlUtil.match(mmo
+                                                .getIdentifierConditionField(), currentIdentifier)) {
 
                                             if (!StringUtils.isBlank(mmo.getIdentifierReplacement())) {
                                                 currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
@@ -745,7 +770,6 @@ public class MarcFileformat implements Fileformat {
 
     }
 
-    
     public void setGoobiID(String goobiId) {
 
     }

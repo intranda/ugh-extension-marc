@@ -21,6 +21,7 @@
 	<path id="classpath">
 		<fileset dir="/opt/digiverso/goobilibs/lib" />
 <!-- 		<fileset dir="${dir.lib}"/>  -->
+<!-- <fileset dir="/opt/digiverso/git/goobi/Goobi/webapp/WEB-INF/lib"/> -->
 	</path>
 
 

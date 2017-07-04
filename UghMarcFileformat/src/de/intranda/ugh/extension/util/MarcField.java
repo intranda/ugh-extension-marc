@@ -1,4 +1,5 @@
 package de.intranda.ugh.extension.util;
+
 /******************************************************************************
  * Copyright notice
  *
@@ -24,6 +25,9 @@ package de.intranda.ugh.extension.util;
  ******************************************************************************/
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -32,16 +36,14 @@ import de.intranda.ugh.extension.MarcFileformat;
 public @Data class MarcField {
 
     private String fieldMainTag = "";
-    private String fieldSubTag = "";
+    private String fieldSubTag ="";
 
-    private String firstname = "";
-    private String lastname = "";
-    private String expansion = "";
+    private List<String> firstname = new ArrayList<>();
+    private List<String> lastname = new ArrayList<>();
+    private List<String> expansion = new ArrayList<>();
 
     private String fieldInd1 = "any";
     private String fieldInd2 = "any";
-
-
 
     public MarcField(Node node) {
         NodeList children = node.getChildNodes();
@@ -59,13 +61,13 @@ public @Data class MarcField {
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_INDICATOR_2)) {
                     fieldInd2 = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_FIRSTNAME)) {
-                    firstname = MarcFileformat.readTextNode(n);
+                    firstname.add(MarcFileformat.readTextNode(n));
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_LASTNAME)) {
-                    lastname = MarcFileformat.readTextNode(n);
+                    lastname.add(MarcFileformat.readTextNode(n));
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_EXPANSION)) {
-                    expansion = MarcFileformat.readTextNode(n);
-               
-                } 
+                    expansion.add(MarcFileformat.readTextNode(n));
+
+                }
             }
         }
 
