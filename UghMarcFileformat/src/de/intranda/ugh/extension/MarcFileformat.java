@@ -662,9 +662,9 @@ public class MarcFileformat implements Fileformat {
         for (Node node : controlfields) {
             NamedNodeMap nnm = node.getAttributes();
             Node tagNode = nnm.getNamedItem("tag");
-            if (tagNode.getNodeValue().equals("007")) {
+            if (tagNode.getNodeValue().equals("007") && field007 == null) {
                 field007 = readTextNode(node).toCharArray();
-            } else if (tagNode.getNodeValue().equals("008")) {
+            } else if (tagNode.getNodeValue().equals("008") && field008 == null) {
                 field008 = readTextNode(node).toCharArray();
             }
         }
