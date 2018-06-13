@@ -42,9 +42,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import de.intranda.ugh.extension.util.DocstructConfigurationItem;
 import de.intranda.ugh.extension.util.GroupConfigurationItem;
 import de.intranda.ugh.extension.util.MarcField;
-import de.intranda.ugh.extension.util.DocstructConfigurationItem;
 import de.intranda.ugh.extension.util.MetadataConfigurationItem;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
@@ -233,8 +233,8 @@ public class MarcFileformat implements Fileformat {
 
         // Get all subfields.
         NodeList nl = inNode.getChildNodes();
-        List<Node> controlfields = new ArrayList<Node>();
-        List<Node> datafields = new ArrayList<Node>();
+        List<Node> controlfields = new ArrayList<>();
+        List<Node> datafields = new ArrayList<>();
         Node leader = null;
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
@@ -439,7 +439,7 @@ public class MarcFileformat implements Fileformat {
                                                     firstname = readTextNode(subfield);
                                                 } else {
                                                     if (mmo.isSeparateEntries()) {
-                                                        // create element 
+                                                        // create element
                                                         Person md = createPerson(mmo, firstname, lastname, identifier, condition);
                                                         if (md != null) {
                                                             person.add(md);
@@ -460,7 +460,7 @@ public class MarcFileformat implements Fileformat {
                                                     lastname = readTextNode(subfield);
                                                 } else {
                                                     if (mmo.isSeparateEntries()) {
-                                                        // create element 
+                                                        // create element
                                                         Person md = createPerson(mmo, firstname, lastname, identifier, condition);
                                                         if (md != null) {
                                                             person.add(md);
@@ -544,7 +544,7 @@ public class MarcFileformat implements Fileformat {
                                             value = readTextNode(subfield);
                                         } else {
                                             if (mmo.isSeparateEntries()) {
-                                                // create element 
+                                                // create element
                                                 Metadata md = createMetadata(mmo, value, identifier, condition);
                                                 if (md != null) {
                                                     metadata.add(md);
@@ -618,7 +618,8 @@ public class MarcFileformat implements Fileformat {
     private Person createPerson(MetadataConfigurationItem mmo, String firstname, String lastname, String identifier, String condition) {
         Person person = null;
         if (!firstname.isEmpty() || !lastname.isEmpty()) {
-            if (StringUtils.isBlank(mmo.getConditionValue()) || perlUtil.match(mmo.getConditionValue(), condition)) {
+            if (StringUtils.isBlank(mmo.getConditionValue()) || perlUtil.match(mmo.getConditionValue(), condition) || (mmo.getConditionValue().equals(
+                    "/empty/") && StringUtils.isBlank(condition))) {
                 try {
                     MetadataType mdt = prefs.getMetadataTypeByName(mmo.getInternalMetadataName());
                     person = new Person(mdt);
@@ -763,6 +764,7 @@ public class MarcFileformat implements Fileformat {
 
     }
 
+    @Override
     public void setGoobiID(String goobiId) {
 
     }
