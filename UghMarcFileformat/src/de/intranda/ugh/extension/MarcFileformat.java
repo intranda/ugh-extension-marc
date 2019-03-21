@@ -514,7 +514,6 @@ public class MarcFileformat implements Fileformat {
             String value = "";
             String identifier = "";
             String condition = "";
-
             for (Node node : datafields) {
                 NamedNodeMap nnm = node.getAttributes();
                 Node tagNode = nnm.getNamedItem("tag");
@@ -532,6 +531,10 @@ public class MarcFileformat implements Fileformat {
                             matchesInd2 = true;
                         }
                         if (matchesInd1 && matchesInd2) {
+                            String currentValue = "";
+                            String currentCondition = "";
+                            String currentIdentifier = "";
+
                             NodeList subfieldList = node.getChildNodes();
                             for (int i = 0; i < subfieldList.getLength(); i++) {
                                 Node subfield = subfieldList.item(i);
@@ -540,30 +543,14 @@ public class MarcFileformat implements Fileformat {
                                     Node code = attributes.getNamedItem("code");
 
                                     if (mf.getFieldSubTag().equals(code.getNodeValue())) {
-                                        if (value.isEmpty()) {
-                                            value = readTextNode(subfield);
-                                        } else {
-                                            if (mmo.isSeparateEntries()) {
-                                                // create element
-                                                Metadata md = createMetadata(mmo, value, identifier, condition);
-                                                if (md != null) {
-                                                    metadata.add(md);
-                                                }
-
-                                                value = readTextNode(subfield);
-                                            } else {
-                                                value = value + mmo.getSeparator() + readTextNode(subfield);
-                                            }
-                                        }
-
+                                        currentValue = readTextNode(subfield);
                                     }
 
                                     if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
 
-                                        String currentIdentifier = readTextNode(subfield);
+                                        currentIdentifier = readTextNode(subfield);
                                         if (StringUtils.isBlank(mmo.getIdentifierConditionField()) || perlUtil.match(mmo
                                                 .getIdentifierConditionField(), currentIdentifier)) {
-
                                             if (!StringUtils.isBlank(mmo.getIdentifierReplacement())) {
                                                 currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
                                             }
@@ -571,13 +558,31 @@ public class MarcFileformat implements Fileformat {
                                         }
                                     }
                                     if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
-                                        condition = readTextNode(subfield);
+                                        currentCondition = readTextNode(subfield);
                                     }
 
                                 }
                             }
-                        }
+                            if (StringUtils.isNotBlank(currentValue)) {
 
+                                if (mmo.isSeparateEntries()) {
+                                    // create element
+                                    Metadata md = createMetadata(mmo, currentValue, currentIdentifier, currentCondition);
+                                    if (md != null) {
+                                        metadata.add(md);
+                                    }
+
+                                } else {
+                                    value = value + mmo.getSeparator() + currentValue;
+                                    if (StringUtils.isNotBlank(currentIdentifier)) {
+                                        identifier =currentIdentifier;
+                                    }
+                                    if (StringUtils.isNotBlank(currentCondition)) {
+                                        condition = currentCondition;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
