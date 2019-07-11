@@ -7,10 +7,16 @@
     <groupId>de.intranda.ugh</groupId>
     <artifactId>ugh-marc</artifactId>
     <version>1.0.2</version>
+ <distributionManagement>
+        <repository>
+            <id>intranda-releases</id>
+            <url>https://nexus.intranda.com/repository/maven-releases</url>
+        </repository>
+    </distributionManagement>
     <repositories>
         <repository>
-            <id>intranda</id>
-            <url>https://nexus.intranda.com/repository/intranda</url>
+            <id>intranda-public</id>
+            <url>https://nexus.intranda.com/repository/maven-public</url>
         </repository>
     </repositories>
     <build>
@@ -35,18 +41,13 @@
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>intranda</id>
-            <url>https://maven01.intranda.com/repository/intranda</url>
-        </repository>
-    </distributionManagement>
+
     <dependencies>
    		<!-- https://mvnrepository.com/artifact/commons-digester/commons-digester -->
 		<dependency>
 			<groupId>de.intranda.ugh</groupId>
 			<artifactId>ugh-core</artifactId>
-			<version>[3.0.4,)</version>
+			<version>[3.0.11,)</version>
 		</dependency>
     <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 <dependency>

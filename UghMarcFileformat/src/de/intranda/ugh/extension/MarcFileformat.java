@@ -573,7 +573,11 @@ public class MarcFileformat implements Fileformat {
                                     }
 
                                 } else {
-                                    value = value + mmo.getSeparator() + currentValue;
+                                    if (StringUtils.isNotBlank(value)) {
+                                        value = value + mmo.getSeparator() + currentValue;
+                                    } else {
+                                        value = currentValue;
+                                    }
                                     if (StringUtils.isNotBlank(currentIdentifier)) {
                                         identifier =currentIdentifier;
                                     }
