@@ -415,6 +415,7 @@ public class MarcFileformat implements Fileformat {
                                                 // firstname
                                                 firstname = expansion;
                                                 break;
+                                            case "2": // hack for corporations configured as persons
                                             case "3":
                                                 // lastname
                                                 lastname = expansion;
