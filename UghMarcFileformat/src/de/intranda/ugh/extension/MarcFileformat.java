@@ -220,14 +220,15 @@ public class MarcFileformat implements Fileformat {
             // Child DocStruct could not be added to father, because of ruleset.
             String message = "Can't add child to parent DocStruct! Child type '" + ds.getType().getName() + "' not allowed for parent type";
             throw new ReadException(message, e);
-        } catch (MetadataTypeNotAllowedException e) {
-            String message = "Can't add child to parent DocStruct! Child type must not be null";
-            throw new ReadException(message, e);
         }
+        //        catch (MetadataTypeNotAllowedException e) {
+        //            String message = "Can't add child to parent DocStruct! Child type must not be null";
+        //            throw new ReadException(message, e);
+        //        }
         return true;
     }
 
-    private DocStruct parseMarcRecord(Node inNode) throws MetadataTypeNotAllowedException, ReadException {
+    private DocStruct parseMarcRecord(Node inNode) {
 
         DocStruct ds = null;
 
@@ -308,8 +309,13 @@ public class MarcFileformat implements Fileformat {
         return ds;
     }
 
+    /**
+     * 
+     * @param datafields
+     * @return
+     */
     private List<MetadataGroup> parseGroups(List<Node> datafields) {
-        List<MetadataGroup> groups = new ArrayList<>();
+        List<MetadataGroup> groups = new ArrayList<>(groupList.size());
         for (GroupConfigurationItem gci : groupList) {
             List<Metadata> mList = new ArrayList<>();
             List<Person> pList = new ArrayList<>();
@@ -319,55 +325,63 @@ public class MarcFileformat implements Fileformat {
             if (!gci.getPersonList().isEmpty()) {
                 pList = parsePersons(datafields, gci.getPersonList());
             }
-            if (!mList.isEmpty() || !pList.isEmpty()) {
-                try {
-                    MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName(gci.getGroupName()));
-                    for (Metadata md : mList) {
+            if (mList.isEmpty() && pList.isEmpty()) {
+                continue;
+            }
 
-                        List<Metadata> mdl = mg.getMetadataByType(md.getType().getName());
-                        boolean added = false;
-                        for (Metadata metadata : mdl) {
-                            if (StringUtils.isBlank(metadata.getValue()) && StringUtils.isBlank(metadata.getAuthorityValue())) {
-                                added = true;
-                                metadata.setValue(md.getValue());
-                                metadata.setAutorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
-                            }
-                        }
-                        if (!added) {
-                            mg.addMetadata(md);
+            try {
+                MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName(gci.getGroupName()));
+                for (Metadata md : mList) {
+                    List<Metadata> mdl = mg.getMetadataByType(md.getType().getName());
+                    boolean added = false;
+                    for (Metadata metadata : mdl) {
+                        if (StringUtils.isBlank(metadata.getValue()) && StringUtils.isBlank(metadata.getAuthorityValue())) {
+                            added = true;
+                            metadata.setValue(md.getValue());
+                            metadata.setAutorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
                         }
                     }
-                    for (Person p : pList) {
-                        List<Person> pl = mg.getPersonByType(p.getType().getName());
-                        boolean added = false;
-                        for (Person per : pl) {
-
-                            if (StringUtils.isBlank(per.getFirstname()) && StringUtils.isBlank(per.getLastname()) && StringUtils.isBlank(per
-                                    .getAuthorityValue())) {
-                                added = true;
-                                per.setFirstname(p.getFirstname());
-                                per.setLastname(p.getLastname());
-                                per.setAutorityFile(p.getAuthorityID(), p.getAuthorityURI(), p.getAuthorityValue());
-                            }
-                        }
-                        if (!added) {
-                            mg.addPerson(p);
-                        }
+                    if (!added) {
+                        mg.addMetadata(md);
                     }
-                    groups.add(mg);
-                } catch (MetadataTypeNotAllowedException e) {
-                    logger.error(e);
                 }
+                for (Person p : pList) {
+                    List<Person> pl = mg.getPersonByType(p.getType().getName());
+                    boolean added = false;
+                    for (Person per : pl) {
+
+                        if (StringUtils.isBlank(per.getFirstname()) && StringUtils.isBlank(per.getLastname())
+                                && StringUtils.isBlank(per.getAuthorityValue())) {
+                            added = true;
+                            per.setFirstname(p.getFirstname());
+                            per.setLastname(p.getLastname());
+                            per.setAutorityFile(p.getAuthorityID(), p.getAuthorityURI(), p.getAuthorityValue());
+                        }
+                    }
+                    if (!added) {
+                        mg.addPerson(p);
+                    }
+                }
+                groups.add(mg);
+            } catch (MetadataTypeNotAllowedException e) {
+                logger.error(e);
             }
         }
 
         return groups;
     }
 
+    /**
+     * 
+     * @param datafields
+     * @param personList
+     * @return
+     */
     private List<Person> parsePersons(List<Node> datafields, List<MetadataConfigurationItem> personList) {
         List<Person> person = new ArrayList<>();
 
         for (MetadataConfigurationItem mmo : personList) {
+            // For each node in the MARC document
             for (Node node : datafields) {
                 String firstname = "";
                 String lastname = "";
@@ -381,217 +395,237 @@ public class MarcFileformat implements Fileformat {
                 String ind1Value = ind1Node.getNodeValue().trim();
                 String ind2Value = ind2Node.getNodeValue().trim();
 
+                // Match main tag in the config
                 for (MarcField mf : mmo.getFieldList()) {
-                    if (mf.getFieldMainTag().equals(tagNode.getNodeValue())) {
-                        boolean matchesInd1 = false;
-                        boolean matchesInd2 = false;
-                        if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Value)) {
-                            matchesInd1 = true;
-                        }
-                        if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Value)) {
-                            matchesInd2 = true;
-                        }
-                        if (matchesInd1 && matchesInd2) {
-                            NodeList subfieldList = node.getChildNodes();
-                            for (int i = 0; i < subfieldList.getLength(); i++) {
-                                Node subfield = subfieldList.item(i);
-                                if (subfield.getNodeType() == Node.ELEMENT_NODE) {
-                                    NamedNodeMap attributes = subfield.getAttributes();
-                                    Node code = attributes.getNamedItem("code");
-                                    if (!mf.getExpansion().isEmpty() && mf.getExpansion().get(0).equals(code.getNodeValue())) {
-                                        String expansion = readTextNode(subfield);
+                    if (!mf.getFieldMainTag().equals(tagNode.getNodeValue())) {
+                        continue;
+                    }
+                    boolean matchesInd1 = false;
+                    boolean matchesInd2 = false;
+                    if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Value)) {
+                        matchesInd1 = true;
+                    }
+                    if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Value)) {
+                        matchesInd2 = true;
+                    }
+                    if (!matchesInd1 || !matchesInd2) {
+                        continue;
+                    }
 
-                                        switch (ind1Value) {
-                                            case "1":
-                                                // lastname, firstname
-                                                if (expansion.contains(",")) {
-                                                    lastname = expansion.substring(0, expansion.indexOf(",")).trim();
-                                                    firstname = expansion.substring(expansion.indexOf(",") + 1).trim();
-                                                } else {
-                                                    lastname = expansion;
-                                                }
-                                                break;
-                                            case "0":
-                                                // firstname
-                                                firstname = expansion;
-                                                break;
-                                            case "2": // hack for corporations configured as persons
-                                            case "3":
-                                                // lastname
-                                                lastname = expansion;
-                                                break;
-                                            default:
-                                                break;
+                    // Subfields
+                    NodeList subfieldList = node.getChildNodes();
+                    for (int i = 0; i < subfieldList.getLength(); i++) {
+                        Node subfield = subfieldList.item(i);
+                        if (subfield.getNodeType() != Node.ELEMENT_NODE) {
+                            continue;
+                        }
+
+                        NamedNodeMap attributes = subfield.getAttributes();
+                        Node code = attributes.getNamedItem("code");
+                        if (!mf.getExpansion().isEmpty() && mf.getExpansion().get(0).equals(code.getNodeValue())) {
+                            String expansion = readTextNode(subfield);
+
+                            switch (ind1Value) {
+                                case "1":
+                                    // lastname, firstname
+                                    if (expansion.contains(",")) {
+                                        lastname = expansion.substring(0, expansion.indexOf(",")).trim();
+                                        firstname = expansion.substring(expansion.indexOf(",") + 1).trim();
+                                    } else {
+                                        lastname = expansion;
+                                    }
+                                    break;
+                                case "0":
+                                    // firstname
+                                    firstname = expansion;
+                                    break;
+                                case "2": // hack for corporations configured as persons
+                                case "3":
+                                    // lastname
+                                    lastname = expansion;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < subfieldList.getLength(); i++) {
+                        Node subfield = subfieldList.item(i);
+                        if (subfield.getNodeType() != Node.ELEMENT_NODE) {
+                            continue;
+                        }
+
+                        NamedNodeMap attributes = subfield.getAttributes();
+                        Node code = attributes.getNamedItem("code");
+
+                        if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
+                            String currentIdentifier = readTextNode(subfield);
+                            if (StringUtils.isBlank(mmo.getIdentifierConditionField())
+                                    || perlUtil.match(mmo.getIdentifierConditionField(), currentIdentifier)) {
+
+                                if (StringUtils.isNotBlank(mmo.getIdentifierReplacement())) {
+                                    currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
+                                }
+                                identifier = currentIdentifier;
+                            }
+                        }
+
+                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
+                            condition = readTextNode(subfield);
+                        }
+
+                        if (!mf.getFirstname().isEmpty()) {
+                            for (String nodeName : mf.getFirstname()) {
+                                if (nodeName.equals(code.getNodeValue())) {
+                                    if (firstname.isEmpty()) {
+                                        firstname = readTextNode(subfield);
+                                    } else {
+                                        if (mmo.isSeparateEntries()) {
+                                            // create element
+                                            Person md = createPerson(mmo, firstname, lastname, identifier, condition);
+                                            if (md != null) {
+                                                person.add(md);
+                                            }
+                                            firstname = readTextNode(subfield);
+                                        } else {
+                                            firstname = firstname + mmo.getSeparator() + readTextNode(subfield);
                                         }
                                     }
+
                                 }
                             }
-
-                            for (int i = 0; i < subfieldList.getLength(); i++) {
-                                Node subfield = subfieldList.item(i);
-                                if (subfield.getNodeType() == Node.ELEMENT_NODE) {
-                                    NamedNodeMap attributes = subfield.getAttributes();
-                                    Node code = attributes.getNamedItem("code");
-
-                                    if (!mf.getFirstname().isEmpty()) {
-                                        for (String nodeName : mf.getFirstname()) {
-                                            if (nodeName.equals(code.getNodeValue())) {
-                                                if (firstname.isEmpty()) {
-                                                    firstname = readTextNode(subfield);
-                                                } else {
-                                                    if (mmo.isSeparateEntries()) {
-                                                        // create element
-                                                        Person md = createPerson(mmo, firstname, lastname, identifier, condition);
-                                                        if (md != null) {
-                                                            person.add(md);
-                                                        }
-                                                        firstname = readTextNode(subfield);
-                                                    } else {
-                                                        firstname = firstname + mmo.getSeparator() + readTextNode(subfield);
-                                                    }
-                                                }
-
+                        }
+                        if (!mf.getLastname().isEmpty()) {
+                            for (String nodeName : mf.getLastname()) {
+                                if (nodeName.equals(code.getNodeValue())) {
+                                    if (lastname.isEmpty()) {
+                                        lastname = readTextNode(subfield);
+                                    } else {
+                                        if (mmo.isSeparateEntries()) {
+                                            // create element
+                                            Person md = createPerson(mmo, firstname, lastname, identifier, condition);
+                                            if (md != null) {
+                                                person.add(md);
                                             }
-                                        }
-                                    }
-                                    if (!mf.getLastname().isEmpty()) {
-                                        for (String nodeName : mf.getLastname()) {
-                                            if (nodeName.equals(code.getNodeValue())) {
-                                                if (lastname.isEmpty()) {
-                                                    lastname = readTextNode(subfield);
-                                                } else {
-                                                    if (mmo.isSeparateEntries()) {
-                                                        // create element
-                                                        Person md = createPerson(mmo, firstname, lastname, identifier, condition);
-                                                        if (md != null) {
-                                                            person.add(md);
-                                                        }
 
-                                                        lastname = readTextNode(subfield);
-                                                    } else {
-                                                        lastname = lastname + mmo.getSeparator() + readTextNode(subfield);
-                                                    }
-                                                }
-
-                                            }
+                                            lastname = readTextNode(subfield);
+                                        } else {
+                                            lastname = lastname + mmo.getSeparator() + readTextNode(subfield);
                                         }
                                     }
 
-                                    if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
-
-                                        String currentIdentifier = readTextNode(subfield);
-                                        if (StringUtils.isBlank(mmo.getIdentifierConditionField()) || perlUtil.match(mmo
-                                                .getIdentifierConditionField(), currentIdentifier)) {
-
-                                            if (StringUtils.isNotBlank(mmo.getIdentifierReplacement())) {
-                                                currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
-                                            }
-                                            identifier = currentIdentifier;
-                                        }
-                                    }
-                                    if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
-                                        condition = readTextNode(subfield);
-                                    }
                                 }
                             }
                         }
                     }
                 }
+
+                // Single value for all occurrences
                 Person md = createPerson(mmo, firstname, lastname, identifier, condition);
                 if (md != null) {
                     person.add(md);
                 }
             }
         }
-        return person;
 
+        return person;
     }
 
+    /**
+     * 
+     * @param datafields
+     * @param metadataList
+     * @return
+     */
     private List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
         List<Metadata> metadata = new ArrayList<>();
 
         for (MetadataConfigurationItem mmo : metadataList) {
-
             String value = "";
             String identifier = "";
             String condition = "";
+
+            // For each node in the MARC document
             for (Node node : datafields) {
                 NamedNodeMap nnm = node.getAttributes();
                 Node tagNode = nnm.getNamedItem("tag");
                 Node ind1Node = nnm.getNamedItem("ind1");
                 Node ind2Node = nnm.getNamedItem("ind2");
 
+                // Match main tag in the config
                 for (MarcField mf : mmo.getFieldList()) {
-                    if (mf.getFieldMainTag().equals(tagNode.getNodeValue())) {
-                        boolean matchesInd1 = false;
-                        boolean matchesInd2 = false;
-                        if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Node.getNodeValue().trim())) {
-                            matchesInd1 = true;
+                    if (!mf.getFieldMainTag().equals(tagNode.getNodeValue())) {
+                        continue;
+                    }
+                    boolean matchesInd1 = false;
+                    boolean matchesInd2 = false;
+                    if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Node.getNodeValue().trim())) {
+                        matchesInd1 = true;
+                    }
+                    if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Node.getNodeValue().trim())) {
+                        matchesInd2 = true;
+                    }
+                    if (!matchesInd1 || !matchesInd2) {
+                        continue;
+                    }
+
+                    String currentValue = "";
+                    String currentCondition = "";
+
+                    // Subfields
+                    NodeList subfieldList = node.getChildNodes();
+                    for (int i = 0; i < subfieldList.getLength(); i++) {
+                        Node subfield = subfieldList.item(i);
+                        if (subfield.getNodeType() != Node.ELEMENT_NODE) {
+                            continue;
                         }
-                        if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Node.getNodeValue().trim())) {
-                            matchesInd2 = true;
+
+                        NamedNodeMap attributes = subfield.getAttributes();
+                        Node code = attributes.getNamedItem("code");
+
+                        if (mf.getFieldSubTag().equals(code.getNodeValue())) {
+                            currentValue = readTextNode(subfield);
                         }
-                        if (matchesInd1 && matchesInd2) {
-                            String currentValue = "";
-                            String currentCondition = "";
-                            String currentIdentifier = "";
 
-                            NodeList subfieldList = node.getChildNodes();
-                            for (int i = 0; i < subfieldList.getLength(); i++) {
-                                Node subfield = subfieldList.item(i);
-                                if (subfield.getNodeType() == Node.ELEMENT_NODE) {
-                                    NamedNodeMap attributes = subfield.getAttributes();
-                                    Node code = attributes.getNamedItem("code");
-
-                                    if (mf.getFieldSubTag().equals(code.getNodeValue())) {
-                                        currentValue = readTextNode(subfield);
-                                    }
-
-                                    if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
-
-                                        currentIdentifier = readTextNode(subfield);
-                                        if (StringUtils.isBlank(mmo.getIdentifierConditionField()) || perlUtil.match(mmo
-                                                .getIdentifierConditionField(), currentIdentifier)) {
-                                            if (!StringUtils.isBlank(mmo.getIdentifierReplacement())) {
-                                                currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
-                                            }
-                                            identifier = currentIdentifier;
-                                        }
-                                    }
-                                    if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
-                                        currentCondition = readTextNode(subfield);
-                                    }
-
+                        if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
+                            String currentIdentifier = readTextNode(subfield);
+                            if (StringUtils.isBlank(mmo.getIdentifierConditionField())
+                                    || perlUtil.match(mmo.getIdentifierConditionField(), currentIdentifier)) {
+                                if (!StringUtils.isBlank(mmo.getIdentifierReplacement())) {
+                                    currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
                                 }
+                                identifier = currentIdentifier;
                             }
-                            if (StringUtils.isNotBlank(currentValue)) {
+                        }
+                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
+                            currentCondition = readTextNode(subfield);
+                        }
+                    }
 
-                                if (mmo.isSeparateEntries()) {
-                                    // create element
-                                    Metadata md = createMetadata(mmo, currentValue, currentIdentifier, currentCondition);
-                                    if (md != null) {
-                                        metadata.add(md);
-                                    }
-
-                                } else {
-                                    if (StringUtils.isNotBlank(value)) {
-                                        value = value + mmo.getSeparator() + currentValue;
-                                    } else {
-                                        value = currentValue;
-                                    }
-                                    if (StringUtils.isNotBlank(currentIdentifier)) {
-                                        identifier =currentIdentifier;
-                                    }
-                                    if (StringUtils.isNotBlank(currentCondition)) {
-                                        condition = currentCondition;
-                                    }
-                                }
+                    if (StringUtils.isNotBlank(currentValue)) {
+                        if (mmo.isSeparateEntries()) {
+                            // create element
+                            Metadata md = createMetadata(mmo, currentValue, identifier, currentCondition);
+                            if (md != null) {
+                                metadata.add(md);
+                            }
+                        } else {
+                            if (StringUtils.isNotBlank(value)) {
+                                value = value + mmo.getSeparator() + currentValue;
+                            } else {
+                                value = currentValue;
+                            }
+                            if (StringUtils.isNotBlank(currentCondition)) {
+                                condition = currentCondition;
                             }
                         }
                     }
                 }
 
             }
+
+            // Single value for all occurrences
             Metadata md = createMetadata(mmo, value, identifier, condition);
             if (md != null) {
                 metadata.add(md);
@@ -628,8 +662,8 @@ public class MarcFileformat implements Fileformat {
     private Person createPerson(MetadataConfigurationItem mmo, String firstname, String lastname, String identifier, String condition) {
         Person person = null;
         if (!firstname.isEmpty() || !lastname.isEmpty()) {
-            if (StringUtils.isBlank(mmo.getConditionValue()) || perlUtil.match(mmo.getConditionValue(), condition) || (mmo.getConditionValue().equals(
-                    "/empty/") && StringUtils.isBlank(condition))) {
+            if (StringUtils.isBlank(mmo.getConditionValue()) || perlUtil.match(mmo.getConditionValue(), condition)
+                    || (mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(condition))) {
                 try {
                     MetadataType mdt = prefs.getMetadataTypeByName(mmo.getInternalMetadataName());
                     person = new Person(mdt);
