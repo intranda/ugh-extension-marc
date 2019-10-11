@@ -387,7 +387,6 @@ public class MarcFileformat implements Fileformat {
                 String lastname = "";
 
                 String identifier = "";
-                String condition = "";
                 NamedNodeMap nnm = node.getAttributes();
                 Node tagNode = nnm.getNamedItem("tag");
                 Node ind1Node = nnm.getNamedItem("ind1");
@@ -459,6 +458,15 @@ public class MarcFileformat implements Fileformat {
                         NamedNodeMap attributes = subfield.getAttributes();
                         Node code = attributes.getNamedItem("code");
 
+                        // Skip values that don't match the field condition
+                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
+                            String currentCondition = readTextNode(subfield);
+                            if (!StringUtils.isBlank(mmo.getConditionValue()) && !perlUtil.match(mmo.getConditionValue(), currentCondition)
+                                    && !(mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(currentCondition))) {
+                                continue;
+                            }
+                        }
+
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
                             String currentIdentifier = readTextNode(subfield);
                             if (StringUtils.isBlank(mmo.getIdentifierConditionField())
@@ -471,10 +479,6 @@ public class MarcFileformat implements Fileformat {
                             }
                         }
 
-                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
-                            condition = readTextNode(subfield);
-                        }
-
                         if (!mf.getFirstname().isEmpty()) {
                             for (String nodeName : mf.getFirstname()) {
                                 if (nodeName.equals(code.getNodeValue())) {
@@ -483,7 +487,7 @@ public class MarcFileformat implements Fileformat {
                                     } else {
                                         if (mmo.isSeparateEntries()) {
                                             // create element
-                                            Person md = createPerson(mmo, firstname, lastname, identifier, condition);
+                                            Person md = createPerson(mmo, firstname, lastname, identifier);
                                             if (md != null) {
                                                 person.add(md);
                                             }
@@ -504,7 +508,7 @@ public class MarcFileformat implements Fileformat {
                                     } else {
                                         if (mmo.isSeparateEntries()) {
                                             // create element
-                                            Person md = createPerson(mmo, firstname, lastname, identifier, condition);
+                                            Person md = createPerson(mmo, firstname, lastname, identifier);
                                             if (md != null) {
                                                 person.add(md);
                                             }
@@ -522,7 +526,7 @@ public class MarcFileformat implements Fileformat {
                 }
 
                 // Single value for all occurrences
-                Person md = createPerson(mmo, firstname, lastname, identifier, condition);
+                Person md = createPerson(mmo, firstname, lastname, identifier);
                 if (md != null) {
                     person.add(md);
                 }
@@ -539,6 +543,7 @@ public class MarcFileformat implements Fileformat {
      * @return
      */
     private List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
+        logger.info("parseMetadata");
         List<Metadata> metadata = new ArrayList<>();
 
         for (MetadataConfigurationItem mmo : metadataList) {
@@ -552,6 +557,7 @@ public class MarcFileformat implements Fileformat {
                 Node tagNode = nnm.getNamedItem("tag");
                 Node ind1Node = nnm.getNamedItem("ind1");
                 Node ind2Node = nnm.getNamedItem("ind2");
+                logger.debug(tagNode.getNodeName());
 
                 // Match main tag in the config
                 for (MarcField mf : mmo.getFieldList()) {
@@ -571,7 +577,6 @@ public class MarcFileformat implements Fileformat {
                     }
 
                     String currentValue = "";
-                    String currentCondition = "";
 
                     // Subfields
                     NodeList subfieldList = node.getChildNodes();
@@ -583,6 +588,14 @@ public class MarcFileformat implements Fileformat {
 
                         NamedNodeMap attributes = subfield.getAttributes();
                         Node code = attributes.getNamedItem("code");
+
+                        // Skip values that don't match the field condition
+                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
+                            String currentCondition = readTextNode(subfield);
+                            if (!StringUtils.isBlank(mmo.getConditionValue()) && !perlUtil.match(mmo.getConditionValue(), currentCondition)) {
+                                continue;
+                            }
+                        }
 
                         if (mf.getFieldSubTag().equals(code.getNodeValue())) {
                             currentValue = readTextNode(subfield);
@@ -596,17 +609,15 @@ public class MarcFileformat implements Fileformat {
                                     currentIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), currentIdentifier);
                                 }
                                 identifier = currentIdentifier;
+                                logger.debug("Identifier matched: " + identifier);
                             }
-                        }
-                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
-                            currentCondition = readTextNode(subfield);
                         }
                     }
 
                     if (StringUtils.isNotBlank(currentValue)) {
                         if (mmo.isSeparateEntries()) {
                             // create element
-                            Metadata md = createMetadata(mmo, currentValue, identifier, currentCondition);
+                            Metadata md = createMetadata(mmo, currentValue, identifier);
                             if (md != null) {
                                 metadata.add(md);
                             }
@@ -616,9 +627,6 @@ public class MarcFileformat implements Fileformat {
                             } else {
                                 value = currentValue;
                             }
-                            if (StringUtils.isNotBlank(currentCondition)) {
-                                condition = currentCondition;
-                            }
                         }
                     }
                 }
@@ -626,7 +634,7 @@ public class MarcFileformat implements Fileformat {
             }
 
             // Single value for all occurrences
-            Metadata md = createMetadata(mmo, value, identifier, condition);
+            Metadata md = createMetadata(mmo, value, identifier);
             if (md != null) {
                 metadata.add(md);
             }
@@ -635,51 +643,46 @@ public class MarcFileformat implements Fileformat {
         return metadata;
     }
 
-    private Metadata createMetadata(MetadataConfigurationItem mmo, String value, String identifier, String condition) {
+    private Metadata createMetadata(MetadataConfigurationItem mmo, String value, String identifier) {
         Metadata md = null;
 
         if (!value.isEmpty()) {
-            if (StringUtils.isBlank(mmo.getConditionValue()) || perlUtil.match(mmo.getConditionValue(), condition)) {
-                try {
-                    md = new Metadata(prefs.getMetadataTypeByName(mmo.getInternalMetadataName()));
-                    if (StringUtils.isNotBlank(mmo.getFieldReplacement())) {
-                        value = perlUtil.substitute(mmo.getFieldReplacement(), value);
-                    }
-                    md.setValue(value);
-                    if (!identifier.isEmpty()) {
-                        // TODO alternative zu gnd
-                        md.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
-                    }
-
-                } catch (MetadataTypeNotAllowedException e) {
-                    logger.error(e);
+            try {
+                md = new Metadata(prefs.getMetadataTypeByName(mmo.getInternalMetadataName()));
+                if (StringUtils.isNotBlank(mmo.getFieldReplacement())) {
+                    value = perlUtil.substitute(mmo.getFieldReplacement(), value);
                 }
+                md.setValue(value);
+                if (!identifier.isEmpty()) {
+                    // TODO alternative zu gnd
+                    md.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
+                }
+
+            } catch (MetadataTypeNotAllowedException e) {
+                logger.error(e);
             }
         }
         return md;
     }
 
-    private Person createPerson(MetadataConfigurationItem mmo, String firstname, String lastname, String identifier, String condition) {
+    private Person createPerson(MetadataConfigurationItem mmo, String firstname, String lastname, String identifier) {
         Person person = null;
         if (!firstname.isEmpty() || !lastname.isEmpty()) {
-            if (StringUtils.isBlank(mmo.getConditionValue()) || perlUtil.match(mmo.getConditionValue(), condition)
-                    || (mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(condition))) {
-                try {
-                    MetadataType mdt = prefs.getMetadataTypeByName(mmo.getInternalMetadataName());
-                    person = new Person(mdt);
-                    person.setRole(mdt.getName());
+            try {
+                MetadataType mdt = prefs.getMetadataTypeByName(mmo.getInternalMetadataName());
+                person = new Person(mdt);
+                person.setRole(mdt.getName());
 
-                    person.setFirstname(firstname);
-                    person.setLastname(lastname);
+                person.setFirstname(firstname);
+                person.setLastname(lastname);
 
-                    if (!identifier.isEmpty()) {
-                        // TODO alternative zu gnd
-                        person.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
-                    }
-
-                } catch (MetadataTypeNotAllowedException e) {
-                    logger.error(e);
+                if (!identifier.isEmpty()) {
+                    // TODO alternative zu gnd
+                    person.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
                 }
+
+            } catch (MetadataTypeNotAllowedException e) {
+                logger.error(e);
             }
         }
         return person;
