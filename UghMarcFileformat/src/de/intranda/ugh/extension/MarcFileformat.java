@@ -393,7 +393,7 @@ public class MarcFileformat implements Fileformat {
                 String ind1Value = ind1Node.getNodeValue().trim();
                 String ind2Value = ind2Node.getNodeValue().trim();
 
-                boolean matches = true;
+                Boolean matches = null;
                 String currentLastName = "";
                 String currentFirstName = "";
                 String currentIdentifier = "";
@@ -428,13 +428,18 @@ public class MarcFileformat implements Fileformat {
                         Node code = attributes.getNamedItem("code");
 
                         // Skip values that don't match the field condition
-                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
-                            String currentCondition = readTextNode(subfield);
-                            if (!StringUtils.isBlank(mmo.getConditionValue()) && !perlUtil.match(mmo.getConditionValue(), currentCondition)
-                                    && !(mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(currentCondition))) {
-                                matches = false;
-                                break;
+                        if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
+                                && mmo.getConditionField().equals(code.getNodeValue())) {
+                            String valueToCheck = readTextNode(subfield);
+                            if (!perlUtil.match(mmo.getConditionValue(), valueToCheck)
+                                    && !(mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(valueToCheck))) {
+                                if (matches == null) {
+                                    // Only set matches = false if not previously set to true by a matching subfield
+                                    matches = false;
+                                }
+                                continue; // If condition field == value field, make sure non-matching values don't proceed
                             }
+                            matches = true;
                         }
 
                         // Identifier
@@ -509,7 +514,7 @@ public class MarcFileformat implements Fileformat {
                     }
                 }
 
-                if (matches) {
+                if (matches == null || matches) {
                     if (mmo.isSeparateEntries()) {
                         // Create separate entity person
                         Person md = createPerson(mmo, currentFirstName, currentLastName, currentIdentifier);
@@ -554,7 +559,6 @@ public class MarcFileformat implements Fileformat {
 
         for (MetadataConfigurationItem mmo : metadataList) {
             String singleEntityValue = "";
-            boolean matches = true;
 
             // For each node in the MARC document
             for (Node node : datafields) {
@@ -563,6 +567,8 @@ public class MarcFileformat implements Fileformat {
                 Node ind1Node = nnm.getNamedItem("ind1");
                 Node ind2Node = nnm.getNamedItem("ind2");
                 logger.debug(tagNode.getNodeName());
+
+                Boolean matches = null;
 
                 // Match main tag in the config
                 for (MarcField mf : mmo.getFieldList()) {
@@ -596,13 +602,18 @@ public class MarcFileformat implements Fileformat {
                         NamedNodeMap attributes = subfield.getAttributes();
                         Node code = attributes.getNamedItem("code");
 
-                        // Skip values that don't match the field condition
-                        if (StringUtils.isNotBlank(mmo.getConditionField()) && mmo.getConditionField().equals(code.getNodeValue())) {
-                            String currentCondition = readTextNode(subfield);
-                            if (!StringUtils.isBlank(mmo.getConditionValue()) && !perlUtil.match(mmo.getConditionValue(), currentCondition)) {
-                                matches = false;
-                                break;
+                        // If a condition is configured, make sure at least one subfield value meets it
+                        if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
+                                && mmo.getConditionField().equals(code.getNodeValue())) {
+                            String valueToCheck = readTextNode(subfield);
+                            if (!perlUtil.match(mmo.getConditionValue(), valueToCheck)) {
+                                if (matches == null) {
+                                    // Only set matches = false if not previously set to true by a matching subfield
+                                    matches = false;
+                                }
+                                continue; // If condition field == value field, make sure non-matching values don't proceed
                             }
+                            matches = true;
                         }
 
                         if (mf.getFieldSubTag().equals(code.getNodeValue())) {
@@ -621,7 +632,7 @@ public class MarcFileformat implements Fileformat {
                         }
                     }
 
-                    if (StringUtils.isNotBlank(currentValue) && matches) {
+                    if (matches == null || matches) {
                         if (mmo.isSeparateEntries()) {
                             // create element
                             Metadata md = createMetadata(mmo, currentValue, currentIdentifier);
