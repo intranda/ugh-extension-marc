@@ -4495,7 +4495,9 @@
         <identifierField>0</identifierField>
         <identifierConditionField>/DE-588/</identifierConditionField>
         <identifierReplacement>s/\(.+\)//g</identifierReplacement>
-        <separateEntries>false</separateEntries>
+        <conditionField>4</conditionField>
+        <conditionValue>/cre/</conditionValue>
+        <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
       <Person>

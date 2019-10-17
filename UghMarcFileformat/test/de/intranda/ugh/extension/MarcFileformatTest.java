@@ -16,6 +16,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.jcabi.log.Logger;
+
 import ugh.dl.Metadata;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
@@ -110,16 +112,11 @@ public class MarcFileformatTest {
         MarcFileformat mfc = new MarcFileformat(prefs);
 
         List<Person> personList = mfc.parsePersons(datafields, mfc.personList);
-        Assert.assertFalse(personList.isEmpty());
-        for (Person p : personList) {
-            if ("Author".equals(p.getType().getName())) {
-                Assert.assertEquals("Theodor", p.getFirstname());
-                Assert.assertEquals("Kutschmann", p.getLastname());
-                Assert.assertEquals("115747876X", p.getAuthorityValue());
-                return;
-            }
-        }
-
-        Assert.fail("Metadata not created");
+        Assert.assertEquals(1, personList.size());
+        Person p = personList.get(0);
+        Assert.assertEquals("Author", p.getType().getName());
+        Assert.assertEquals("Theodor", p.getFirstname());
+        Assert.assertEquals("Kutschmann", p.getLastname());
+        Assert.assertEquals("115747876X", p.getAuthorityValue());
     }
 }
