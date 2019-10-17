@@ -105,8 +105,8 @@ public class MarcFileformat implements Fileformat {
     private Perl5Util perlUtil;
     private DigitalDocument digDoc = new DigitalDocument();
 
-    private List<MetadataConfigurationItem> metadataList = new LinkedList<>();
-    private List<MetadataConfigurationItem> personList = new LinkedList<>();
+    protected List<MetadataConfigurationItem> metadataList = new LinkedList<>();
+    protected List<MetadataConfigurationItem> personList = new LinkedList<>();
     private List<DocstructConfigurationItem> docstructList = new LinkedList<>();
 
     private List<GroupConfigurationItem> groupList = new LinkedList<>();
@@ -376,8 +376,9 @@ public class MarcFileformat implements Fileformat {
      * @param datafields
      * @param personList
      * @return
+     * @should import person roles correctly
      */
-    private List<Person> parsePersons(List<Node> datafields, List<MetadataConfigurationItem> personList) {
+    List<Person> parsePersons(List<Node> datafields, List<MetadataConfigurationItem> personList) {
         List<Person> persons = new ArrayList<>();
 
         for (MetadataConfigurationItem mmo : personList) {
@@ -553,8 +554,9 @@ public class MarcFileformat implements Fileformat {
      * @param datafields
      * @param metadataList
      * @return
+     * @should import correct value for multiple subfields and condition on the same subfield
      */
-    private List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
+    List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
         List<Metadata> metadata = new ArrayList<>();
 
         for (MetadataConfigurationItem mmo : metadataList) {
