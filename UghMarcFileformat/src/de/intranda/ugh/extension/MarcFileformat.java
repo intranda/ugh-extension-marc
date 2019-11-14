@@ -377,6 +377,7 @@ public class MarcFileformat implements Fileformat {
      * @param personList
      * @return
      * @should import person roles correctly
+     * @should only import one role per person
      */
     List<Person> parsePersons(List<Node> datafields, List<MetadataConfigurationItem> personList) {
         List<Person> persons = new ArrayList<>();
@@ -513,6 +514,12 @@ public class MarcFileformat implements Fileformat {
                             }
                         }
                     }
+                }
+
+                // In case a non-empty condition is configured but no condition field was found, skip this value
+                if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
+                        && !mmo.getConditionValue().equals("/empty/") && matches == null) {
+                    matches = false;
                 }
 
                 if (matches == null || matches) {

@@ -4496,6 +4496,22 @@
         <identifierConditionField>/DE-588/</identifierConditionField>
         <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
+        <conditionValue>/empty/</conditionValue>
+        <separateEntries>true</separateEntries>
+        <separator>; </separator>
+      </Person>
+      <Person>
+        <Name>Creator</Name>
+        <field>
+          <fieldMainTag>100</fieldMainTag>
+          <expansion>a</expansion>
+          <fieldInd1>any</fieldInd1>
+          <fieldInd2>any</fieldInd2>
+        </field>
+        <identifierField>0</identifierField>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
+        <conditionField>4</conditionField>
         <conditionValue>/cre/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>

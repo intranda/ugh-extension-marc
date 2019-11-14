@@ -9,14 +9,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.jcabi.log.Logger;
 
 import ugh.dl.Metadata;
 import ugh.dl.Person;
@@ -48,17 +47,19 @@ public class MarcFileformatTest {
     /**
      * 
      * @param doc
+     * @param namespacePrefix
      * @return
      */
-    public List<Node> getDatafields(Document doc) {
-        NodeList datafieldNodes = doc.getElementsByTagName("datafield");
+    public List<Node> getDatafields(Document doc, String namespacePrefix) {
+        String field = (StringUtils.isNotEmpty(namespacePrefix) ? namespacePrefix + ":" : "") + "datafield";
+        NodeList datafieldNodes = doc.getElementsByTagName(field);
         Assert.assertFalse(datafieldNodes.getLength() == 0);
 
         List<Node> datafields = new ArrayList<>(datafieldNodes.getLength());
         for (int i = 0; i < datafieldNodes.getLength(); i++) {
             Node n = datafieldNodes.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                if (n.getNodeName().equalsIgnoreCase("datafield")) {
+                if (n.getNodeName().equalsIgnoreCase(field)) {
                     datafields.add(n);
                 }
             }
@@ -78,7 +79,7 @@ public class MarcFileformatTest {
         Document doc = loadMarcDocument("resources/test/34220059.xml");
         Assert.assertNotNull(doc);
 
-        List<Node> datafields = getDatafields(doc);
+        List<Node> datafields = getDatafields(doc, null);
 
         Prefs prefs = new Prefs();
         Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
@@ -105,7 +106,7 @@ public class MarcFileformatTest {
         Document doc = loadMarcDocument("resources/test/34220059.xml");
         Assert.assertNotNull(doc);
 
-        List<Node> datafields = getDatafields(doc);
+        List<Node> datafields = getDatafields(doc, null);
 
         Prefs prefs = new Prefs();
         Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
@@ -118,5 +119,28 @@ public class MarcFileformatTest {
         Assert.assertEquals("Theodor", p.getFirstname());
         Assert.assertEquals("Kutschmann", p.getLastname());
         Assert.assertEquals("115747876X", p.getAuthorityValue());
+    }
+
+    /**
+     * @see MarcFileformat#parsePersons(List,List)
+     * @verifies only import one role per person
+     */
+    @Test
+    public void parsePersons_shouldOnlyImportOneRolePerPerson() throws Exception {
+        Document doc = loadMarcDocument("resources/test/000348732.xml");
+        Assert.assertNotNull(doc);
+
+        List<Node> datafields = getDatafields(doc, "marc");
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        List<Person> personList = mfc.parsePersons(datafields, mfc.personList);
+        Assert.assertEquals(1, personList.size());
+        Person p = personList.get(0);
+        Assert.assertEquals("Creator", p.getType().getName());
+        Assert.assertEquals("Jeffrey C.", p.getFirstname());
+        Assert.assertEquals("Livas", p.getLastname());
     }
 }

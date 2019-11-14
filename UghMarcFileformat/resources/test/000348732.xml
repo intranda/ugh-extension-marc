@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<srw:searchRetrieveResponse
+	xmlns:srw="http://www.loc.gov/zing/srw/">
+	<srw:version>1.1</srw:version>
+	<srw:numberOfRecords>1</srw:numberOfRecords>
+	<srw:records>
+		<srw:record>
+			<srw:recordSchema>marcxml</srw:recordSchema>
+			<srw:recordPacking>xml</srw:recordPacking>
+			<srw:recordData>
+				<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim">
+					<marc:leader>02275nam 2200397K 45q0</marc:leader>
+					<marc:controlfield tag="001">000348732
+					</marc:controlfield>
+					<marc:controlfield tag="003">MCM</marc:controlfield>
+					<marc:controlfield tag="004">000348732
+					</marc:controlfield>
+					<marc:controlfield tag="005">20010608134623.0
+					</marc:controlfield>
+					<marc:controlfield tag="008">880426s1987 xx ad b 000 0
+						eng d</marc:controlfield>
+					<marc:datafield tag="035" ind1=" " ind2=" ">
+						<marc:subfield code="a">MITb10348732</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="035" ind1=" " ind2=" ">
+						<marc:subfield code="a">(OCoLC)17850949</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="035" ind1=" " ind2=" ">
+						<marc:subfield code="a">GLIS00348732</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="040" ind1=" " ind2=" ">
+						<marc:subfield code="a">MYG</marc:subfield>
+						<marc:subfield code="c">MYG</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="099" ind1=" " ind2=" ">
+						<marc:subfield code="a">Thesis Phy 1987 Ph.D.
+						</marc:subfield>
+						<marc:subfield code="a">Thesis Phy 1987 Ph.D. Mfch
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="099" ind1=" " ind2=" ">
+						<marc:subfield code="a">Thesis</marc:subfield>
+						<marc:subfield code="a">Phy</marc:subfield>
+						<marc:subfield code="a">1987</marc:subfield>
+						<marc:subfield code="a">Ph.D.</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="100" ind1="1" ind2=" ">
+						<marc:subfield code="a">Livas, Jeffrey C.
+						</marc:subfield>
+						<marc:subfield code="q">(Jeffrey Clark)</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="245" ind1="1" ind2="0">
+						<marc:subfield code="a">Upper limits for gravitational
+							radiation from some astrophysical sources /</marc:subfield>
+						<marc:subfield code="c">by Jeffrey Clark Livas.
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="260" ind1=" " ind2=" ">
+						<marc:subfield code="c">c1987.</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="300" ind1=" " ind2=" ">
+						<marc:subfield code="a">159 leaves :</marc:subfield>
+						<marc:subfield code="b">ill., charts ;</marc:subfield>
+						<marc:subfield code="c">28 cm.</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="500" ind1=" " ind2=" ">
+						<marc:subfield code="a">Title as it appeared in
+							Massachusetts Institute of Technology Graduate List: Upper limits
+							on gravitational radiation from some astrophysical sources.
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="502" ind1=" " ind2=" ">
+						<marc:subfield code="a">Thesis (Ph. D.)--Massachusetts
+							Institute of Technology, Dept. of Physics, 1987.</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="504" ind1=" " ind2=" ">
+						<marc:subfield code="a">Bibliography: leaves 155-159.
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="599" ind1="0" ind2="0">
+						<marc:subfield code="a">Supervised by Rainer Weiss.
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="710" ind1="2" ind2=" ">
+						<marc:subfield code="a">Massachusetts Institute of
+							Technology.</marc:subfield>
+						<marc:subfield code="b">Department of Physics.
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="740" ind1="0" ind2=" ">
+						<marc:subfield code="a">Upper limits on gravitational
+							radiation from some astrophysical sources.</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="740" ind1="0" ind2=" ">
+						<marc:subfield code="a">Gravitational radiation from
+							some astrophysical sources, Upper limits for.</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="852" ind1="8" ind2=" ">
+						<marc:subfield code="a">MCM</marc:subfield>
+						<marc:subfield code="b">ARC</marc:subfield>
+						<marc:subfield code="c">NOLN3</marc:subfield>
+						<marc:subfield code="h">Thesis Phy 1987 Ph.D.
+						</marc:subfield>
+						<marc:subfield code="k">THESIS</marc:subfield>
+						<marc:subfield code="z">4Institute Archives
+						</marc:subfield>
+						<marc:subfield code="5">Noncirculating Collection 3
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="852" ind1="8" ind2=" ">
+						<marc:subfield code="a">MCM</marc:subfield>
+						<marc:subfield code="b">ARC</marc:subfield>
+						<marc:subfield code="c">NOLN1</marc:subfield>
+						<marc:subfield code="h">Thesis Phy 1987 Ph.D.
+						</marc:subfield>
+						<marc:subfield code="k">THESIS</marc:subfield>
+						<marc:subfield code="z">4Institute Archives
+						</marc:subfield>
+						<marc:subfield code="5">Noncirculating Collection 1
+						</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="852" ind1="8" ind2=" ">
+						<marc:subfield code="a">MCM</marc:subfield>
+						<marc:subfield code="b">DEW</marc:subfield>
+						<marc:subfield code="c">MFORM</marc:subfield>
+						<marc:subfield code="h">Thesis Phy 1987 Ph.D.
+						</marc:subfield>
+						<marc:subfield code="k">THESIS</marc:subfield>
+						<marc:subfield code="z">4Dewey Library</marc:subfield>
+						<marc:subfield code="5">Microforms</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="876" ind1="-" ind2="1">
+						<marc:subfield code="l">MIT01</marc:subfield>
+						<marc:subfield code="L">MARC 21 Library</marc:subfield>
+						<marc:subfield code="m">BOOK</marc:subfield>
+						<marc:subfield code="1">ARC</marc:subfield>
+						<marc:subfield code="A">Institute Archives
+						</marc:subfield>
+						<marc:subfield code="2">NOLN1</marc:subfield>
+						<marc:subfield code="B">Noncirculating Collection 1
+						</marc:subfield>
+						<marc:subfield code="h">Thesis Phy 1987 Ph.D.
+						</marc:subfield>
+						<marc:subfield code="k">THESIS</marc:subfield>
+						<marc:subfield code="5">39080005128084</marc:subfield>
+						<marc:subfield code="8">19950626</marc:subfield>
+						<marc:subfield code="f">02</marc:subfield>
+						<marc:subfield code="F">Room Use Only</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="876" ind1="-" ind2="1">
+						<marc:subfield code="l">MIT01</marc:subfield>
+						<marc:subfield code="L">MARC 21 Library</marc:subfield>
+						<marc:subfield code="m">BOOK</marc:subfield>
+						<marc:subfield code="1">ARC</marc:subfield>
+						<marc:subfield code="A">Institute Archives
+						</marc:subfield>
+						<marc:subfield code="2">NOLN3</marc:subfield>
+						<marc:subfield code="B">Noncirculating Collection 3
+						</marc:subfield>
+						<marc:subfield code="h">Thesis Phy 1987 Ph.D.
+						</marc:subfield>
+						<marc:subfield code="k">THESIS</marc:subfield>
+						<marc:subfield code="5">39080005120115</marc:subfield>
+						<marc:subfield code="8">19950626</marc:subfield>
+						<marc:subfield code="f">02</marc:subfield>
+						<marc:subfield code="F">Room Use Only</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="876" ind1="-" ind2="1">
+						<marc:subfield code="l">MIT01</marc:subfield>
+						<marc:subfield code="L">MARC 21 Library</marc:subfield>
+						<marc:subfield code="m">BOOK</marc:subfield>
+						<marc:subfield code="1">DEW</marc:subfield>
+						<marc:subfield code="A">Dewey Library</marc:subfield>
+						<marc:subfield code="2">MFORM</marc:subfield>
+						<marc:subfield code="B">Microforms</marc:subfield>
+						<marc:subfield code="h">Thesis Phy 1987 Ph.D.
+						</marc:subfield>
+						<marc:subfield code="k">THESIS</marc:subfield>
+						<marc:subfield code="5">39080005128076</marc:subfield>
+						<marc:subfield code="8">19950626</marc:subfield>
+						<marc:subfield code="f">12</marc:subfield>
+						<marc:subfield code="F">Thesis Loan</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="049" ind1=" " ind2=" ">
+						<marc:subfield code="a">MYGT</marc:subfield>
+						<marc:subfield code="a">MYGS</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="910" ind1=" " ind2=" ">
+						<marc:subfield code="a">LS880426</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="949" ind1=" " ind2=" ">
+						<marc:subfield code="a">MYTT</marc:subfield>
+						<marc:subfield code="b">39080005120115</marc:subfield>
+						<marc:subfield code="a">[Micro-] [fiche] MYTT
+						</marc:subfield>
+						<marc:subfield code="b">39080005128084</marc:subfield>
+						<marc:subfield code="a">MYTS</marc:subfield>
+						<marc:subfield code="b">39080005123143</marc:subfield>
+						<marc:subfield code="a">[Micro-] [fiche] MYTS
+						</marc:subfield>
+						<marc:subfield code="b">39080005128076</marc:subfield>
+					</marc:datafield>
+					<marc:datafield tag="887" ind1=" " ind2=" ">
+						<marc:subfield code="a">Boston MIT / Aleph
+						</marc:subfield>
+						<marc:subfield code="2">intranda UCI catalog name
+						</marc:subfield>
+					</marc:datafield>
+				</marc:record>
+			</srw:recordData>
+		</srw:record>
+	</srw:records>
+	<srw:echoedSearchRetrieveRequest>
+		<srw:version>1.1</srw:version>
+		<srw:recordSchema>marcxml</srw:recordSchema>
+		<srw:query>000348732</srw:query>
+		<srw:recordPacking>xml</srw:recordPacking>
+		<srw:startRecord>1</srw:startRecord>
+		<srw:maximumRecords>1</srw:maximumRecords>
+	</srw:echoedSearchRetrieveRequest>
+</srw:searchRetrieveResponse>
