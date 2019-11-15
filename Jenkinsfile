@@ -36,7 +36,7 @@ pipeline {
         }
       }
       steps {
-        sh 'mvn -f Goobi/pom.xml deploy'
+        sh 'mvn -f UghMarcFileformat/pom.xml deploy'
       }
     }
   }
