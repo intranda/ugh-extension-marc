@@ -82,8 +82,7 @@
 						</marc:subfield>
 					</marc:datafield>
 					<marc:datafield tag="710" ind1="2" ind2=" ">
-						<marc:subfield code="a">Massachusetts Institute of
-							Technology.</marc:subfield>
+						<marc:subfield code="a">Massachusetts Institute of Technology.</marc:subfield>
 						<marc:subfield code="b">Department of Physics.
 						</marc:subfield>
 					</marc:datafield>

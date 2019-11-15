@@ -98,6 +98,35 @@ public class MarcFileformatTest {
     }
 
     /**
+     * @see MarcFileformat#parseMetadata(List,List)
+     * @verifies only import one role per corporation
+     */
+    @Test
+    public void parseMetadata_shouldOnlyImportOneRolePerCorporation() throws Exception {
+        Document doc = loadMarcDocument("resources/test/000348732.xml");
+        Assert.assertNotNull(doc);
+
+        List<Node> datafields = getDatafields(doc, "marc");
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        List<Metadata> metadataList = mfc.parseMetadata(datafields, mfc.metadataList);
+        Assert.assertFalse(metadataList.isEmpty());
+        int count = 0;
+        Metadata corporation = null;
+        for (Metadata md : metadataList) {
+            if (md.getType().getName().contains("Corporat")) {
+                count++;
+                corporation = md;
+            }
+        }
+        Assert.assertEquals(1, count);
+        Assert.assertEquals("Massachusetts Institute of Technology.", corporation.getValue());
+    }
+
+    /**
      * @see MarcFileformat#parsePersons(List,List)
      * @verifies import person roles correctly
      */

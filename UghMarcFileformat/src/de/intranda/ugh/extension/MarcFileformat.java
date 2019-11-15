@@ -562,6 +562,7 @@ public class MarcFileformat implements Fileformat {
      * @param metadataList
      * @return
      * @should import correct value for multiple subfields and condition on the same subfield
+     * @should only import one role per corporation
      */
     List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
         List<Metadata> metadata = new ArrayList<>();
@@ -615,7 +616,8 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
                                 && mmo.getConditionField().equals(code.getNodeValue())) {
                             String valueToCheck = readTextNode(subfield);
-                            if (!perlUtil.match(mmo.getConditionValue(), valueToCheck)) {
+                            if (!perlUtil.match(mmo.getConditionValue(), valueToCheck)
+                                    && !(mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -639,6 +641,12 @@ public class MarcFileformat implements Fileformat {
                                 currentIdentifier = localIdentifier;
                             }
                         }
+                    }
+
+                    // In case a non-empty condition is configured but no condition field was found, skip this value
+                    if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
+                            && !mmo.getConditionValue().equals("/empty/") && matches == null) {
+                        matches = false;
                     }
 
                     if (matches == null || matches) {
