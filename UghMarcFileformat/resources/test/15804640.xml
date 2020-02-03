@@ -1,1 +1,106 @@
-<?xml version='1.0' encoding='UTF-8'?><searchRetrieveResponse><header><version>1.2</version><numberOfRecords>1</numberOfRecords><recordSchema>marcxml</recordSchema></header><records> <record><leader>02943nas a2200000uu 4500</leader><controlfield tag="001">15804640</controlfield><controlfield tag="003">DE-609</controlfield><controlfield tag="005">20191016100946.0</controlfield><controlfield tag="007">cr |||</controlfield><controlfield tag="008">090226c1997    ||||||||||||||||||||ger||</controlfield><datafield tag="016" ind1="7" ind2=" "><subfield code="a">992897203</subfield><subfield code="2">DE-101</subfield></datafield><datafield tag="016" ind1="7" ind2=" "><subfield code="a">2481982-7</subfield><subfield code="2">DE-600</subfield></datafield><datafield tag="035" ind1=" " ind2=" "><subfield code="a">(DE-101)992897203</subfield></datafield><datafield tag="041" ind1=" " ind2=" "><subfield code="a">ger</subfield></datafield><datafield tag="044" ind1=" " ind2=" "><subfield code="c">XA-DE</subfield><subfield code="c">XA-DE</subfield></datafield><datafield tag="110" ind1="2" ind2=" "><subfield code="0">(DE-609)12036512</subfield><subfield code="0">(DE-588)5028175-6</subfield><subfield code="a">Deutsches Institut für Urbanistik</subfield><subfield code="4">aut</subfield></datafield><datafield tag="245" ind1="1" ind2="0"><subfield code="a">Jahresbericht</subfield><subfield code="h">Elektronische Ressource</subfield><subfield code="c">Difu, Deutsches Institut für Urbanistik</subfield></datafield><datafield tag="260" ind1="3" ind2=" "><subfield code="a">Berlin</subfield><subfield code="b">Difu</subfield><subfield code="c">1997-2016</subfield></datafield><datafield tag="300" ind1=" " ind2=" "><subfield code="a">Online-Ressource</subfield></datafield><datafield tag="362" ind1="1" ind2=" "><subfield code="a">Nachgewiesen 1996(1997) - 2015(2016)</subfield></datafield><datafield tag="500" ind1=" " ind2=" "><subfield code="a">Jahresbericht / Difu, Deutsches Institut für Urbanistik (2116972-X)</subfield></datafield><datafield tag="583" ind1=" " ind2=" "><subfield code="a">Archivierung/Langzeitarchivierung gewährleistet</subfield></datafield><datafield tag="785" ind1="0" ind2="0"><subfield code="a">difu, Deutsches Institut für Urbanistik</subfield><subfield code="i">Nachher</subfield><subfield code="t">Einblicke</subfield><subfield code="w">(DE-609)34270606</subfield><subfield code="w">(DE-101)2977169-9</subfield></datafield><datafield tag="852" ind1=" " ind2=" "><subfield code="a">609</subfield></datafield><datafield tag="856" ind1="4" ind2=" "><subfield code="8">00</subfield><subfield code="u">http://www.difu.de/publikationen/jahresberichte.html</subfield><subfield code="y">kostenfrei</subfield></datafield><datafield tag="856" ind1="4" ind2=" "><subfield code="8">01</subfield><subfield code="u">https://digital.zlb.de/viewer/metadata/15804640/1/</subfield><subfield code="y">kostenfrei</subfield></datafield><datafield tag="856" ind1="4" ind2=" "><subfield code="8">02</subfield><subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/?2481982</subfield></datafield></record> </records><nextRecordPosition>2</nextRecordPosition><echoedSearchRetrieveRequest><version>1.2</version><query>SATZNR"15804640"</query><startRecord>1</startRecord><maximumRecords>20</maximumRecords><numberOfDeliveredRecords>1</numberOfDeliveredRecords><recordSchema>marcxml</recordSchema></echoedSearchRetrieveRequest></searchRetrieveResponse>
+<?xml version='1.0' encoding='UTF-8'?>
+<searchRetrieveResponse>
+	<header>
+		<version>1.2</version>
+		<numberOfRecords>1</numberOfRecords>
+		<recordSchema>marcxml</recordSchema>
+	</header>
+	<records>
+		<record>
+			<leader>02943nas a2200000uu 4500</leader>
+			<controlfield tag="001">15804640</controlfield>
+			<controlfield tag="003">DE-609</controlfield>
+			<controlfield tag="005">20191016100946.0</controlfield>
+			<controlfield tag="007">cr |||</controlfield>
+			<controlfield tag="008">090226c1997 ||||||||||||||||||||ger||
+			</controlfield>
+			<datafield tag="016" ind1="7" ind2=" ">
+				<subfield code="a">992897203</subfield>
+				<subfield code="2">DE-101</subfield>
+			</datafield>
+			<datafield tag="016" ind1="7" ind2=" ">
+				<subfield code="a">2481982-7</subfield>
+				<subfield code="2">DE-600</subfield>
+			</datafield>
+			<datafield tag="035" ind1=" " ind2=" ">
+				<subfield code="a">(DE-101)992897203</subfield>
+			</datafield>
+			<datafield tag="041" ind1=" " ind2=" ">
+				<subfield code="a">ger</subfield>
+			</datafield>
+			<datafield tag="044" ind1=" " ind2=" ">
+				<subfield code="c">XA-DE</subfield>
+				<subfield code="c">XA-DE</subfield>
+			</datafield>
+			<datafield tag="110" ind1="2" ind2=" ">
+				<subfield code="0">(DE-609)12036512</subfield>
+				<subfield code="0">(DE-588)5028175-6</subfield>
+				<subfield code="a">Deutsches Institut für Urbanistik</subfield>
+				<subfield code="4">aut</subfield>
+			</datafield>
+			<datafield tag="245" ind1="1" ind2="0">
+				<subfield code="a">Jahresbericht</subfield>
+				<subfield code="h">Elektronische Ressource</subfield>
+				<subfield code="c">Difu, Deutsches Institut für Urbanistik
+				</subfield>
+			</datafield>
+			<datafield tag="260" ind1="3" ind2=" ">
+				<subfield code="a">Berlin</subfield>
+				<subfield code="b">Difu</subfield>
+				<subfield code="c">1997-2016</subfield>
+			</datafield>
+			<datafield tag="300" ind1=" " ind2=" ">
+				<subfield code="a">Online-Ressource</subfield>
+			</datafield>
+			<datafield tag="362" ind1="1" ind2=" ">
+				<subfield code="a">Nachgewiesen 1996(1997) - 2015(2016)
+				</subfield>
+			</datafield>
+			<datafield tag="500" ind1=" " ind2=" ">
+				<subfield code="a">Jahresbericht / Difu, Deutsches Institut für
+					Urbanistik (2116972-X)</subfield>
+			</datafield>
+			<datafield tag="583" ind1=" " ind2=" ">
+				<subfield code="a">Archivierung/Langzeitarchivierung
+					gewährleistet</subfield>
+			</datafield>
+			<datafield tag="785" ind1="0" ind2="0">
+				<subfield code="a">difu, Deutsches Institut für Urbanistik
+				</subfield>
+				<subfield code="i">Nachher</subfield>
+				<subfield code="t">Einblicke</subfield>
+				<subfield code="w">(DE-609)34270606</subfield>
+				<subfield code="w">(DE-101)2977169-9</subfield>
+			</datafield>
+			<datafield tag="852" ind1=" " ind2=" ">
+				<subfield code="a">609</subfield>
+			</datafield>
+			<datafield tag="856" ind1="4" ind2=" ">
+				<subfield code="8">00</subfield>
+				<subfield code="u">http://www.difu.de/publikationen/jahresberichte.html
+				</subfield>
+				<subfield code="y">kostenfrei</subfield>
+			</datafield>
+			<datafield tag="856" ind1="4" ind2=" ">
+				<subfield code="8">01</subfield>
+				<subfield code="u">https://digital.zlb.de/viewer/metadata/15804640/1/
+				</subfield>
+				<subfield code="y">kostenfrei</subfield>
+			</datafield>
+			<datafield tag="856" ind1="4" ind2=" ">
+				<subfield code="8">02</subfield>
+				<subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/?2481982
+				</subfield>
+			</datafield>
+		</record>
+	</records>
+	<nextRecordPosition>2</nextRecordPosition>
+	<echoedSearchRetrieveRequest>
+		<version>1.2</version>
+		<query>SATZNR"15804640"</query>
+		<startRecord>1</startRecord>
+		<maximumRecords>20</maximumRecords>
+		<numberOfDeliveredRecords>1</numberOfDeliveredRecords>
+		<recordSchema>marcxml</recordSchema>
+	</echoedSearchRetrieveRequest>
+</searchRetrieveResponse>

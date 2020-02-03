@@ -567,6 +567,7 @@ public class MarcFileformat implements Fileformat {
      * @return
      * @should import correct value for multiple subfields and condition on the same subfield
      * @should only import one role per corporation
+     * @should import multiple values correctly
      */
     List<Metadata> parseMetadata(List<Node> datafields, List<MetadataConfigurationItem> metadataList) {
         List<Metadata> metadata = new ArrayList<>();
@@ -602,7 +603,7 @@ public class MarcFileformat implements Fileformat {
                         continue;
                     }
 
-                    String currentValue = "";
+                    List<String> currentValueList = new ArrayList<>();
                     String currentIdentifier = "";
 
                     // Subfields
@@ -632,7 +633,7 @@ public class MarcFileformat implements Fileformat {
                         }
 
                         if (mf.getFieldSubTag().equals(code.getNodeValue())) {
-                            currentValue = readTextNode(subfield);
+                            currentValueList.add(readTextNode(subfield));
                         }
 
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
@@ -655,17 +656,23 @@ public class MarcFileformat implements Fileformat {
 
                     if (matches == null || matches) {
                         if (mmo.isSeparateEntries()) {
-                            // create element
-                            Metadata md = createMetadata(mmo, currentValue, currentIdentifier);
-                            if (md != null) {
-                                metadata.add(md);
+                            // Separate metadata values
+                            for (String val : currentValueList) {
+                                Metadata md = createMetadata(mmo, val, currentIdentifier);
+                                if (md != null) {
+                                    metadata.add(md);
+                                }
                             }
-                        } else if (!currentValue.isEmpty()) {
-                            if (StringUtils.isNotBlank(singleEntityValue)) {
-                                singleEntityValue = singleEntityValue + mmo.getSeparator() + currentValue;
-                            } else {
-                                singleEntityValue = currentValue;
+                        } else if (!currentValueList.isEmpty()) {
+                            // Concatenated value
+                            StringBuilder sb = new StringBuilder();
+                            for (String val : currentValueList) {
+                                if (sb.length() > 0) {
+                                    sb.append(mmo.getSeparator());
+                                }
+                                sb.append(val);
                             }
+                            singleEntityValue = sb.toString();
                             if (StringUtils.isNotBlank(currentIdentifier)) {
                                 singleEntityIdentifier = currentIdentifier;
                             }

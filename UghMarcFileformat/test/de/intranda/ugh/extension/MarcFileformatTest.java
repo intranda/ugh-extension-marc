@@ -127,6 +127,36 @@ public class MarcFileformatTest {
     }
 
     /**
+     * @see MarcFileformat#parseMetadata(List,List)
+     * @verifies import multiple values correctly
+     */
+    @Test
+    public void parseMetadata_shouldImportMultipleValuesCorrectly() throws Exception {
+        Document doc = loadMarcDocument("resources/test/211482064.xml");
+        Assert.assertNotNull(doc);
+
+        List<Node> datafields = getDatafields(doc, "");
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        List<Metadata> metadataList = mfc.parseMetadata(datafields, mfc.metadataList);
+        Assert.assertFalse(metadataList.isEmpty());
+        int count = 0;
+        List<String> values = new ArrayList<>(2);
+        for (Metadata md : metadataList) {
+            if (md.getType().getName().contains("PlaceOfPublication")) {
+                count++;
+                values.add(md.getValue());
+            }
+        }
+        Assert.assertEquals(2, count);
+        Assert.assertEquals("Stuttgart", values.get(0));
+        Assert.assertEquals("Tübingen", values.get(1));
+    }
+
+    /**
      * @see MarcFileformat#parsePersons(List,List)
      * @verifies import person roles correctly
      */

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zs:searchRetrieveResponse
+	xmlns:zs="http://www.loc.gov/zing/srw/">
+	<zs:version>1.1</zs:version>
+	<zs:numberOfRecords>1</zs:numberOfRecords>
+	<zs:records>
+		<zs:record>
+			<zs:recordSchema>marcxml</zs:recordSchema>
+			<zs:recordPacking>xml</zs:recordPacking>
+			<zs:recordData>
+				<record xmlns="http://www.loc.gov/MARC21/slim">
+					<leader> cam a22 c4500</leader>
+					<controlfield tag="001">211482064</controlfield>
+					<controlfield tag="003">DE-627</controlfield>
+					<controlfield tag="005">20190730144819.0</controlfield>
+					<controlfield tag="007">tu</controlfield>
+					<controlfield tag="008">141113s1813 xx ||||| 00| ||ger c
+					</controlfield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">(DE-627)211482064</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">(DE-599)GBV211482064</subfield>
+					</datafield>
+					<datafield tag="035" ind1=" " ind2=" ">
+						<subfield code="a">(OCoLC)832821956</subfield>
+					</datafield>
+					<datafield tag="040" ind1=" " ind2=" ">
+						<subfield code="a">DE-627</subfield>
+						<subfield code="b">ger</subfield>
+						<subfield code="c">DE-627</subfield>
+						<subfield code="e">rakwb</subfield>
+					</datafield>
+					<datafield tag="041" ind1=" " ind2=" ">
+						<subfield code="a">ger</subfield>
+					</datafield>
+					<datafield tag="041" ind1=" " ind2=" ">
+						<subfield code="h">per</subfield>
+					</datafield>
+					<datafield tag="044" ind1=" " ind2=" ">
+						<subfield code="c">XA-DXDE</subfield>
+					</datafield>
+					<datafield tag="084" ind1=" " ind2=" ">
+						<subfield code="a">6,23</subfield>
+						<subfield code="2">ssgn</subfield>
+					</datafield>
+					<datafield tag="100" ind1="0" ind2=" ">
+						<subfield code="a">Ḥāfiẓ</subfield>
+						<subfield code="d">1315-1390</subfield>
+						<subfield code="0">(DE-588)118544632</subfield>
+						<subfield code="0">(DE-627)079343201</subfield>
+						<subfield code="0">(DE-576)165000422</subfield>
+						<subfield code="4">aut</subfield>
+					</datafield>
+					<datafield tag="245" ind1="1" ind2="4">
+						<subfield code="a">Der Diwan</subfield>
+						<subfield code="n">Zweiter Theil</subfield>
+						<subfield code="c">von Mohammed Schemsed-din Hafis. Aus dem
+							Persischen zum erstenmal ganz übersetzt von Joseph v. Hammer, K.
+							K. Rath und Hof-Dollmetsch, Mitglied der Akademie von Göttingen,
+							Korrespondent des Instituts von Holland</subfield>
+					</datafield>
+					<datafield tag="264" ind1=" " ind2="1">
+						<subfield code="a">Stuttgart</subfield>
+						<subfield code="a">Tübingen</subfield>
+						<subfield code="b">Cotta</subfield>
+						<subfield code="c">1813</subfield>
+					</datafield>
+					<datafield tag="300" ind1=" " ind2=" ">
+						<subfield code="a">[2] Bl., 574 S.</subfield>
+						<subfield code="c">8°</subfield>
+					</datafield>
+					<datafield tag="336" ind1=" " ind2=" ">
+						<subfield code="a">Text</subfield>
+						<subfield code="b">txt</subfield>
+						<subfield code="2">rdacontent</subfield>
+					</datafield>
+					<datafield tag="337" ind1=" " ind2=" ">
+						<subfield code="a">ohne Hilfsmittel zu benutzen</subfield>
+						<subfield code="b">n</subfield>
+						<subfield code="2">rdamedia</subfield>
+					</datafield>
+					<datafield tag="338" ind1=" " ind2=" ">
+						<subfield code="a">Band</subfield>
+						<subfield code="b">nc</subfield>
+						<subfield code="2">rdacarrier</subfield>
+					</datafield>
+					<datafield tag="500" ind1=" " ind2=" ">
+						<subfield code="a">Autopsie nach Ex. der SBB</subfield>
+					</datafield>
+					<datafield tag="700" ind1="1" ind2=" ">
+						<subfield code="a">Hammer-Purgstall, Joseph von</subfield>
+						<subfield code="d">1774-1856</subfield>
+						<subfield code="0">(DE-588)118545426</subfield>
+						<subfield code="0">(DE-627)133409678</subfield>
+						<subfield code="0">(DE-576)161288723</subfield>
+						<subfield code="4">oth</subfield>
+					</datafield>
+					<datafield tag="710" ind1="2" ind2=" ">
+						<subfield code="a">J. G. Cotta'sche Buchhandlung</subfield>
+						<subfield code="0">(DE-588)5056474-2</subfield>
+						<subfield code="0">(DE-627)10408264X</subfield>
+						<subfield code="0">(DE-576)194205584</subfield>
+						<subfield code="4">prt</subfield>
+					</datafield>
+					<datafield tag="773" ind1="1" ind2="8">
+						<subfield code="w">(DE-627)211481270</subfield>
+						<subfield code="g">Theil 2</subfield>
+						<subfield code="q">2.1813</subfield>
+					</datafield>
+					<datafield tag="776" ind1="0" ind2="8">
+						<subfield code="i">Digitalisierte Ausg.</subfield>
+						<subfield code="a">Ḥāfiẓ, 1315 - 1390</subfield>
+						<subfield code="t">Der Diwan ; Zweiter Theil</subfield>
+						<subfield code="d">Stuttgart : Cotta, 1813</subfield>
+						<subfield code="h">[2] Bl., 574 S.</subfield>
+						<subfield code="w">(DE-627)803222491</subfield>
+						<subfield code="w">(DE-576)980322249X</subfield>
+					</datafield>
+					<datafield tag="776" ind1="0" ind2="8">
+						<subfield code="i">Elektronische Reproduktion</subfield>
+						<subfield code="a">Ḥāfiẓ, 1315 - 1390</subfield>
+						<subfield code="t">Der Diwan ; Zweiter Theil</subfield>
+						<subfield code="d">[Weimar] : [Klassik Stiftung Weimar,
+							Herzogin Anna Amalia Bibliothek], 2018</subfield>
+						<subfield code="h">1 Online-Ressource ([2] Blatt, 574 Seiten)
+						</subfield>
+						<subfield code="w">(DE-627)1040666280</subfield>
+					</datafield>
+					<datafield tag="912" ind1=" " ind2=" ">
+						<subfield code="a">SSG-OPC-vor</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">755522095</subfield>
+						<subfield code="b">DE-1a</subfield>
+						<subfield code="9">1a</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">b</subfield>
+						<subfield code="g">Bibl. Diez oct. 351</subfield>
+						<subfield code="h">1:HDR</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">472992929</subfield>
+						<subfield code="b">DE-18</subfield>
+						<subfield code="9">18</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">c</subfield>
+						<subfield code="g">A 1952/3898: 2</subfield>
+						<subfield code="h">SUB-SM</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">354181181</subfield>
+						<subfield code="b">DE-27</subfield>
+						<subfield code="9">27</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">c</subfield>
+						<subfield code="g">8 Phil.or.IV,18b :2</subfield>
+						<subfield code="h">Mag</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">188140239</subfield>
+						<subfield code="b">DE-7</subfield>
+						<subfield code="9">7</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">c</subfield>
+						<subfield code="g">8 P AS II, 5572:2</subfield>
+						<subfield code="h">HG-OR1</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">225448300</subfield>
+						<subfield code="b">DE-32</subfield>
+						<subfield code="9">32</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">b</subfield>
+						<subfield code="g">14, 9 : 2 (b)</subfield>
+						<subfield code="h">MAG</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">147398405X</subfield>
+						<subfield code="b">DE-32</subfield>
+						<subfield code="9">32</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">d</subfield>
+						<subfield code="g">245837 - A (2)</subfield>
+						<subfield code="h">MAG</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">1773011391</subfield>
+						<subfield code="b">DE-32</subfield>
+						<subfield code="9">32</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">d</subfield>
+						<subfield code="g">Ruppert 1771 (Ex. I)</subfield>
+						<subfield code="h">Rara</subfield>
+						<subfield code="g">Ruppert 1771</subfield>
+						<subfield code="g">MWW-Goethe 1729 N</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">1773012177</subfield>
+						<subfield code="b">DE-32</subfield>
+						<subfield code="9">32</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">d</subfield>
+						<subfield code="g">Ruppert 1771 (Ex. II)</subfield>
+						<subfield code="g">Ruppert 1771</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">380712040</subfield>
+						<subfield code="b">DE-3</subfield>
+						<subfield code="9">3</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">d</subfield>
+						<subfield code="g">D Ec 1904 (2)</subfield>
+						<subfield code="g">SSG-Digitalisat</subfield>
+						<subfield code="g">Bibliothek Johann Gildemeister</subfield>
+						<subfield code="h">Ha 1</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">361317964</subfield>
+						<subfield code="b">DE-35</subfield>
+						<subfield code="9">35</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">b</subfield>
+						<subfield code="g">Lb 87:2</subfield>
+						<subfield code="h">ZEN</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">3500915701</subfield>
+						<subfield code="b">DE-35</subfield>
+						<subfield code="9">35</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">b</subfield>
+						<subfield code="g">W-AF D 34:2</subfield>
+						<subfield code="h">ZEN</subfield>
+					</datafield>
+					<datafield tag="924" ind1="0" ind2=" ">
+						<subfield code="a">3480014747</subfield>
+						<subfield code="b">DE-Em2</subfield>
+						<subfield code="9">Em 2</subfield>
+						<subfield code="c">GBV</subfield>
+						<subfield code="d">d</subfield>
+						<subfield code="g">Philos. 8° 0834b M</subfield>
+						<subfield code="h">Em</subfield>
+					</datafield>
+					<datafield tag="951" ind1=" " ind2=" ">
+						<subfield code="a">MV</subfield>
+					</datafield>
+				</record>
+			</zs:recordData>
+			<zs:recordPosition>1</zs:recordPosition>
+		</zs:record>
+	</zs:records>
+	<zs:echoedSearchRetrieveRequest>
+		<zs:version>1.1</zs:version>
+		<zs:query>pica.ppn=211482064</zs:query>
+		<zs:maximumRecords>10</zs:maximumRecords>
+		<zs:recordPacking>xml</zs:recordPacking>
+		<zs:recordSchema>marcxml</zs:recordSchema>
+	</zs:echoedSearchRetrieveRequest>
+</zs:searchRetrieveResponse>
