@@ -385,6 +385,7 @@ public class MarcFileformat implements Fileformat {
         for (MetadataConfigurationItem mmo : personList) {
             String singleEntityLastName = "";
             String singleEntityFirstName = "";
+            String singleEntityIdentifier = "";
 
             // For each node in the MARC document
             for (Node node : datafields) {
@@ -540,13 +541,16 @@ public class MarcFileformat implements Fileformat {
                         } else {
                             singleEntityFirstName = currentFirstName;
                         }
+                        if (StringUtils.isNotBlank(currentIdentifier)) {
+                            singleEntityIdentifier = currentIdentifier;
+                        }
                     }
                 }
             }
 
             // Single entity for all occurrences
             if (!mmo.isSeparateEntries()) {
-                Person md = createPerson(mmo, singleEntityFirstName, singleEntityLastName, "");
+                Person md = createPerson(mmo, singleEntityFirstName, singleEntityLastName, singleEntityIdentifier);
                 if (md != null) {
                     persons.add(md);
                 }
@@ -569,7 +573,7 @@ public class MarcFileformat implements Fileformat {
 
         for (MetadataConfigurationItem mmo : metadataList) {
             String singleEntityValue = "";
-
+            String singleEntityIdentifier = "";
             // For each node in the MARC document
             for (Node node : datafields) {
                 NamedNodeMap nnm = node.getAttributes();
@@ -662,6 +666,9 @@ public class MarcFileformat implements Fileformat {
                             } else {
                                 singleEntityValue = currentValue;
                             }
+                            if (StringUtils.isNotBlank(currentIdentifier)) {
+                                singleEntityIdentifier = currentIdentifier;
+                            }
                         }
                     }
                 }
@@ -669,7 +676,7 @@ public class MarcFileformat implements Fileformat {
 
             // Single entity for all occurrences
             if (!mmo.isSeparateEntries()) {
-                Metadata md = createMetadata(mmo, singleEntityValue, "");
+                Metadata md = createMetadata(mmo, singleEntityValue, singleEntityIdentifier);
                 if (md != null) {
                     metadata.add(md);
                 }
