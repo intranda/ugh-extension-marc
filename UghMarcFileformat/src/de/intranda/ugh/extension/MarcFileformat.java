@@ -843,9 +843,8 @@ public class MarcFileformat implements Fileformat {
     }
 
     @Override
-    public boolean setDigitalDocument(DigitalDocument inDoc) {
+    public void setDigitalDocument(DigitalDocument inDoc) {
         this.digDoc = inDoc;
-        return true;
     }
 
     @Override
