@@ -1,4 +1,5 @@
 package de.intranda.ugh.extension.util;
+
 /******************************************************************************
  * Copyright notice
  *
@@ -25,12 +26,11 @@ package de.intranda.ugh.extension.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Data;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.intranda.ugh.extension.MarcFileformat;
+import lombok.Data;
 
 public @Data class MetadataConfigurationItem {
 
@@ -38,8 +38,8 @@ public @Data class MetadataConfigurationItem {
 
     private String separator = "; ";
 
-    private List<MarcField> fieldList = new ArrayList<MarcField>();
-    
+    private List<MarcField> fieldList = new ArrayList<>();
+
     private String identifierField = "";
     private String identifierConditionField = "";
     private String identifierReplacement = "";
@@ -47,11 +47,11 @@ public @Data class MetadataConfigurationItem {
     private String conditionField = "";
     private String conditionValue = "";
     private String fieldReplacement = "";
-    
+
     private boolean separateEntries = true;
 
-    
-    
+    private boolean abortAfterFirstMatch = true;
+
     public MetadataConfigurationItem(Node node) {
         NodeList children = node.getChildNodes();
 
@@ -83,6 +83,13 @@ public @Data class MetadataConfigurationItem {
                     conditionValue = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_VALUE_REPLACEMENT)) {
                     fieldReplacement = MarcFileformat.readTextNode(n);
+                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_ABORT_AFTER_MATCH)) {
+                    String value = MarcFileformat.readTextNode(n);
+                    if (value != null && value.equalsIgnoreCase("true")) {
+                        abortAfterFirstMatch = true;
+                    } else {
+                        abortAfterFirstMatch = false;
+                    }
                 }
 
             }

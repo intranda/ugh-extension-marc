@@ -93,6 +93,7 @@ public class MarcFileformat implements Fileformat {
     public static final String PREFS_MARC_CONDITION_VALUE = "conditionValue";
     public static final String PREFS_MARC_VALUE_REPLACEMENT = "fieldReplacement";
     public static final String PREFS_MARC_SEPARATE_ENTRIES = "separateEntries";
+    public static final String PREFS_MARC_ABORT_AFTER_MATCH = "abortAfterFirstMatch";
 
     public static final String PREFS_MARC_LEADER_6 = "leader6";
     public static final String PREFS_MARC_LEADER_7 = "leader7";
@@ -486,8 +487,8 @@ public class MarcFileformat implements Fileformat {
                         }
                     }
 
-                    // Only check first/last name fields if no values have been found in expansion
-                    if (currentFirstName.isEmpty() && currentLastName.isEmpty()) {
+                    // Only check first/last name fields if no values have been found in expansion, or if it is configured
+                    if ((currentFirstName.isEmpty() && currentLastName.isEmpty()) || !mmo.isAbortAfterFirstMatch()) {
                         for (int i = 0; i < subfieldList.getLength(); i++) {
                             Node subfield = subfieldList.item(i);
                             if (subfield.getNodeType() != Node.ELEMENT_NODE) {
@@ -500,7 +501,10 @@ public class MarcFileformat implements Fileformat {
                             if (!mf.getFirstname().isEmpty()) {
                                 for (String nodeName : mf.getFirstname()) {
                                     if (nodeName.equals(code.getNodeValue())) {
-                                        currentLastName = readTextNode(subfield);
+                                        if (StringUtils.isNotBlank(currentFirstName)) {
+                                            currentFirstName += mmo.getSeparator();
+                                        }
+                                        currentFirstName += readTextNode(subfield);
                                         break;
                                     }
                                 }
@@ -508,7 +512,10 @@ public class MarcFileformat implements Fileformat {
                             if (!mf.getLastname().isEmpty()) {
                                 for (String nodeName : mf.getLastname()) {
                                     if (nodeName.equals(code.getNodeValue())) {
-                                        currentFirstName = readTextNode(subfield);
+                                        if (StringUtils.isNotBlank(currentLastName)) {
+                                            currentLastName += mmo.getSeparator();
+                                        }
+                                        currentLastName += readTextNode(subfield);
                                         break;
                                     }
                                 }
