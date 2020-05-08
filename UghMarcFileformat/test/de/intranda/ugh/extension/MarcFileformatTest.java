@@ -202,4 +202,26 @@ public class MarcFileformatTest {
         Assert.assertEquals("Jeffrey C.", p.getFirstname());
         Assert.assertEquals("Livas", p.getLastname());
     }
+
+    /**
+     * @see MarcFileformat#parsePersons(List,List,boolean)
+     * @verifies concatenate names within one person correctly
+     */
+    @Test
+    public void parsePersons_shouldConcatenateNamesWithinOnePersonCorrectly() throws Exception {
+        Document doc = loadMarcDocument("resources/test/3592722050.xml");
+        Assert.assertNotNull(doc);
+
+        List<Node> datafields = getDatafields(doc, null);
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        List<Person> personList = mfc.parsePersons(datafields, mfc.personList);
+        Assert.assertEquals(3, personList.size());
+        Person p = personList.get(0);
+        Assert.assertEquals("Contributor", p.getType().getName());
+        Assert.assertEquals("Anna Amalia, Sachsen-Weimar-Eisenach, Herzogin", p.getFirstname());
+    }
 }

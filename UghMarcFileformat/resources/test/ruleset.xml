@@ -4702,6 +4702,8 @@
         </field>
         <field>
           <fieldMainTag>700</fieldMainTag>
+          <firstname>c</firstname>
+          <firstname>b</firstname>
           <expansion>a</expansion>
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
@@ -4712,7 +4714,8 @@
         <conditionField>4</conditionField>
         <conditionValue>/ctb/</conditionValue>
         <separateEntries>true</separateEntries>
-        <separator>; </separator>
+        <separator>, </separator>
+        <abortAfterFirstMatch>false</abortAfterFirstMatch>
       </Person>
       <Person>
         <Name>Curator</Name>
