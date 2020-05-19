@@ -1,5 +1,7 @@
 package de.intranda.ugh.extension;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -155,6 +157,31 @@ public class MarcFileformatTest {
         Assert.assertEquals("Stuttgart", values.get(0));
         Assert.assertEquals("Tübingen", values.get(1));
     }
+
+
+    @Test
+    public void parseMetadata_shouldImportCombinedTitleCorrectly() throws Exception {
+        Document doc = loadMarcDocument("resources/test/1717559573.xml");
+        Assert.assertNotNull(doc);
+
+        List<Node> datafields = getDatafields(doc, "");
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        List<Metadata> metadataList = mfc.parseMetadata(datafields, mfc.metadataList);
+        Assert.assertFalse(metadataList.isEmpty());
+        Metadata title = null;
+        for (Metadata md : metadataList) {
+            if (md.getType().getName().contains("TitleDocMain")) {
+                title = md;
+            }
+        }
+        assertNotNull(title);
+        Assert.assertEquals("Itt, Paul; Blatt 2", title.getValue());
+    }
+
 
     /**
      * @see MarcFileformat#parsePersons(List,List)

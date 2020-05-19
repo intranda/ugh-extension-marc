@@ -3992,13 +3992,31 @@
         <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <!-- If <conditionField> is used, <conditionValue> must be used as well. Checks if the the subfield definied in conditionField is filled and matches the regular expression of conditionValue. If this is not the case, the metadata will not created.
                      -->
-        <conditionField/>
-        <conditionValue/>
+        <conditionField>a</conditionField>
+        <conditionValue>/^(?!\[Stammbucheintrag\]).+/</conditionValue>
         <!-- run the regex and keep the value of $1 -->
         <fieldReplacement/>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Metadata>
+      
+        <Metadata>
+                <Name>TitleDocMain</Name>
+                <field>
+                    <fieldMainTag>100</fieldMainTag>
+                    <fieldSubTag>a</fieldSubTag>
+                    <fieldInd1>any</fieldInd1>
+                    <fieldInd2>any</fieldInd2>
+                </field>
+                <field>
+                    <fieldMainTag>952</fieldMainTag>
+                    <fieldSubTag>h</fieldSubTag>
+                    <fieldInd1>any</fieldInd1>
+                    <fieldInd2>any</fieldInd2>
+                </field>
+                <separateEntries>false</separateEntries>
+                <separator>; Blatt </separator>
+            </Metadata>
       <Metadata>
         <Name>TitleDocSub1</Name>
         <field>

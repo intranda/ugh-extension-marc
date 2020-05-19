@@ -582,6 +582,8 @@ public class MarcFileformat implements Fileformat {
         for (MetadataConfigurationItem mmo : metadataList) {
             String singleEntityValue = "";
             String singleEntityIdentifier = "";
+            List<String> matchedValueList = new ArrayList<>();
+
             // For each node in the MARC document
             for (Node node : datafields) {
                 NamedNodeMap nnm = node.getAttributes();
@@ -610,9 +612,8 @@ public class MarcFileformat implements Fileformat {
                         continue;
                     }
 
-                    List<String> currentValueList = new ArrayList<>();
                     String currentIdentifier = "";
-
+                    List<String> currentValue = new ArrayList<>();
                     // Subfields
                     NodeList subfieldList = node.getChildNodes();
                     for (int i = 0; i < subfieldList.getLength(); i++) {
@@ -640,7 +641,7 @@ public class MarcFileformat implements Fileformat {
                         }
 
                         if (mf.getFieldSubTag().equals(code.getNodeValue())) {
-                            currentValueList.add(readTextNode(subfield));
+                            currentValue.add(readTextNode(subfield));
                         }
 
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
@@ -653,43 +654,46 @@ public class MarcFileformat implements Fileformat {
                                 currentIdentifier = localIdentifier;
                             }
                         }
-                    }
 
-                    // In case a non-empty condition is configured but no condition field was found, skip this value
-                    if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
-                            && !mmo.getConditionValue().equals("/empty/") && matches == null) {
-                        matches = false;
+                        // In case a non-empty condition is configured but no condition field was found, skip this value
+                        if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
+                                && !mmo.getConditionValue().equals("/empty/") && matches == null) {
+                            matches = false;
+                        }
                     }
-
                     if (matches == null || matches) {
+
                         if (mmo.isSeparateEntries()) {
                             // Separate metadata values
-                            for (String val : currentValueList) {
+                            for (String val : currentValue) {
                                 Metadata md = createMetadata(mmo, val, currentIdentifier);
                                 if (md != null) {
                                     metadata.add(md);
                                 }
                             }
-                        } else if (!currentValueList.isEmpty()) {
-                            // Concatenated value
-                            StringBuilder sb = new StringBuilder();
-                            for (String val : currentValueList) {
-                                if (sb.length() > 0) {
-                                    sb.append(mmo.getSeparator());
-                                }
-                                sb.append(val);
-                            }
-                            singleEntityValue = sb.toString();
+                        } else {
+                            matchedValueList.addAll(currentValue);
                             if (StringUtils.isNotBlank(currentIdentifier)) {
                                 singleEntityIdentifier = currentIdentifier;
                             }
                         }
                     }
+
                 }
             }
 
             // Single entity for all occurrences
             if (!mmo.isSeparateEntries()) {
+                // Concatenated value
+                StringBuilder sb = new StringBuilder();
+                for (String val : matchedValueList) {
+                    if (sb.length() > 0) {
+                        sb.append(mmo.getSeparator());
+                    }
+                    sb.append(val);
+                }
+                singleEntityValue = sb.toString();
+
                 Metadata md = createMetadata(mmo, singleEntityValue, singleEntityIdentifier);
                 if (md != null) {
                     metadata.add(md);

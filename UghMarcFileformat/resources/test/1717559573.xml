@@ -1,0 +1,82 @@
+<record xmlns="http://www.loc.gov/MARC21/slim">
+  <leader>xxxxxnta a22yyyyy c 4500</leader>
+  <controlfield tag="001">1001212576</controlfield>
+  <controlfield tag="003">DE-601</controlfield>
+  <controlfield tag="005">20181008165137.0</controlfield>
+  <controlfield tag="008">171023s1627    gw            000 0 lat d</controlfield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(DE-599)GBV1001212576</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="b">ger</subfield>
+    <subfield code="c">GBVCP</subfield>
+    <subfield code="e">rda</subfield>
+  </datafield>
+  <datafield tag="041" ind1="0" ind2=" ">
+    <subfield code="a">lat</subfield>
+  </datafield>
+  <datafield tag="044" ind1=" " ind2=" ">
+    <subfield code="c">XG-DR</subfield>
+  </datafield>
+  <datafield tag="100" ind1="1" ind2=" ">
+    <subfield code="a">Itt, Paul</subfield>
+    <subfield code="e">Verfasser</subfield>
+    <subfield code="4">aut</subfield>
+    <subfield code="0">(DE-601)1001212614</subfield>
+    <subfield code="0">(DE-588)1142150666</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">[Stammbucheintrag]</subfield>
+    <subfield code="h">Manuskript</subfield>
+    <subfield code="b">[S.l.] : 1627</subfield>
+    <subfield code="c">Paulus Itt</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">Text</subfield>
+    <subfield code="b">txt</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">unbewegtes Bild</subfield>
+    <subfield code="b">sti</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="337" ind1=" " ind2=" ">
+    <subfield code="a">ohne Hilfsmittel zu benutzen</subfield>
+    <subfield code="b">n</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield tag="338" ind1=" " ind2=" ">
+    <subfield code="a">Blatt</subfield>
+    <subfield code="b">nb</subfield>
+    <subfield code="2">rdacarrier</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Illustration (Aquarell), Wappen: von Rot u. Silber geteilt, an der Teilung zwei steigende Löwen in verwechselter Tinktur, eine ebensolche Lilie zwischen sich haltend.</subfield>
+  </datafield>
+  <datafield tag="773" ind1="0" ind2="8">
+    <subfield code="i">Enthalten in:</subfield>
+    <subfield code="g">[1589-1707], Bl. 2</subfield>
+    <subfield code="q">&lt;2</subfield>
+    <subfield code="w">(DE-601)688438148</subfield>
+  </datafield>
+  <datafield tag="900" ind1=" " ind2=" ">
+    <subfield code="a">GBV</subfield>
+    <subfield code="b">HAAB Weimar &lt;32&gt;</subfield>
+  </datafield>
+  <datafield tag="951" ind1=" " ind2=" ">
+    <subfield code="a">AR</subfield>
+  </datafield>
+  <datafield tag="952" ind1=" " ind2=" ">
+    <subfield code="h">2</subfield>
+    <subfield code="y">[1589-1707], Bl. 2</subfield>
+  </datafield>
+  <datafield tag="954" ind1=" " ind2=" ">
+    <subfield code="0">HAAB Weimar &lt;32&gt;</subfield>
+    <subfield code="a">61</subfield>
+    <subfield code="b">1717559573</subfield>
+    <subfield code="c">01</subfield>
+    <subfield code="h">stammbucheintrag</subfield>
+    <subfield code="x">0032</subfield>
+  </datafield>
+</record>
