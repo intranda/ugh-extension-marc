@@ -1,5 +1,12 @@
 package de.intranda.ugh.extension.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import de.intranda.ugh.extension.MarcFileformat;
 /******************************************************************************
  * Copyright notice
  *
@@ -25,22 +32,18 @@ package de.intranda.ugh.extension.util;
  ******************************************************************************/
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import de.intranda.ugh.extension.MarcFileformat;
-
 public @Data class MarcField {
 
     private String fieldMainTag = "";
-    private String fieldSubTag ="";
+    private String fieldSubTag = "";
 
     private List<String> firstname = new ArrayList<>();
     private List<String> lastname = new ArrayList<>();
     private List<String> expansion = new ArrayList<>();
+
+    private List<String> mainName = new ArrayList<>();
+    private List<String> subName = new ArrayList<>();
+    private List<String> partName = new ArrayList<>();
 
     private String fieldInd1 = "any";
     private String fieldInd2 = "any";
@@ -66,7 +69,14 @@ public @Data class MarcField {
                     lastname.add(MarcFileformat.readTextNode(n));
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_EXPANSION)) {
                     expansion.add(MarcFileformat.readTextNode(n));
+                }
 
+                else if (n.getNodeName().equalsIgnoreCase("fieldMainName")) {
+                    mainName.add(MarcFileformat.readTextNode(n));
+                } else if (n.getNodeName().equalsIgnoreCase("fieldSubName")) {
+                    subName.add(MarcFileformat.readTextNode(n));
+                } else if (n.getNodeName().equalsIgnoreCase("fieldPartName")) {
+                    partName.add(MarcFileformat.readTextNode(n));
                 }
             }
         }

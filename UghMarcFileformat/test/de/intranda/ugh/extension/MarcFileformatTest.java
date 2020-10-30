@@ -1,5 +1,6 @@
 package de.intranda.ugh.extension;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ugh.dl.Corporate;
 import ugh.dl.Metadata;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
@@ -99,34 +101,7 @@ public class MarcFileformatTest {
         Assert.fail("Metadata not created");
     }
 
-    /**
-     * @see MarcFileformat#parseMetadata(List,List)
-     * @verifies only import one role per corporation
-     */
-    @Test
-    public void parseMetadata_shouldOnlyImportOneRolePerCorporation() throws Exception {
-        Document doc = loadMarcDocument("resources/test/000348732.xml");
-        Assert.assertNotNull(doc);
 
-        List<Node> datafields = getDatafields(doc, "marc");
-
-        Prefs prefs = new Prefs();
-        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
-        MarcFileformat mfc = new MarcFileformat(prefs);
-
-        List<Metadata> metadataList = mfc.parseMetadata(datafields, mfc.metadataList);
-        Assert.assertFalse(metadataList.isEmpty());
-        int count = 0;
-        Metadata corporation = null;
-        for (Metadata md : metadataList) {
-            if (md.getType().getName().contains("Corporat")) {
-                count++;
-                corporation = md;
-            }
-        }
-        Assert.assertEquals(1, count);
-        Assert.assertEquals("Massachusetts Institute of Technology.", corporation.getValue());
-    }
 
     /**
      * @see MarcFileformat#parseMetadata(List,List)
@@ -251,4 +226,28 @@ public class MarcFileformatTest {
         Assert.assertEquals("Contributor", p.getType().getName());
         Assert.assertEquals("Anna Amalia, Sachsen-Weimar-Eisenach, Herzogin", p.getFirstname());
     }
+
+
+    @Test
+    public void parseCorporation() throws Exception {
+        Document doc = loadMarcDocument("resources/test/corporation.xml");
+        Assert.assertNotNull(doc);
+        List<Node> datafields = getDatafields(doc, null);
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        List<Corporate> cl = mfc.parseCorporations(datafields, mfc.corporationList);
+        Assert.assertEquals(2, cl.size());
+        Corporate fixture = cl.get(0);
+        assertEquals("Georg-August-Universität Göttingen", fixture.getMainName());
+        assertEquals("2024315-7", fixture.getAuthorityValue());
+
+        fixture = cl.get(1);
+        assertEquals("Catholic Church.", fixture.getMainName());
+        assertEquals("Province of Baltimore (Md.).",fixture.getSubNames().get(0));
+        assertEquals("Provincial Council",fixture.getSubNames().get(1));
+        assertEquals("1869; 10th", fixture.getPartName());
+    }
+
 }

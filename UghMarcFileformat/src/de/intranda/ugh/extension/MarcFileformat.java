@@ -46,6 +46,7 @@ import de.intranda.ugh.extension.util.DocstructConfigurationItem;
 import de.intranda.ugh.extension.util.GroupConfigurationItem;
 import de.intranda.ugh.extension.util.MarcField;
 import de.intranda.ugh.extension.util.MetadataConfigurationItem;
+import ugh.dl.Corporate;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.Fileformat;
@@ -108,6 +109,7 @@ public class MarcFileformat implements Fileformat {
 
     protected List<MetadataConfigurationItem> metadataList = new LinkedList<>();
     protected List<MetadataConfigurationItem> personList = new LinkedList<>();
+    protected List<MetadataConfigurationItem> corporationList = new LinkedList<>();
     private List<DocstructConfigurationItem> docstructList = new LinkedList<>();
 
     private List<GroupConfigurationItem> groupList = new LinkedList<>();
@@ -147,10 +149,12 @@ public class MarcFileformat implements Fileformat {
                 } else if (n.getNodeName().equalsIgnoreCase(PREFS_MARC_GROUP_NAME)) {
                     GroupConfigurationItem item = new GroupConfigurationItem(n);
                     groupList.add(item);
+                } else if (n.getNodeName().equalsIgnoreCase("Corporate")) {
+                    MetadataConfigurationItem metadata = new MetadataConfigurationItem(n);
+                    corporationList.add(metadata);
                 }
             }
         }
-
     }
 
     public static String readTextNode(Node inNode) {
@@ -261,6 +265,9 @@ public class MarcFileformat implements Fileformat {
 
         List<Metadata> metadata = parseMetadata(datafields, metadataList);
         List<Person> allPer = parsePersons(datafields, personList);
+
+        List<Corporate> allCorp = parseCorporations(datafields, corporationList);
+
         // Contains all metadata groups.
         List<MetadataGroup> allGroups = parseGroups(datafields);
 
@@ -275,6 +282,17 @@ public class MarcFileformat implements Fileformat {
                     continue;
                 } catch (DocStructHasNoTypeException e) {
                     String message = "Ignoring DocStructHasNoTypeException at OPAC import!";
+                    logger.warn(message, e);
+                    continue;
+                }
+            }
+        }
+        if (allCorp != null) {
+            for (Corporate corp : allCorp) {
+                try {
+                    ds.addCorporate(corp);
+                } catch (MetadataTypeNotAllowedException e) {
+                    String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
                     logger.warn(message, e);
                     continue;
                 }
@@ -370,6 +388,168 @@ public class MarcFileformat implements Fileformat {
         }
 
         return groups;
+    }
+
+    List<Corporate> parseCorporations(List<Node> datafields, List<MetadataConfigurationItem> corporationList) {
+        List<Corporate> corporations = new ArrayList<>();
+
+        for (MetadataConfigurationItem mmi : corporationList) {
+            String singleMainName = null;
+            List<String> singleSubNames = new ArrayList<>();
+            String singlePartName = null;
+            String singleIdentifier = null;
+
+            for (Node node : datafields) {
+                NamedNodeMap nnm = node.getAttributes();
+                Node tagNode = nnm.getNamedItem("tag");
+                Node ind1Node = nnm.getNamedItem("ind1");
+                Node ind2Node = nnm.getNamedItem("ind2");
+                String ind1Value = ind1Node.getNodeValue().trim();
+                String ind2Value = ind2Node.getNodeValue().trim();
+
+                Boolean matches = null;
+
+                // Match main tag in the config
+                for (MarcField mf : mmi.getFieldList()) {
+                    if (!mf.getFieldMainTag().equals(tagNode.getNodeValue())) {
+                        continue;
+                    }
+
+                    boolean matchesInd1 = false;
+                    boolean matchesInd2 = false;
+                    if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Value)) {
+                        matchesInd1 = true;
+                    }
+                    if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Value)) {
+                        matchesInd2 = true;
+                    }
+                    if (!matchesInd1 || !matchesInd2) {
+                        continue;
+                    }
+
+                    String currentIdentifier = "";
+                    String currentMainName = "";
+                    List<String> currentSubNames = new ArrayList<>();
+                    String currentPartName = "";
+
+                    NodeList subfieldList = node.getChildNodes();
+                    for (int i = 0; i < subfieldList.getLength(); i++) {
+                        Node subfield = subfieldList.item(i);
+                        if (subfield.getNodeType() != Node.ELEMENT_NODE) {
+                            continue;
+                        }
+
+                        NamedNodeMap attributes = subfield.getAttributes();
+                        Node code = attributes.getNamedItem("code");
+
+                        // Skip values that don't match the field condition
+                        if (StringUtils.isNotBlank(mmi.getConditionField()) && StringUtils.isNotBlank(mmi.getConditionValue())
+                                && mmi.getConditionField().equals(code.getNodeValue())) {
+                            String valueToCheck = readTextNode(subfield);
+                            if (!perlUtil.match(mmi.getConditionValue(), valueToCheck)
+                                    && !(mmi.getConditionValue().equals("/empty/") && StringUtils.isBlank(valueToCheck))) {
+                                if (matches == null) {
+                                    // Only set matches = false if not previously set to true by a matching subfield
+                                    matches = false;
+                                }
+                                continue; // If condition field == value field, make sure non-matching values don't proceed
+                            }
+                            matches = true;
+                        }
+
+                        // Identifier
+                        if (StringUtils.isNotBlank(mmi.getIdentifierField()) && mmi.getIdentifierField().equals(code.getNodeValue())) {
+                            String localIdentifier = readTextNode(subfield);
+                            if (StringUtils.isBlank(mmi.getIdentifierConditionField())
+                                    || perlUtil.match(mmi.getIdentifierConditionField(), localIdentifier)) {
+
+                                if (StringUtils.isNotBlank(mmi.getIdentifierReplacement())) {
+                                    localIdentifier = perlUtil.substitute(mmi.getIdentifierReplacement(), localIdentifier);
+                                }
+                                currentIdentifier = localIdentifier;
+                            }
+                        }
+
+                        if (!mf.getMainName().isEmpty()) {
+                            for (String subfieldCode : mf.getMainName()) {
+                                if (subfieldCode.equals(code.getNodeValue())) {
+                                    if (StringUtils.isBlank(currentMainName)) {
+                                        currentMainName = readTextNode(subfield);
+                                    }
+                                }
+                            }
+                        }
+                        if (!mf.getSubName().isEmpty()) {
+                            for (String subfieldCode : mf.getSubName()) {
+                                if (subfieldCode.equals(code.getNodeValue())) {
+                                    currentSubNames.add(readTextNode(subfield));
+                                }
+
+                            }
+                        }
+                        if (!mf.getPartName().isEmpty()) {
+                            for (String subfieldCode : mf.getPartName()) {
+                                if (subfieldCode.equals(code.getNodeValue())) {
+                                    if (StringUtils.isBlank(currentPartName)) {
+                                        currentPartName = readTextNode(subfield);
+                                    } else {
+                                        currentPartName = currentPartName + mmi.getSeparator() + readTextNode(subfield);
+                                    }
+                                }
+                            }
+                        }
+
+                        // In case a non-empty condition is configured but no condition field was found, skip this value
+                        if (StringUtils.isNotBlank(mmi.getConditionField()) && StringUtils.isNotBlank(mmi.getConditionValue())
+                                && !mmi.getConditionValue().equals("/empty/") && matches == null) {
+                            matches = false;
+                        }
+
+                        if (matches == null || matches) {
+                            if (mmi.isSeparateEntries()) {
+                                // Create separate entity
+                                Corporate corporate = createCorporation(mmi, currentMainName, currentSubNames, currentPartName, currentIdentifier);
+                                if (corporate != null) {
+                                    corporations.add(corporate);
+                                }
+                            } else if (StringUtils.isNotBlank(currentMainName)) {
+                                if (StringUtils.isNotBlank(singleMainName)) {
+                                    singleMainName = singleMainName + mmi.getSeparator() + currentMainName;
+                                } else {
+                                    singleMainName = currentMainName;
+                                }
+                                if (!currentSubNames.isEmpty()) {
+                                    singleSubNames.addAll(currentSubNames);
+                                }
+                                if (StringUtils.isNotBlank(currentPartName)) {
+                                    if (StringUtils.isNotBlank(currentPartName)) {
+                                        singlePartName = currentPartName + mmi.getSeparator() + currentPartName;
+                                    } else {
+                                        singlePartName = currentPartName;
+                                    }
+                                }
+                                if (StringUtils.isNotBlank(currentIdentifier)) {
+                                    singleIdentifier = currentIdentifier;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                // Single entity for all occurrences
+                if (!mmi.isSeparateEntries()) {
+                    Corporate md = createCorporation(mmi, singleMainName, singleSubNames, singlePartName, singleIdentifier);
+
+                    if (md != null) {
+                        corporations.add(md);
+                    }
+                }
+
+            }
+        }
+
+        return corporations;
     }
 
     /**
@@ -755,6 +935,31 @@ public class MarcFileformat implements Fileformat {
             }
         }
         return person;
+    }
+
+    private Corporate createCorporation(MetadataConfigurationItem mmo, String mainName, List<String> subNames, String partName, String identifier) {
+        Corporate corporate = null;
+        if (StringUtils.isNotBlank(mainName)) {
+
+            try {
+                MetadataType mdt = prefs.getMetadataTypeByName(mmo.getInternalMetadataName());
+                corporate = new Corporate(mdt);
+                corporate.setRole(mdt.getName());
+
+                corporate.setMainName(mainName);
+                corporate.setSubNames(subNames);
+                corporate.setPartName(partName);
+
+                if (!identifier.isEmpty()) {
+                    // TODO alternative zu gnd
+                    corporate.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
+                }
+
+            } catch (MetadataTypeNotAllowedException e) {
+                logger.error(e);
+            }
+        }
+        return corporate;
     }
 
     private DocStruct parseDocstruct(Node leader, List<Node> controlfields) {
