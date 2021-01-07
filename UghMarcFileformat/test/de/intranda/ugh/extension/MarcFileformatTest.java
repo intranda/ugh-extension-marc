@@ -245,8 +245,8 @@ public class MarcFileformatTest {
 
         fixture = cl.get(1);
         assertEquals("Catholic Church.", fixture.getMainName());
-        assertEquals("Province of Baltimore (Md.).",fixture.getSubNames().get(0));
-        assertEquals("Provincial Council",fixture.getSubNames().get(1));
+        assertEquals("Province of Baltimore (Md.).",fixture.getSubNames().get(0).getValue());
+        assertEquals("Provincial Council",fixture.getSubNames().get(1).getValue());
         assertEquals("1869; 10th", fixture.getPartName());
     }
 

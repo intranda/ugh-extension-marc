@@ -53,6 +53,7 @@ import ugh.dl.Fileformat;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.MetadataType;
+import ugh.dl.NamePart;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 import ugh.exceptions.DocStructHasNoTypeException;
@@ -395,7 +396,7 @@ public class MarcFileformat implements Fileformat {
 
         for (MetadataConfigurationItem mmi : corporationList) {
             String singleMainName = null;
-            List<String> singleSubNames = new ArrayList<>();
+            List<NamePart> singleSubNames = new ArrayList<>();
             String singlePartName = null;
             String singleIdentifier = null;
 
@@ -429,7 +430,7 @@ public class MarcFileformat implements Fileformat {
 
                     String currentIdentifier = "";
                     String currentMainName = "";
-                    List<String> currentSubNames = new ArrayList<>();
+                    List<NamePart> currentSubNames = new ArrayList<>();
                     String currentPartName = "";
 
                     NodeList subfieldList = node.getChildNodes();
@@ -482,7 +483,7 @@ public class MarcFileformat implements Fileformat {
                         if (!mf.getSubName().isEmpty()) {
                             for (String subfieldCode : mf.getSubName()) {
                                 if (subfieldCode.equals(code.getNodeValue())) {
-                                    currentSubNames.add(readTextNode(subfield));
+                                    currentSubNames.add(new NamePart("subname",readTextNode(subfield)));
                                 }
 
                             }
@@ -937,7 +938,7 @@ public class MarcFileformat implements Fileformat {
         return person;
     }
 
-    private Corporate createCorporation(MetadataConfigurationItem mmo, String mainName, List<String> subNames, String partName, String identifier) {
+    private Corporate createCorporation(MetadataConfigurationItem mmo, String mainName, List<NamePart> subNames, String partName, String identifier) {
         Corporate corporate = null;
         if (StringUtils.isNotBlank(mainName)) {
 
