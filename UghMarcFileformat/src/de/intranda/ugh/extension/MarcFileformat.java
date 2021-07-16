@@ -35,6 +35,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.oro.text.perl.MalformedPerl5PatternException;
 import org.apache.oro.text.perl.Perl5Util;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -175,6 +176,11 @@ public class MarcFileformat implements Fileformat {
     }
 
     public boolean read(Node inNode) throws ReadException {
+        return read(inNode, null);
+    }
+
+    
+    public boolean read(Node inNode, DocStruct readAsDocStrct) throws ReadException {
 
         DocStruct ds = null;
         DocStruct dsOld = null;
@@ -199,7 +205,7 @@ public class MarcFileformat implements Fileformat {
                             nodename = n.getNodeName();
                             if (nodename.equals(MARC_PREFS_NODE_RECORD_STRING)) {
                                 // Parse a single picaplus record.
-                                ds = parseMarcRecord(n);
+                                ds = parseMarcRecord(n, readAsDocStrct);
                                 // It's the first one, so this becomes the
                                 // toplogical structural entity.
                                 if (ds != null) {
@@ -215,7 +221,7 @@ public class MarcFileformat implements Fileformat {
                         }
                     }
                 } else if (nodename.equals(MARC_PREFS_NODE_RECORD_STRING)) {
-                    ds = parseMarcRecord(ppr);
+                    ds = parseMarcRecord(ppr, readAsDocStrct);
                     if (ds != null) {
                         this.digDoc.setLogicalDocStruct(ds);
                     }
@@ -234,9 +240,9 @@ public class MarcFileformat implements Fileformat {
         return true;
     }
 
-    private DocStruct parseMarcRecord(Node inNode) {
+    private DocStruct parseMarcRecord(Node inNode, DocStruct docStruct) {
 
-        DocStruct ds = null;
+        DocStruct ds = docStruct;
 
         // Get all subfields.
         NodeList nl = inNode.getChildNodes();
@@ -255,7 +261,9 @@ public class MarcFileformat implements Fileformat {
                 }
             }
         }
-        ds = parseDocstruct(leader, controlfields);
+        if(ds == null) {            
+            ds = parseDocstruct(leader, controlfields);
+        }
 
         if (ds == null) {
             // No DocStruct found, this is a serious problem; as I do not know
@@ -892,7 +900,11 @@ public class MarcFileformat implements Fileformat {
             try {
                 md = new Metadata(prefs.getMetadataTypeByName(mmo.getInternalMetadataName()));
                 if (StringUtils.isNotBlank(mmo.getFieldReplacement())) {
-                    value = perlUtil.substitute(mmo.getFieldReplacement(), value);
+                    try {                        
+                        value = perlUtil.substitute(mmo.getFieldReplacement(), value);
+                    } catch(MalformedPerl5PatternException e) {
+                        logger.error("Error applying field replacement for " + mmo.getFieldReplacement(), e);
+                    }
                 }
                 md.setValue(value);
                 if (!identifier.isEmpty()) {
@@ -1026,6 +1038,10 @@ public class MarcFileformat implements Fileformat {
 
     @Override
     public boolean read(String filename) throws ReadException {
+        return this.read(filename, null);
+    }
+    
+    public boolean read(String filename, DocStruct readAsDocStruct) throws ReadException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         // Do not validate XML file.
         factory.setValidating(false);
@@ -1041,7 +1057,7 @@ public class MarcFileformat implements Fileformat {
             NodeList upperChildlist = document.getElementsByTagName(MARC_PREFS_NODE_RECORD_STRING);
             Node node = upperChildlist.item(0);
 
-            return read(node);
+            return read(node, readAsDocStruct);
         } catch (ParserConfigurationException | SAXException | IOException e) {
             logger.error(e);
         }
