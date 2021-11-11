@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -96,6 +97,7 @@ public class MarcFileformat implements Fileformat {
     public static final String PREFS_MARC_CONDITION_VALUE = "conditionValue";
     public static final String PREFS_MARC_VALUE_REPLACEMENT = "fieldReplacement";
     public static final String PREFS_MARC_SEPARATE_ENTRIES = "separateEntries";
+    public static final String PREFS_MARC_SEPARATE_SUBFIELDS = "separateSubfields";
     public static final String PREFS_MARC_ABORT_AFTER_MATCH = "abortAfterFirstMatch";
 
     public static final String PREFS_MARC_LEADER_6 = "leader6";
@@ -417,6 +419,7 @@ public class MarcFileformat implements Fileformat {
                 String ind2Value = ind2Node.getNodeValue().trim();
 
                 Boolean matches = null;
+ 
 
                 // Match main tag in the config
                 for (MarcField mf : mmi.getFieldList()) {
@@ -513,37 +516,54 @@ public class MarcFileformat implements Fileformat {
                                 && !mmi.getConditionValue().equals("/empty/") && matches == null) {
                             matches = false;
                         }
-
-                        if (matches == null || matches) {
-                            if (mmi.isSeparateEntries()) {
-                                // Create separate entity
-                                Corporate corporate = createCorporation(mmi, currentMainName, currentSubNames, currentPartName, currentIdentifier);
-                                if (corporate != null) {
-                                    corporations.add(corporate);
-                                }
-                            } else if (StringUtils.isNotBlank(currentMainName)) {
-                                if (StringUtils.isNotBlank(singleMainName)) {
-                                    singleMainName = singleMainName + mmi.getSeparator() + currentMainName;
-                                } else {
-                                    singleMainName = currentMainName;
-                                }
-                                if (!currentSubNames.isEmpty()) {
-                                    singleSubNames.addAll(currentSubNames);
-                                }
-                                if (StringUtils.isNotBlank(currentPartName)) {
-                                    if (StringUtils.isNotBlank(currentPartName)) {
-                                        singlePartName = currentPartName + mmi.getSeparator() + currentPartName;
-                                    } else {
-                                        singlePartName = currentPartName;
-                                    }
-                                }
-                                if (StringUtils.isNotBlank(currentIdentifier)) {
-                                    singleIdentifier = currentIdentifier;
-                                }
-                            }
-
+                    }
+                    
+                    //replace in first and last name entries
+                    if(StringUtils.isNotBlank(mmi.getFieldReplacement())) {
+                        if(StringUtils.isNotBlank(currentMainName)) {                        
+                            currentMainName = perlUtil.substitute(mmi.getFieldReplacement(), currentMainName);
+                        }
+                        for (int i = 0; i < currentSubNames.size(); i++) {
+                            NamePart subName = currentSubNames.get(i);
+                            String name = subName.getValue();
+                            name = perlUtil.substitute(mmi.getFieldReplacement(), name);
+                            subName.setValue(name);
+                        }
+                        if(StringUtils.isNotBlank(currentPartName)) {                        
+                            currentPartName = perlUtil.substitute(mmi.getFieldReplacement(), currentPartName);
                         }
                     }
+                    
+                    if (matches == null || matches) {
+                        if (mmi.isSeparateEntries()) {
+                            // Create separate entity
+                            Corporate corporate = createCorporation(mmi, currentMainName, currentSubNames, currentPartName, currentIdentifier);
+                            if (corporate != null) {
+                                corporations.add(corporate);
+                            }
+                        } else if (StringUtils.isNotBlank(currentMainName)) {
+                            if (StringUtils.isNotBlank(singleMainName)) {
+                                singleMainName = singleMainName + mmi.getSeparator() + currentMainName;
+                            } else {
+                                singleMainName = currentMainName;
+                            }
+                            if (!currentSubNames.isEmpty()) {
+                                singleSubNames.addAll(currentSubNames);
+                            }
+                            if (StringUtils.isNotBlank(currentPartName)) {
+                                if (StringUtils.isNotBlank(currentPartName)) {
+                                    singlePartName = currentPartName + mmi.getSeparator() + currentPartName;
+                                } else {
+                                    singlePartName = currentPartName;
+                                }
+                            }
+                            if (StringUtils.isNotBlank(currentIdentifier)) {
+                                singleIdentifier = currentIdentifier;
+                            }
+                        }
+
+                    }
+                    
                 }
 
                 // Single entity for all occurrences
@@ -719,7 +739,19 @@ public class MarcFileformat implements Fileformat {
                     matches = false;
                 }
 
+                //replace in first and last name entries
+                if(StringUtils.isNotBlank(mmo.getFieldReplacement())) {
+                    if(StringUtils.isNotBlank(currentFirstName)) {                        
+                        currentFirstName = perlUtil.substitute(mmo.getFieldReplacement(), currentFirstName);
+                    }
+                    if(StringUtils.isNotBlank(currentLastName)) {                        
+                        currentLastName = perlUtil.substitute(mmo.getFieldReplacement(), currentLastName);
+                    }
+                }
+                
                 if (matches == null || matches) {
+                    
+                    
                     if (mmo.isSeparateEntries()) {
                         // Create separate entity person
                         Person md = createPerson(mmo, currentFirstName, currentLastName, currentIdentifier);
@@ -802,7 +834,7 @@ public class MarcFileformat implements Fileformat {
                     }
 
                     String currentIdentifier = "";
-                    List<String> currentValue = new ArrayList<>();
+                    List<String> subfieldValues = new ArrayList<>();
                     // Subfields
                     NodeList subfieldList = node.getChildNodes();
                     for (int i = 0; i < subfieldList.getLength(); i++) {
@@ -829,8 +861,8 @@ public class MarcFileformat implements Fileformat {
                             matches = true;
                         }
 
-                        if (mf.getFieldSubTag().equals(code.getNodeValue())) {
-                            currentValue.add(readTextNode(subfield));
+                        if (mf.getFieldSubTags().contains(code.getNodeValue())) {
+                            subfieldValues.add(readTextNode(subfield));
                         }
 
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
@@ -851,17 +883,25 @@ public class MarcFileformat implements Fileformat {
                         }
                     }
                     if (matches == null || matches) {
-
-                        if (mmo.isSeparateEntries()) {
-                            // Separate metadata values
-                            for (String val : currentValue) {
+                        if(mmo.getInternalMetadataName().equals("Subject")) {
+                            System.out.println("Subject");
+                        }
+                        if(mmo.isSeparateSubfields()) {
+                            for(String val : subfieldValues) {
                                 Metadata md = createMetadata(mmo, val, currentIdentifier);
                                 if (md != null) {
                                     metadata.add(md);
                                 }
                             }
+                        } else if(mmo.isSeparateEntries()) {
+                            String currentValue = subfieldValues.stream().collect(Collectors.joining(mmo.getSeparator()));
+                            Metadata md = createMetadata(mmo, currentValue, currentIdentifier);
+                            if (md != null) {
+                                metadata.add(md);
+                            }
                         } else {
-                            matchedValueList.addAll(currentValue);
+                            String currentValue = subfieldValues.stream().collect(Collectors.joining(mmo.getSeparator()));
+                            matchedValueList.add(currentValue);
                             if (StringUtils.isNotBlank(currentIdentifier)) {
                                 singleEntityIdentifier = currentIdentifier;
                             }

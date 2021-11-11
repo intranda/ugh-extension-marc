@@ -25,6 +25,7 @@ package de.intranda.ugh.extension.util;
  ******************************************************************************/
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -49,6 +50,7 @@ public @Data class MetadataConfigurationItem {
     private String fieldReplacement = "";
 
     private boolean separateEntries = true;
+    private Boolean separateSubfields = null;   //a null value means that the value of separateEntries should be used
 
     private boolean abortAfterFirstMatch = true;
 
@@ -70,6 +72,15 @@ public @Data class MetadataConfigurationItem {
                         separateEntries = true;
                     } else {
                         separateEntries = false;
+                    }
+                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_SEPARATE_SUBFIELDS)) {
+                    String value = MarcFileformat.readTextNode(n);
+                    if (value != null && value.equalsIgnoreCase("true")) {
+                        separateSubfields = true;
+                    } else if (value != null && value.equalsIgnoreCase("false")) {
+                        separateSubfields = false;
+                    } else {
+                        separateSubfields = null;
                     }
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_IDENTIFIER)) {
                     identifierField = MarcFileformat.readTextNode(n);
@@ -94,5 +105,9 @@ public @Data class MetadataConfigurationItem {
 
             }
         }
+    }
+    
+    public boolean isSeparateSubfields() {
+        return Optional.ofNullable(separateSubfields).orElse(separateEntries);
     }
 }

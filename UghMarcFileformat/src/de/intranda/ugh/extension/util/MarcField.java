@@ -35,7 +35,7 @@ import lombok.Data;
 public @Data class MarcField {
 
     private String fieldMainTag = "";
-    private String fieldSubTag = "";
+    private List<String> fieldSubTags = new ArrayList<>();
 
     private List<String> firstname = new ArrayList<>();
     private List<String> lastname = new ArrayList<>();
@@ -58,7 +58,7 @@ public @Data class MarcField {
                 if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_MAIN_TAG)) {
                     fieldMainTag = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_SUB_TAG)) {
-                    fieldSubTag = MarcFileformat.readTextNode(n);
+                    fieldSubTags.add(MarcFileformat.readTextNode(n));
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_INDICATOR_1)) {
                     fieldInd1 = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_INDICATOR_2)) {

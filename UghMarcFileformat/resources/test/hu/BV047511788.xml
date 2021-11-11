@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <record xmlns="http://www.loc.gov/MARC21/slim">
+          <leader>01763nam a2200337 i 4500</leader>
+          <controlfield tag="001">9949185083802882</controlfield>
+          <controlfield tag="005">20211103</controlfield>
+          <controlfield tag="007">cr#|||||||||||</controlfield>
+          <controlfield tag="008">211014|2021####xx######o##|######0#ger#u</controlfield>
+          <datafield ind1="7" ind2=" " tag="016">
+            <subfield code="a">1277018444</subfield>
+            <subfield code="2">OCoLC</subfield>
+          </datafield>
+          <datafield ind1="7" ind2=" " tag="024">
+            <subfield code="a">urn:nbn:de:kobv:11-d-</subfield>
+            <subfield code="2">urn</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="035">
+            <subfield code="a">BV047511788</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="035">
+            <subfield code="a">(DE-599)BVBBV047511788</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="035">
+            <subfield code="a">(DE-604)BV047511788</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="040">
+            <subfield code="c">DE-604</subfield>
+            <subfield code="e">rda</subfield>
+            <subfield code="a">DE-11</subfield>
+            <subfield code="d">DE-11</subfield>
+          </datafield>
+          <datafield ind1=" " ind2="7" tag="041">
+            <subfield code="a">ger</subfield>
+            <subfield code="2">ISO 639-2</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="084">
+            <subfield code="a">AP 69000</subfield>
+            <subfield code="0">(DE-625)7870:</subfield>
+            <subfield code="2">rvk</subfield>
+          </datafield>
+          <datafield ind1="0" ind2="0" tag="245">
+            <subfield code="a">&lt;&lt;Der&gt;&gt; dramatische Dilettantismus, sein Wesen und seine Existenzberechtigung :</subfield>
+            <subfield code="b">stenographischer Bericht der außerordentlichen Kundgebungs-Tagung des Verbandes der Privat-Theater-Vereine Deutschlands, e.V. am 29. März 1914, sowie eine angefügte Denkschrift über die wichtigsten Bestimmungen der Gewerbeordnung für Privat-Theatervereine.</subfield>
+          </datafield>
+          <datafield ind1=" " ind2="1" tag="264">
+            <subfield code="a">Berlin :</subfield>
+            <subfield code="b">Humboldt-Universität zu Berlin, Universitätsbibliothek,</subfield>
+            <subfield code="c">2021.</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="300">
+            <subfield code="a">1 Online-Ressource (30 Seiten).</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="336">
+            <subfield code="b">txt</subfield>
+            <subfield code="2">rdacontent</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="337">
+            <subfield code="b">c</subfield>
+            <subfield code="2">rdamedia</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="338">
+            <subfield code="b">cr</subfield>
+            <subfield code="2">rdacarrier</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="534">
+            <subfield code="c">1914</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="546">
+            <subfield code="b">Lateinisch (Fraktur)</subfield>
+          </datafield>
+          <datafield ind1="2" ind2=" " tag="710">
+            <subfield code="a">Verband der Privat-Theater-Vereine Deutschlands.</subfield>
+            <subfield code="4">isb</subfield>
+            <subfield code="0">(DE-588)5023117-0</subfield>
+          </datafield>
+          <datafield ind1="2" ind2=" " tag="710">
+            <subfield code="a">Verband 2</subfield>
+            <subfield code="4">isb</subfield>
+            <subfield code="0">(DE-588)5023117-1</subfield>
+          </datafield>
+          <datafield ind1="0" ind2="8" tag="776">
+            <subfield code="i">Elektronische Reproduktion von</subfield>
+            <subfield code="t">&lt;&lt;Der&gt;&gt; dramatische Dilettantismus, sein Wesen und seine Existenzberechtigung</subfield>
+            <subfield code="d">Berlin</subfield>
+            <subfield code="e">Verlegt und herausgegeben vom Verband der Privat-Theater-Vereine Deutschlands e.V.</subfield>
+            <subfield code="f">1914</subfield>
+            <subfield code="h">30 Seiten</subfield>
+            <subfield code="n">Nach einem Exemplar der Humboldt-Universität zu Berlin, Universitätsbibliothek mit der Signatur: 2008 A 10277</subfield>
+            <subfield code="w">BV025354793</subfield>
+          </datafield>
+          <datafield ind1="4" ind2=" " tag="856">
+            <subfield code="u">https://www.ub.hu-berlin.de/de/bibliothek-benutzen/digitalisierung-eod/digitalisierung-in-bearbeitung</subfield>
+            <subfield code="x">Digitalisierung</subfield>
+            <subfield code="z">kostenfrei</subfield>
+            <subfield code="3">Volltext</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="912">
+            <subfield code="a">digit</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="940">
+            <subfield code="a">RDA-Aufnahme</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="942">
+            <subfield code="a">05</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="968">
+            <subfield code="a">AP 69000</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="969">
+            <subfield code="a">BV047511788</subfield>
+          </datafield>
+          <datafield ind1="g" ind2=" " tag="995">
+            <subfield code="a">Allgemeines</subfield>
+            <subfield code="2">OR010</subfield>
+          </datafield>
+          <datafield ind1=" " ind2=" " tag="AVE">
+            <subfield code="8">53739991640002882</subfield>
+            <subfield code="c">61639769230002882</subfield>
+            <subfield code="e">Available</subfield>
+            <subfield code="l">OR010</subfield>
+            <subfield code="m">HU Digitalisate E-Books</subfield>
+          </datafield>
+        </record>
