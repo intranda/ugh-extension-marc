@@ -110,4 +110,8 @@ public @Data class MetadataConfigurationItem {
     public boolean isSeparateSubfields() {
         return Optional.ofNullable(separateSubfields).orElse(separateEntries);
     }
+    
+    public String getSeparator() {
+        return Optional.ofNullable(separator).orElse("");
+    }
 }
