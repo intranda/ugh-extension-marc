@@ -883,9 +883,6 @@ public class MarcFileformat implements Fileformat {
                         }
                     }
                     if (matches == null || matches) {
-                        if(mmo.getInternalMetadataName().equals("Subject")) {
-                            System.out.println("Subject");
-                        }
                         if(mmo.isSeparateSubfields()) {
                             for(String val : subfieldValues) {
                                 Metadata md = createMetadata(mmo, val, currentIdentifier);
