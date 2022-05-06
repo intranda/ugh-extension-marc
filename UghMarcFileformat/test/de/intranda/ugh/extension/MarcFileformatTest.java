@@ -13,7 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -101,7 +101,7 @@ public class MarcFileformatTest {
 
         Assert.fail("Metadata not created");
     }
-    
+
     /**
      * @see MarcFileformat#parseMetadata(List,List)
      * @verifies import correct value for multiple subfields and condition on the same subfield
@@ -120,27 +120,27 @@ public class MarcFileformatTest {
 
         List<Metadata> metadataList = mfc.parseMetadata(datafields, mfc.metadataList);
         Assert.assertFalse(metadataList.isEmpty());
-        
+
         List<Metadata> subjects = metadataList.stream().filter(md -> md.getType().getName().equals("Subject")).collect(Collectors.toList());
         Assert.assertEquals(2, subjects.size());
         Assert.assertEquals("Literatur und Sprachen#Deutsche Sprache und Literatur", subjects.get(0).getValue());
         Assert.assertEquals("Geschichte", subjects.get(1).getValue());
-        
-//        List<Metadata> format = metadataList.stream().filter(md -> md.getType().getName().equals("FormatSourcePrint")).collect(Collectors.toList());
-//        Assert.assertEquals(1, format.size());
-//        Assert.assertEquals("96 Seiten", format.get(0).getValue());
-        
+
+        //        List<Metadata> format = metadataList.stream().filter(md -> md.getType().getName().equals("FormatSourcePrint")).collect(Collectors.toList());
+        //        Assert.assertEquals(1, format.size());
+        //        Assert.assertEquals("96 Seiten", format.get(0).getValue());
+
         List<Metadata> lang = metadataList.stream().filter(md -> md.getType().getName().equals("DocLanguage")).collect(Collectors.toList());
         Assert.assertEquals(1, lang.size());
         Assert.assertEquals("ger", lang.get(0).getValue());
-        
-        
+
+
         List<Person> personList = mfc.parsePersons(datafields, mfc.personList);
         Assert.assertEquals(1, personList.size());
         Assert.assertEquals("Bodo", personList.get(0).getFirstname());
         Assert.assertEquals("Wildberg", personList.get(0).getLastname());
     }
-    
+
     @Test
     public void parseMetadata_hu_corporate() throws Exception {
 
@@ -155,7 +155,7 @@ public class MarcFileformatTest {
 
         List<Metadata> metadataList = mfc.parseMetadata(datafields, mfc.metadataList);
         Assert.assertFalse(metadataList.isEmpty());
-        
+
         List<Corporate> corporateList = mfc.parseCorporations(datafields, mfc.corporationList);
         Assert.assertEquals(2, corporateList.size());
         Assert.assertEquals("5023117-0", corporateList.get(0).getAuthorityValue());

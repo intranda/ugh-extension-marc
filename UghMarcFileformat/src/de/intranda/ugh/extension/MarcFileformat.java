@@ -34,7 +34,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.perl.MalformedPerl5PatternException;
 import org.apache.oro.text.perl.Perl5Util;
@@ -181,7 +181,7 @@ public class MarcFileformat implements Fileformat {
         return read(inNode, null);
     }
 
-    
+
     public boolean read(Node inNode, DocStruct readAsDocStrct) throws ReadException {
 
         DocStruct ds = null;
@@ -263,7 +263,7 @@ public class MarcFileformat implements Fileformat {
                 }
             }
         }
-        if(ds == null) {            
+        if(ds == null) {
             ds = parseDocstruct(leader, controlfields);
         }
 
@@ -419,7 +419,7 @@ public class MarcFileformat implements Fileformat {
                 String ind2Value = ind2Node.getNodeValue().trim();
 
                 Boolean matches = null;
- 
+
 
                 // Match main tag in the config
                 for (MarcField mf : mmi.getFieldList()) {
@@ -517,10 +517,10 @@ public class MarcFileformat implements Fileformat {
                             matches = false;
                         }
                     }
-                    
+
                     //replace in first and last name entries
                     if(StringUtils.isNotBlank(mmi.getFieldReplacement())) {
-                        if(StringUtils.isNotBlank(currentMainName)) {                        
+                        if(StringUtils.isNotBlank(currentMainName)) {
                             currentMainName = perlUtil.substitute(mmi.getFieldReplacement(), currentMainName);
                         }
                         for (int i = 0; i < currentSubNames.size(); i++) {
@@ -529,11 +529,11 @@ public class MarcFileformat implements Fileformat {
                             name = perlUtil.substitute(mmi.getFieldReplacement(), name);
                             subName.setValue(name);
                         }
-                        if(StringUtils.isNotBlank(currentPartName)) {                        
+                        if(StringUtils.isNotBlank(currentPartName)) {
                             currentPartName = perlUtil.substitute(mmi.getFieldReplacement(), currentPartName);
                         }
                     }
-                    
+
                     if (matches == null || matches) {
                         if (mmi.isSeparateEntries()) {
                             // Create separate entity
@@ -563,7 +563,7 @@ public class MarcFileformat implements Fileformat {
                         }
 
                     }
-                    
+
                 }
 
                 // Single entity for all occurrences
@@ -741,17 +741,17 @@ public class MarcFileformat implements Fileformat {
 
                 //replace in first and last name entries
                 if(StringUtils.isNotBlank(mmo.getFieldReplacement())) {
-                    if(StringUtils.isNotBlank(currentFirstName)) {                        
+                    if(StringUtils.isNotBlank(currentFirstName)) {
                         currentFirstName = perlUtil.substitute(mmo.getFieldReplacement(), currentFirstName);
                     }
-                    if(StringUtils.isNotBlank(currentLastName)) {                        
+                    if(StringUtils.isNotBlank(currentLastName)) {
                         currentLastName = perlUtil.substitute(mmo.getFieldReplacement(), currentLastName);
                     }
                 }
-                
+
                 if (matches == null || matches) {
-                    
-                    
+
+
                     if (mmo.isSeparateEntries()) {
                         // Create separate entity person
                         Person md = createPerson(mmo, currentFirstName, currentLastName, currentIdentifier);
@@ -937,7 +937,7 @@ public class MarcFileformat implements Fileformat {
             try {
                 md = new Metadata(prefs.getMetadataTypeByName(mmo.getInternalMetadataName()));
                 if (StringUtils.isNotBlank(mmo.getFieldReplacement())) {
-                    try {                        
+                    try {
                         value = perlUtil.substitute(mmo.getFieldReplacement(), value);
                     } catch(MalformedPerl5PatternException e) {
                         logger.error("Error applying field replacement for " + mmo.getFieldReplacement(), e);
@@ -1077,7 +1077,7 @@ public class MarcFileformat implements Fileformat {
     public boolean read(String filename) throws ReadException {
         return this.read(filename, null);
     }
-    
+
     public boolean read(String filename, DocStruct readAsDocStruct) throws ReadException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         // Do not validate XML file.
