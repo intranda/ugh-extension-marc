@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,9 +37,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.oro.text.perl.MalformedPerl5PatternException;
-import org.apache.oro.text.perl.Perl5Util;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -48,6 +47,7 @@ import de.intranda.ugh.extension.util.DocstructConfigurationItem;
 import de.intranda.ugh.extension.util.GroupConfigurationItem;
 import de.intranda.ugh.extension.util.MarcField;
 import de.intranda.ugh.extension.util.MetadataConfigurationItem;
+import lombok.extern.log4j.Log4j2;
 import ugh.dl.Corporate;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
@@ -67,6 +67,7 @@ import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
 
+@Log4j2
 public class MarcFileformat implements Fileformat {
 
     public static final String PREFS_MARC_METADATA_NAME = "Metadata";
@@ -108,7 +109,6 @@ public class MarcFileformat implements Fileformat {
     public static final String PREFS_MARC_CONTROLFIELD_008_21 = "field008_21";
 
     private Prefs prefs;
-    private Perl5Util perlUtil;
     private DigitalDocument digDoc = new DigitalDocument();
 
     protected List<MetadataConfigurationItem> metadataList = new LinkedList<>();
@@ -118,14 +118,11 @@ public class MarcFileformat implements Fileformat {
 
     private List<GroupConfigurationItem> groupList = new LinkedList<>();
 
-    private static final Logger logger = Logger.getLogger(ugh.dl.DigitalDocument.class);
-
     public MarcFileformat(Prefs prefs) {
         this.prefs = prefs;
-        perlUtil = new Perl5Util();
         Node marcNode = this.prefs.getPreferenceNode(MARC_PREFS_NODE_NAME_STRING);
         if (marcNode == null) {
-            logger.error("Can't read preferences for marcxml fileformat! Node 'Marc' in XML-file not found!");
+            log.error("Can't read preferences for marcxml fileformat! Node 'Marc' in XML-file not found!");
         } else {
             this.readPrefs(marcNode);
         }
@@ -181,13 +178,12 @@ public class MarcFileformat implements Fileformat {
         return read(inNode, null);
     }
 
-
     public boolean read(Node inNode, DocStruct readAsDocStrct) throws ReadException {
 
         DocStruct ds = null;
         DocStruct dsOld = null;
 
-        logger.info("Parsing marcxml record");
+        log.info("Parsing marcxml record");
 
         // DOM tree is created already - parse the the tree and find
         // picaplusresults and picaplusrecord elements.
@@ -263,14 +259,14 @@ public class MarcFileformat implements Fileformat {
                 }
             }
         }
-        if(ds == null) {
+        if (ds == null) {
             ds = parseDocstruct(leader, controlfields);
         }
 
         if (ds == null) {
             // No DocStruct found, this is a serious problem; as I do not know
             // to where I should attach the metadata.
-            logger.error("Marcxml record read, but no DocStruct found!");
+            log.error("Marcxml record read, but no DocStruct found!");
             return null;
         }
 
@@ -289,11 +285,11 @@ public class MarcFileformat implements Fileformat {
                     ds.addMetadata(md2);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    logger.warn(message, e);
+                    log.warn(message, e);
                     continue;
                 } catch (DocStructHasNoTypeException e) {
                     String message = "Ignoring DocStructHasNoTypeException at OPAC import!";
-                    logger.warn(message, e);
+                    log.warn(message, e);
                     continue;
                 }
             }
@@ -304,7 +300,7 @@ public class MarcFileformat implements Fileformat {
                     ds.addCorporate(corp);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    logger.warn(message, e);
+                    log.warn(message, e);
                     continue;
                 }
             }
@@ -317,10 +313,10 @@ public class MarcFileformat implements Fileformat {
                     ds.addPerson(per2);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    logger.warn(message, e);
+                    log.warn(message, e);
                 } catch (IncompletePersonObjectException e) {
                     String message = "Ignoring IncompletePersonObjectException at OPAC import!";
-                    logger.warn(message, e);
+                    log.warn(message, e);
                 }
             }
         }
@@ -331,7 +327,7 @@ public class MarcFileformat implements Fileformat {
                     ds.addMetadataGroup(mdg);
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
-                    logger.warn(message, e);
+                    log.warn(message, e);
                 }
             }
         }
@@ -394,7 +390,7 @@ public class MarcFileformat implements Fileformat {
                 }
                 groups.add(mg);
             } catch (MetadataTypeNotAllowedException e) {
-                logger.error(e);
+                log.error(e);
             }
         }
 
@@ -419,7 +415,6 @@ public class MarcFileformat implements Fileformat {
                 String ind2Value = ind2Node.getNodeValue().trim();
 
                 Boolean matches = null;
-
 
                 // Match main tag in the config
                 for (MarcField mf : mmi.getFieldList()) {
@@ -458,8 +453,9 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmi.getConditionField()) && StringUtils.isNotBlank(mmi.getConditionValue())
                                 && mmi.getConditionField().equals(code.getNodeValue())) {
                             String valueToCheck = readTextNode(subfield);
-                            if (!perlUtil.match(mmi.getConditionValue(), valueToCheck)
-                                    && !(mmi.getConditionValue().equals("/empty/") && StringUtils.isBlank(valueToCheck))) {
+                            Pattern pattern = Pattern.compile(mmi.getConditionValue());
+                            if (!pattern.matcher(valueToCheck).find()
+                                    && !(mmi.getConditionValue().equals("empty") && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -473,10 +469,9 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmi.getIdentifierField()) && mmi.getIdentifierField().equals(code.getNodeValue())) {
                             String localIdentifier = readTextNode(subfield);
                             if (StringUtils.isBlank(mmi.getIdentifierConditionField())
-                                    || perlUtil.match(mmi.getIdentifierConditionField(), localIdentifier)) {
-
+                                    || Pattern.compile(mmi.getIdentifierConditionField()).matcher(localIdentifier).find()) {
                                 if (StringUtils.isNotBlank(mmi.getIdentifierReplacement())) {
-                                    localIdentifier = perlUtil.substitute(mmi.getIdentifierReplacement(), localIdentifier);
+                                    localIdentifier = localIdentifier.replaceAll(mmi.getIdentifierValueCondition(), mmi.getIdentifierReplacement());
                                 }
                                 currentIdentifier = localIdentifier;
                             }
@@ -484,17 +479,15 @@ public class MarcFileformat implements Fileformat {
 
                         if (!mf.getMainName().isEmpty()) {
                             for (String subfieldCode : mf.getMainName()) {
-                                if (subfieldCode.equals(code.getNodeValue())) {
-                                    if (StringUtils.isBlank(currentMainName)) {
-                                        currentMainName = readTextNode(subfield);
-                                    }
+                                if (subfieldCode.equals(code.getNodeValue()) && StringUtils.isBlank(currentMainName)) {
+                                    currentMainName = readTextNode(subfield);
                                 }
                             }
                         }
                         if (!mf.getSubName().isEmpty()) {
                             for (String subfieldCode : mf.getSubName()) {
                                 if (subfieldCode.equals(code.getNodeValue())) {
-                                    currentSubNames.add(new NamePart("subname",readTextNode(subfield)));
+                                    currentSubNames.add(new NamePart("subname", readTextNode(subfield)));
                                 }
 
                             }
@@ -513,24 +506,24 @@ public class MarcFileformat implements Fileformat {
 
                         // In case a non-empty condition is configured but no condition field was found, skip this value
                         if (StringUtils.isNotBlank(mmi.getConditionField()) && StringUtils.isNotBlank(mmi.getConditionValue())
-                                && !mmi.getConditionValue().equals("/empty/") && matches == null) {
+                                && !mmi.getConditionValue().equals("empty") && matches == null) {
                             matches = false;
                         }
                     }
 
                     //replace in first and last name entries
-                    if(StringUtils.isNotBlank(mmi.getFieldReplacement())) {
-                        if(StringUtils.isNotBlank(currentMainName)) {
-                            currentMainName = perlUtil.substitute(mmi.getFieldReplacement(), currentMainName);
+                    if (StringUtils.isNotBlank(mmi.getFieldRegExp())) {
+                        if (StringUtils.isNotBlank(currentMainName)) {
+                            currentMainName = currentMainName.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
                         }
                         for (int i = 0; i < currentSubNames.size(); i++) {
                             NamePart subName = currentSubNames.get(i);
                             String name = subName.getValue();
-                            name = perlUtil.substitute(mmi.getFieldReplacement(), name);
+                            name = name.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
                             subName.setValue(name);
                         }
-                        if(StringUtils.isNotBlank(currentPartName)) {
-                            currentPartName = perlUtil.substitute(mmi.getFieldReplacement(), currentPartName);
+                        if (StringUtils.isNotBlank(currentPartName)) {
+                            currentPartName = currentPartName.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
                         }
                     }
 
@@ -561,9 +554,7 @@ public class MarcFileformat implements Fileformat {
                                 singleIdentifier = currentIdentifier;
                             }
                         }
-
                     }
-
                 }
 
                 // Single entity for all occurrences
@@ -644,8 +635,11 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
                                 && mmo.getConditionField().equals(code.getNodeValue())) {
                             String valueToCheck = readTextNode(subfield);
-                            if (!perlUtil.match(mmo.getConditionValue(), valueToCheck)
-                                    && !(mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(valueToCheck))) {
+                            Pattern pattern = Pattern.compile(mmo.getConditionValue());
+                            Matcher matcher = pattern.matcher(valueToCheck);
+
+                            if (!matcher.find()
+                                    && !(mmo.getConditionValue().equals("empty") && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -659,10 +653,9 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
                             String localIdentifier = readTextNode(subfield);
                             if (StringUtils.isBlank(mmo.getIdentifierConditionField())
-                                    || perlUtil.match(mmo.getIdentifierConditionField(), localIdentifier)) {
-
+                                    || Pattern.compile(mmo.getIdentifierConditionField()).matcher(localIdentifier).find()) {
                                 if (StringUtils.isNotBlank(mmo.getIdentifierReplacement())) {
-                                    localIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), localIdentifier);
+                                    localIdentifier = localIdentifier.replaceAll(mmo.getIdentifierValueCondition(), mmo.getIdentifierReplacement());
                                 }
                                 currentIdentifier = localIdentifier;
                             }
@@ -735,22 +728,21 @@ public class MarcFileformat implements Fileformat {
 
                 // In case a non-empty condition is configured but no condition field was found, skip this value
                 if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
-                        && !mmo.getConditionValue().equals("/empty/") && matches == null) {
+                        && !mmo.getConditionValue().equals("empty") && matches == null) {
                     matches = false;
                 }
 
                 //replace in first and last name entries
-                if(StringUtils.isNotBlank(mmo.getFieldReplacement())) {
-                    if(StringUtils.isNotBlank(currentFirstName)) {
-                        currentFirstName = perlUtil.substitute(mmo.getFieldReplacement(), currentFirstName);
+                if (StringUtils.isNotBlank(mmo.getFieldRegExp())) {
+                    if (StringUtils.isNotBlank(currentFirstName)) {
+                        currentFirstName = currentFirstName.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
                     }
-                    if(StringUtils.isNotBlank(currentLastName)) {
-                        currentLastName = perlUtil.substitute(mmo.getFieldReplacement(), currentLastName);
+                    if (StringUtils.isNotBlank(currentLastName)) {
+                        currentLastName = currentFirstName.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
                     }
                 }
 
                 if (matches == null || matches) {
-
 
                     if (mmo.isSeparateEntries()) {
                         // Create separate entity person
@@ -811,7 +803,7 @@ public class MarcFileformat implements Fileformat {
                 Node tagNode = nnm.getNamedItem("tag");
                 Node ind1Node = nnm.getNamedItem("ind1");
                 Node ind2Node = nnm.getNamedItem("ind2");
-                logger.debug(tagNode.getNodeName());
+                log.debug(tagNode.getNodeName());
 
                 Boolean matches = null;
 
@@ -850,8 +842,9 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
                                 && mmo.getConditionField().equals(code.getNodeValue())) {
                             String valueToCheck = readTextNode(subfield);
-                            if (!perlUtil.match(mmo.getConditionValue(), valueToCheck)
-                                    && !(mmo.getConditionValue().equals("/empty/") && StringUtils.isBlank(valueToCheck))) {
+                            Pattern pattern = Pattern.compile(mmo.getConditionValue());
+                            if (!pattern.matcher(valueToCheck).find()
+                                    && !(mmo.getConditionValue().equals("empty") && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -868,9 +861,9 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
                             String localIdentifier = readTextNode(subfield);
                             if (StringUtils.isBlank(mmo.getIdentifierConditionField())
-                                    || perlUtil.match(mmo.getIdentifierConditionField(), localIdentifier)) {
-                                if (!StringUtils.isBlank(mmo.getIdentifierReplacement())) {
-                                    localIdentifier = perlUtil.substitute(mmo.getIdentifierReplacement(), localIdentifier);
+                                    || Pattern.compile(mmo.getIdentifierConditionField()).matcher(localIdentifier).find()) {
+                                if (StringUtils.isNotBlank(mmo.getIdentifierReplacement())) {
+                                    localIdentifier = localIdentifier.replaceAll(mmo.getIdentifierValueCondition(), mmo.getIdentifierReplacement());
                                 }
                                 currentIdentifier = localIdentifier;
                             }
@@ -878,19 +871,19 @@ public class MarcFileformat implements Fileformat {
 
                         // In case a non-empty condition is configured but no condition field was found, skip this value
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
-                                && !mmo.getConditionValue().equals("/empty/") && matches == null) {
+                                && !mmo.getConditionValue().equals("empty") && matches == null) {
                             matches = false;
                         }
                     }
                     if (matches == null || matches) {
-                        if(mmo.isSeparateSubfields()) {
-                            for(String val : subfieldValues) {
+                        if (mmo.isSeparateSubfields()) {
+                            for (String val : subfieldValues) {
                                 Metadata md = createMetadata(mmo, val, currentIdentifier);
                                 if (md != null) {
                                     metadata.add(md);
                                 }
                             }
-                        } else if(mmo.isSeparateEntries()) {
+                        } else if (mmo.isSeparateEntries()) {
                             String currentValue = subfieldValues.stream().collect(Collectors.joining(mmo.getSeparator()));
                             Metadata md = createMetadata(mmo, currentValue, currentIdentifier);
                             if (md != null) {
@@ -936,21 +929,16 @@ public class MarcFileformat implements Fileformat {
         if (!value.isEmpty()) {
             try {
                 md = new Metadata(prefs.getMetadataTypeByName(mmo.getInternalMetadataName()));
-                if (StringUtils.isNotBlank(mmo.getFieldReplacement())) {
-                    try {
-                        value = perlUtil.substitute(mmo.getFieldReplacement(), value);
-                    } catch(MalformedPerl5PatternException e) {
-                        logger.error("Error applying field replacement for " + mmo.getFieldReplacement(), e);
-                    }
+                if (StringUtils.isNotBlank(mmo.getFieldRegExp())) {
+                    value =  value.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
                 }
                 md.setValue(value);
                 if (!identifier.isEmpty()) {
-                    // TODO alternative zu gnd
                     md.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
                 }
 
             } catch (MetadataTypeNotAllowedException e) {
-                logger.error(e);
+                log.error(e);
             }
         }
         return md;
@@ -981,7 +969,7 @@ public class MarcFileformat implements Fileformat {
                 }
 
             } catch (MetadataTypeNotAllowedException e) {
-                logger.error(e);
+                log.error(e);
             }
         }
         return person;
@@ -1006,7 +994,7 @@ public class MarcFileformat implements Fileformat {
                 }
 
             } catch (MetadataTypeNotAllowedException e) {
-                logger.error(e);
+                log.error(e);
             }
         }
         return corporate;
@@ -1067,7 +1055,7 @@ public class MarcFileformat implements Fileformat {
             }
 
         } catch (TypeNotAllowedForParentException e) {
-            logger.error(e);
+            log.error(e);
         }
 
         return ds;
@@ -1096,7 +1084,7 @@ public class MarcFileformat implements Fileformat {
 
             return read(node, readAsDocStruct);
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            logger.error(e);
+            log.error(e);
         }
 
         return false;

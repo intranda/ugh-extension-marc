@@ -43,10 +43,15 @@ public @Data class MetadataConfigurationItem {
 
     private String identifierField = "";
     private String identifierConditionField = "";
+
+    private String identifierValueCondition = "";
     private String identifierReplacement = "";
 
     private String conditionField = "";
     private String conditionValue = "";
+
+
+    private String fieldRegExp = "";
     private String fieldReplacement = "";
 
     private boolean separateEntries = true;
@@ -88,10 +93,14 @@ public @Data class MetadataConfigurationItem {
                     identifierConditionField = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_IDENTIFIER_REPLACEMENT)) {
                     identifierReplacement = MarcFileformat.readTextNode(n);
+                } else if (n.getNodeName().equalsIgnoreCase("identifierRegExp")) {
+                    identifierValueCondition = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_CONDITION_FIELD)) {
                     conditionField = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_CONDITION_VALUE)) {
                     conditionValue = MarcFileformat.readTextNode(n);
+                } else if (n.getNodeName().equalsIgnoreCase("fieldRegExp")) {
+                    fieldRegExp = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_VALUE_REPLACEMENT)) {
                     fieldReplacement = MarcFileformat.readTextNode(n);
                 } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_ABORT_AFTER_MATCH)) {
@@ -106,11 +115,11 @@ public @Data class MetadataConfigurationItem {
             }
         }
     }
-    
+
     public boolean isSeparateSubfields() {
         return Optional.ofNullable(separateSubfields).orElse(separateEntries);
     }
-    
+
     public String getSeparator() {
         return Optional.ofNullable(separator).orElse("");
     }
