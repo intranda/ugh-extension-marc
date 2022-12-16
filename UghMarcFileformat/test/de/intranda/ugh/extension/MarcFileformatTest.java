@@ -121,7 +121,7 @@ public class MarcFileformatTest {
         List<Metadata> metadataList = mfc.parseMetadata(datafields, mfc.metadataList);
         Assert.assertFalse(metadataList.isEmpty());
 
-        List<Metadata> subjects = metadataList.stream().filter(md -> md.getType().getName().equals("Subject")).collect(Collectors.toList());
+        List<Metadata> subjects = metadataList.stream().filter(md -> "Subject".equals(md.getType().getName())).collect(Collectors.toList());
         Assert.assertEquals(2, subjects.size());
         Assert.assertEquals("Literatur und Sprachen#Deutsche Sprache und Literatur", subjects.get(0).getValue());
         Assert.assertEquals("Geschichte", subjects.get(1).getValue());
@@ -130,13 +130,13 @@ public class MarcFileformatTest {
         //        Assert.assertEquals(1, format.size());
         //        Assert.assertEquals("96 Seiten", format.get(0).getValue());
 
-        List<Metadata> lang = metadataList.stream().filter(md -> md.getType().getName().equals("DocLanguage")).collect(Collectors.toList());
+        List<Metadata> lang = metadataList.stream().filter(md -> "DocLanguage".equals(md.getType().getName())).collect(Collectors.toList());
         Assert.assertEquals(1, lang.size());
         Assert.assertEquals("ger", lang.get(0).getValue());
 
-
         List<Person> personList = mfc.parsePersons(datafields, mfc.personList);
         Assert.assertEquals(1, personList.size());
+        Assert.assertEquals("116144742", personList.get(0).getAuthorityValue());
         Assert.assertEquals("Bodo", personList.get(0).getFirstname());
         Assert.assertEquals("Wildberg", personList.get(0).getLastname());
     }
@@ -163,9 +163,6 @@ public class MarcFileformatTest {
         Assert.assertEquals("5023117-1", corporateList.get(1).getAuthorityValue());
         Assert.assertEquals("Verband 2", corporateList.get(1).getMainName());
     }
-
-
-
 
     /**
      * @see MarcFileformat#parseMetadata(List,List)
@@ -197,7 +194,6 @@ public class MarcFileformatTest {
         Assert.assertEquals("Tübingen", values.get(1));
     }
 
-
     @Test
     public void parseMetadata_shouldImportCombinedTitleCorrectly() throws Exception {
         Document doc = loadMarcDocument("resources/test/1717559573.xml");
@@ -220,7 +216,6 @@ public class MarcFileformatTest {
         assertNotNull(title);
         Assert.assertEquals("Itt, Paul; Blatt 2", title.getValue());
     }
-
 
     /**
      * @see MarcFileformat#parsePersons(List,List)
@@ -291,7 +286,6 @@ public class MarcFileformatTest {
         Assert.assertEquals("Anna Amalia, Sachsen-Weimar-Eisenach, Herzogin", p.getFirstname());
     }
 
-
     @Test
     public void parseCorporation() throws Exception {
         Document doc = loadMarcDocument("resources/test/corporation.xml");
@@ -309,8 +303,8 @@ public class MarcFileformatTest {
 
         fixture = cl.get(1);
         assertEquals("Catholic Church.", fixture.getMainName());
-        assertEquals("Province of Baltimore (Md.).",fixture.getSubNames().get(0).getValue());
-        assertEquals("Provincial Council",fixture.getSubNames().get(1).getValue());
+        assertEquals("Province of Baltimore (Md.).", fixture.getSubNames().get(0).getValue());
+        assertEquals("Provincial Council", fixture.getSubNames().get(1).getValue());
         assertEquals("1869; 10th", fixture.getPartName());
     }
 

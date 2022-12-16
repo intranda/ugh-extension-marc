@@ -138,19 +138,19 @@ public class MarcFileformat implements Fileformat {
             Node n = children.item(i);
 
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                if (n.getNodeName().equalsIgnoreCase(PREFS_MARC_METADATA_NAME)) {
+                if (PREFS_MARC_METADATA_NAME.equalsIgnoreCase(n.getNodeName())) {
                     MetadataConfigurationItem metadata = new MetadataConfigurationItem(n);
                     metadataList.add(metadata);
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_MARC_PERSON_NAME)) {
+                } else if (PREFS_MARC_PERSON_NAME.equalsIgnoreCase(n.getNodeName())) {
                     MetadataConfigurationItem metadata = new MetadataConfigurationItem(n);
                     personList.add(metadata);
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_MARC_DOCTSRUCT_NAME)) {
+                } else if (PREFS_MARC_DOCTSRUCT_NAME.equalsIgnoreCase(n.getNodeName())) {
                     DocstructConfigurationItem docstruct = new DocstructConfigurationItem(n);
                     docstructList.add(docstruct);
-                } else if (n.getNodeName().equalsIgnoreCase(PREFS_MARC_GROUP_NAME)) {
+                } else if (PREFS_MARC_GROUP_NAME.equalsIgnoreCase(n.getNodeName())) {
                     GroupConfigurationItem item = new GroupConfigurationItem(n);
                     groupList.add(item);
-                } else if (n.getNodeName().equalsIgnoreCase("Corporate")) {
+                } else if ("Corporate".equalsIgnoreCase(n.getNodeName())) {
                     MetadataConfigurationItem metadata = new MetadataConfigurationItem(n);
                     corporationList.add(metadata);
                 }
@@ -192,7 +192,7 @@ public class MarcFileformat implements Fileformat {
             Node ppr = inNode;
             if (ppr.getNodeType() == Node.ELEMENT_NODE) {
                 String nodename = ppr.getNodeName();
-                if (nodename.equals(MARC_PREFS_NODE_COLLECTION_STRING)) {
+                if (MARC_PREFS_NODE_COLLECTION_STRING.equals(nodename)) {
 
                     // Iterate over all results.
                     NodeList marcrecords = ppr.getChildNodes();
@@ -201,7 +201,7 @@ public class MarcFileformat implements Fileformat {
 
                         if (n.getNodeType() == Node.ELEMENT_NODE) {
                             nodename = n.getNodeName();
-                            if (nodename.equals(MARC_PREFS_NODE_RECORD_STRING)) {
+                            if (MARC_PREFS_NODE_RECORD_STRING.equals(nodename)) {
                                 // Parse a single picaplus record.
                                 ds = parseMarcRecord(n, readAsDocStrct);
                                 // It's the first one, so this becomes the
@@ -218,7 +218,7 @@ public class MarcFileformat implements Fileformat {
                             }
                         }
                     }
-                } else if (nodename.equals(MARC_PREFS_NODE_RECORD_STRING)) {
+                } else if (MARC_PREFS_NODE_RECORD_STRING.equals(nodename)) {
                     ds = parseMarcRecord(ppr, readAsDocStrct);
                     if (ds != null) {
                         this.digDoc.setLogicalDocStruct(ds);
@@ -250,11 +250,11 @@ public class MarcFileformat implements Fileformat {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                if (n.getNodeName().equalsIgnoreCase("leader")) {
+                if ("leader".equalsIgnoreCase(n.getNodeName())) {
                     leader = n;
-                } else if (n.getNodeName().equalsIgnoreCase("controlfield")) {
+                } else if ("controlfield".equalsIgnoreCase(n.getNodeName())) {
                     controlfields.add(n);
-                } else if (n.getNodeName().equalsIgnoreCase("datafield")) {
+                } else if ("datafield".equalsIgnoreCase(n.getNodeName())) {
                     datafields.add(n);
                 }
             }
@@ -424,10 +424,10 @@ public class MarcFileformat implements Fileformat {
 
                     boolean matchesInd1 = false;
                     boolean matchesInd2 = false;
-                    if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Value)) {
+                    if ("any".equals(mf.getFieldInd1()) || mf.getFieldInd1().trim().equals(ind1Value)) {
                         matchesInd1 = true;
                     }
-                    if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Value)) {
+                    if ("any".equals(mf.getFieldInd2()) || mf.getFieldInd2().trim().equals(ind2Value)) {
                         matchesInd2 = true;
                     }
                     if (!matchesInd1 || !matchesInd2) {
@@ -455,7 +455,7 @@ public class MarcFileformat implements Fileformat {
                             String valueToCheck = readTextNode(subfield);
                             Pattern pattern = Pattern.compile(mmi.getConditionValue());
                             if (!pattern.matcher(valueToCheck).find()
-                                    && !(mmi.getConditionValue().equals("empty") && StringUtils.isBlank(valueToCheck))) {
+                                    && !("empty".equals(mmi.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -506,7 +506,7 @@ public class MarcFileformat implements Fileformat {
 
                         // In case a non-empty condition is configured but no condition field was found, skip this value
                         if (StringUtils.isNotBlank(mmi.getConditionField()) && StringUtils.isNotBlank(mmi.getConditionValue())
-                                && !mmi.getConditionValue().equals("empty") && matches == null) {
+                                && !"empty".equals(mmi.getConditionValue()) && matches == null) {
                             matches = false;
                         }
                     }
@@ -516,8 +516,7 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(currentMainName)) {
                             currentMainName = currentMainName.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
                         }
-                        for (int i = 0; i < currentSubNames.size(); i++) {
-                            NamePart subName = currentSubNames.get(i);
+                        for (NamePart subName : currentSubNames) {
                             String name = subName.getValue();
                             name = name.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
                             subName.setValue(name);
@@ -610,10 +609,10 @@ public class MarcFileformat implements Fileformat {
 
                     boolean matchesInd1 = false;
                     boolean matchesInd2 = false;
-                    if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Value)) {
+                    if ("any".equals(mf.getFieldInd1()) || mf.getFieldInd1().trim().equals(ind1Value)) {
                         matchesInd1 = true;
                     }
-                    if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Value)) {
+                    if ("any".equals(mf.getFieldInd2()) || mf.getFieldInd2().trim().equals(ind2Value)) {
                         matchesInd2 = true;
                     }
                     if (!matchesInd1 || !matchesInd2) {
@@ -639,7 +638,7 @@ public class MarcFileformat implements Fileformat {
                             Matcher matcher = pattern.matcher(valueToCheck);
 
                             if (!matcher.find()
-                                    && !(mmo.getConditionValue().equals("empty") && StringUtils.isBlank(valueToCheck))) {
+                                    && !("empty".equals(mmo.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -728,7 +727,7 @@ public class MarcFileformat implements Fileformat {
 
                 // In case a non-empty condition is configured but no condition field was found, skip this value
                 if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
-                        && !mmo.getConditionValue().equals("empty") && matches == null) {
+                        && !"empty".equals(mmo.getConditionValue()) && matches == null) {
                     matches = false;
                 }
 
@@ -738,7 +737,7 @@ public class MarcFileformat implements Fileformat {
                         currentFirstName = currentFirstName.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
                     }
                     if (StringUtils.isNotBlank(currentLastName)) {
-                        currentLastName = currentFirstName.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
+                        currentLastName = currentLastName.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
                     }
                 }
 
@@ -815,10 +814,10 @@ public class MarcFileformat implements Fileformat {
 
                     boolean matchesInd1 = false;
                     boolean matchesInd2 = false;
-                    if (mf.getFieldInd1().equals("any") || mf.getFieldInd1().trim().equals(ind1Node.getNodeValue().trim())) {
+                    if ("any".equals(mf.getFieldInd1()) || mf.getFieldInd1().trim().equals(ind1Node.getNodeValue().trim())) {
                         matchesInd1 = true;
                     }
-                    if (mf.getFieldInd2().equals("any") || mf.getFieldInd2().trim().equals(ind2Node.getNodeValue().trim())) {
+                    if ("any".equals(mf.getFieldInd2()) || mf.getFieldInd2().trim().equals(ind2Node.getNodeValue().trim())) {
                         matchesInd2 = true;
                     }
                     if (!matchesInd1 || !matchesInd2) {
@@ -844,7 +843,7 @@ public class MarcFileformat implements Fileformat {
                             String valueToCheck = readTextNode(subfield);
                             Pattern pattern = Pattern.compile(mmo.getConditionValue());
                             if (!pattern.matcher(valueToCheck).find()
-                                    && !(mmo.getConditionValue().equals("empty") && StringUtils.isBlank(valueToCheck))) {
+                                    && !("empty".equals(mmo.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -871,7 +870,7 @@ public class MarcFileformat implements Fileformat {
 
                         // In case a non-empty condition is configured but no condition field was found, skip this value
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
-                                && !mmo.getConditionValue().equals("empty") && matches == null) {
+                                && !"empty".equals(mmo.getConditionValue()) && matches == null) {
                             matches = false;
                         }
                     }
@@ -930,7 +929,7 @@ public class MarcFileformat implements Fileformat {
             try {
                 md = new Metadata(prefs.getMetadataTypeByName(mmo.getInternalMetadataName()));
                 if (StringUtils.isNotBlank(mmo.getFieldRegExp())) {
-                    value =  value.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
+                    value = value.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
                 }
                 md.setValue(value);
                 if (!identifier.isEmpty()) {
@@ -1015,9 +1014,9 @@ public class MarcFileformat implements Fileformat {
         for (Node node : controlfields) {
             NamedNodeMap nnm = node.getAttributes();
             Node tagNode = nnm.getNamedItem("tag");
-            if (tagNode.getNodeValue().equals("007") && field007 == null) {
+            if ("007".equals(tagNode.getNodeValue()) && field007 == null) {
                 field007 = readTextNode(node).toCharArray();
-            } else if (tagNode.getNodeValue().equals("008") && field008 == null) {
+            } else if ("008".equals(tagNode.getNodeValue()) && field008 == null) {
                 field008 = readTextNode(node).toCharArray();
             }
         }

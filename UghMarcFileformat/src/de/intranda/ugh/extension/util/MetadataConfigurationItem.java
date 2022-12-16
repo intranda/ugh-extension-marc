@@ -50,12 +50,11 @@ public @Data class MetadataConfigurationItem {
     private String conditionField = "";
     private String conditionValue = "";
 
-
     private String fieldRegExp = "";
     private String fieldReplacement = "";
 
     private boolean separateEntries = true;
-    private Boolean separateSubfields = null;   //a null value means that the value of separateEntries should be used
+    private Boolean separateSubfields = null; //a null value means that the value of separateEntries should be used
 
     private boolean abortAfterFirstMatch = true;
 
@@ -65,47 +64,53 @@ public @Data class MetadataConfigurationItem {
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_INTERNAL_METADATA_NAME)) {
+                if (MarcFileformat.PREFS_MARC_INTERNAL_METADATA_NAME.equalsIgnoreCase(n.getNodeName())) {
                     internalMetadataName = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_SEPARATOR)) {
+                } else if (MarcFileformat.PREFS_MARC_SEPARATOR.equalsIgnoreCase(n.getNodeName())) {
                     separator = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_FIELD_NAME)) {
+                } else if (MarcFileformat.PREFS_MARC_FIELD_NAME.equalsIgnoreCase(n.getNodeName())) {
                     fieldList.add(new MarcField(n));
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_SEPARATE_ENTRIES)) {
+                } else if (MarcFileformat.PREFS_MARC_SEPARATE_ENTRIES.equalsIgnoreCase(n.getNodeName())) {
                     String value = MarcFileformat.readTextNode(n);
-                    if (value != null && value.equalsIgnoreCase("true")) {
+                    if (value != null && "true".equalsIgnoreCase(value)) {
                         separateEntries = true;
                     } else {
                         separateEntries = false;
                     }
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_SEPARATE_SUBFIELDS)) {
+                } else if (MarcFileformat.PREFS_MARC_SEPARATE_SUBFIELDS.equalsIgnoreCase(n.getNodeName())) {
                     String value = MarcFileformat.readTextNode(n);
-                    if (value != null && value.equalsIgnoreCase("true")) {
+                    if (value != null && "true".equalsIgnoreCase(value)) {
                         separateSubfields = true;
-                    } else if (value != null && value.equalsIgnoreCase("false")) {
+                    } else if (value != null && "false".equalsIgnoreCase(value)) {
                         separateSubfields = false;
                     } else {
                         separateSubfields = null;
                     }
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_IDENTIFIER)) {
+                } else if (MarcFileformat.PREFS_MARC_IDENTIFIER.equalsIgnoreCase(n.getNodeName())) {
                     identifierField = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_IDENTIFIER_CONDITION)) {
+                } else if (MarcFileformat.PREFS_MARC_IDENTIFIER_CONDITION.equalsIgnoreCase(n.getNodeName())) {
                     identifierConditionField = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_IDENTIFIER_REPLACEMENT)) {
+                } else if (MarcFileformat.PREFS_MARC_IDENTIFIER_REPLACEMENT.equalsIgnoreCase(n.getNodeName())) {
                     identifierReplacement = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase("identifierRegExp")) {
+                    if (identifierReplacement == null) {
+                        identifierReplacement = "";
+                    }
+                } else if ("identifierRegExp".equalsIgnoreCase(n.getNodeName())) {
                     identifierValueCondition = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_CONDITION_FIELD)) {
+                } else if (MarcFileformat.PREFS_MARC_CONDITION_FIELD.equalsIgnoreCase(n.getNodeName())) {
                     conditionField = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_CONDITION_VALUE)) {
+                } else if (MarcFileformat.PREFS_MARC_CONDITION_VALUE.equalsIgnoreCase(n.getNodeName())) {
                     conditionValue = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase("fieldRegExp")) {
+                } else if ("fieldRegExp".equalsIgnoreCase(n.getNodeName())) {
                     fieldRegExp = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_VALUE_REPLACEMENT)) {
+                } else if (MarcFileformat.PREFS_MARC_VALUE_REPLACEMENT.equalsIgnoreCase(n.getNodeName())) {
                     fieldReplacement = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_ABORT_AFTER_MATCH)) {
+                    if (fieldReplacement == null) {
+                        fieldReplacement = "";
+                    }
+                } else if (MarcFileformat.PREFS_MARC_ABORT_AFTER_MATCH.equalsIgnoreCase(n.getNodeName())) {
                     String value = MarcFileformat.readTextNode(n);
-                    if (value != null && value.equalsIgnoreCase("true")) {
+                    if (value != null && "true".equalsIgnoreCase(value)) {
                         abortAfterFirstMatch = true;
                     } else {
                         abortAfterFirstMatch = false;
