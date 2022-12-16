@@ -4208,7 +4208,8 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldReplacement>s/.{35}(.{3}).*/$1/g</fieldReplacement>
+        <fieldRegExp>.{35}(.{3}).*</fieldRegExp>
+<fieldReplacement>$1</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
