@@ -192,6 +192,9 @@ public class MarcFileformat implements Fileformat {
             Node ppr = inNode;
             if (ppr.getNodeType() == Node.ELEMENT_NODE) {
                 String nodename = ppr.getNodeName();
+                if (nodename.contains(":")) {
+                    nodename= nodename.substring(nodename.indexOf(":") +1);
+                }
                 if (MARC_PREFS_NODE_COLLECTION_STRING.equals(nodename)) {
 
                     // Iterate over all results.
@@ -201,6 +204,9 @@ public class MarcFileformat implements Fileformat {
 
                         if (n.getNodeType() == Node.ELEMENT_NODE) {
                             nodename = n.getNodeName();
+                            if (nodename.contains(":")) {
+                                nodename= nodename.substring(nodename.indexOf(":") +1);
+                            }
                             if (MARC_PREFS_NODE_RECORD_STRING.equals(nodename)) {
                                 // Parse a single picaplus record.
                                 ds = parseMarcRecord(n, readAsDocStrct);
@@ -250,11 +256,15 @@ public class MarcFileformat implements Fileformat {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                if ("leader".equalsIgnoreCase(n.getNodeName())) {
+                String nodename = n.getNodeName();
+                if (nodename.contains(":")) {
+                    nodename= nodename.substring(nodename.indexOf(":") +1);
+                }
+                if ("leader".equalsIgnoreCase(nodename)) {
                     leader = n;
-                } else if ("controlfield".equalsIgnoreCase(n.getNodeName())) {
+                } else if ("controlfield".equalsIgnoreCase(nodename)) {
                     controlfields.add(n);
-                } else if ("datafield".equalsIgnoreCase(n.getNodeName())) {
+                } else if ("datafield".equalsIgnoreCase(nodename)) {
                     datafields.add(n);
                 }
             }
@@ -802,7 +812,6 @@ public class MarcFileformat implements Fileformat {
                 Node tagNode = nnm.getNamedItem("tag");
                 Node ind1Node = nnm.getNamedItem("ind1");
                 Node ind2Node = nnm.getNamedItem("ind2");
-                log.debug(tagNode.getNodeName());
 
                 Boolean matches = null;
 
