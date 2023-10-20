@@ -66,6 +66,7 @@ import ugh.exceptions.ReadException;
 import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
+import ugh.fileformats.mets.MetsModsImportExport;
 
 @Log4j2
 public class MarcFileformat implements Fileformat {
@@ -193,7 +194,7 @@ public class MarcFileformat implements Fileformat {
             if (ppr.getNodeType() == Node.ELEMENT_NODE) {
                 String nodename = ppr.getNodeName();
                 if (nodename.contains(":")) {
-                    nodename= nodename.substring(nodename.indexOf(":") +1);
+                    nodename = nodename.substring(nodename.indexOf(":") + 1);
                 }
                 if (MARC_PREFS_NODE_COLLECTION_STRING.equals(nodename)) {
 
@@ -205,7 +206,7 @@ public class MarcFileformat implements Fileformat {
                         if (n.getNodeType() == Node.ELEMENT_NODE) {
                             nodename = n.getNodeName();
                             if (nodename.contains(":")) {
-                                nodename= nodename.substring(nodename.indexOf(":") +1);
+                                nodename = nodename.substring(nodename.indexOf(":") + 1);
                             }
                             if (MARC_PREFS_NODE_RECORD_STRING.equals(nodename)) {
                                 // Parse a single picaplus record.
@@ -258,7 +259,7 @@ public class MarcFileformat implements Fileformat {
             if (n.getNodeType() == Node.ELEMENT_NODE) {
                 String nodename = n.getNodeName();
                 if (nodename.contains(":")) {
-                    nodename= nodename.substring(nodename.indexOf(":") +1);
+                    nodename = nodename.substring(nodename.indexOf(":") + 1);
                 }
                 if ("leader".equalsIgnoreCase(nodename)) {
                     leader = n;
@@ -463,9 +464,9 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmi.getConditionField()) && StringUtils.isNotBlank(mmi.getConditionValue())
                                 && mmi.getConditionField().equals(code.getNodeValue())) {
                             String valueToCheck = readTextNode(subfield);
-                            Pattern pattern = Pattern.compile(mmi.getConditionValue());
+                            Pattern pattern = Pattern.compile(MetsModsImportExport.splitRegularExpression(mmi.getConditionValue()).get(0));
                             if (!pattern.matcher(valueToCheck).find()
-                                    && !("empty".equals(mmi.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
+                                    && !("/empty/".equals(mmi.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -479,9 +480,12 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmi.getIdentifierField()) && mmi.getIdentifierField().equals(code.getNodeValue())) {
                             String localIdentifier = readTextNode(subfield);
                             if (StringUtils.isBlank(mmi.getIdentifierConditionField())
-                                    || Pattern.compile(mmi.getIdentifierConditionField()).matcher(localIdentifier).find()) {
+                                    || Pattern.compile(MetsModsImportExport.splitRegularExpression(mmi.getIdentifierConditionField()).get(0))
+                                            .matcher(localIdentifier)
+                                            .find()) {
                                 if (StringUtils.isNotBlank(mmi.getIdentifierReplacement())) {
-                                    localIdentifier = localIdentifier.replaceAll(mmi.getIdentifierValueCondition(), mmi.getIdentifierReplacement());
+                                    List<String> parts = MetsModsImportExport.splitRegularExpression(mmi.getIdentifierReplacement());
+                                    localIdentifier = localIdentifier.replaceAll(parts.get(0), parts.get(1));
                                 }
                                 currentIdentifier = localIdentifier;
                             }
@@ -516,23 +520,25 @@ public class MarcFileformat implements Fileformat {
 
                         // In case a non-empty condition is configured but no condition field was found, skip this value
                         if (StringUtils.isNotBlank(mmi.getConditionField()) && StringUtils.isNotBlank(mmi.getConditionValue())
-                                && !"empty".equals(mmi.getConditionValue()) && matches == null) {
+                                && !"/empty/".equals(mmi.getConditionValue()) && matches == null) {
                             matches = false;
                         }
                     }
 
                     //replace in first and last name entries
-                    if (StringUtils.isNotBlank(mmi.getFieldRegExp())) {
+                    if (StringUtils.isNotBlank(mmi.getFieldReplacement())) {
+                        List<String> parts = MetsModsImportExport.splitRegularExpression(mmi.getFieldReplacement());
+
                         if (StringUtils.isNotBlank(currentMainName)) {
-                            currentMainName = currentMainName.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
+                            currentMainName = currentMainName.replaceAll(parts.get(0), parts.get(1));
                         }
                         for (NamePart subName : currentSubNames) {
                             String name = subName.getValue();
-                            name = name.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
+                            name = name.replaceAll(parts.get(0), parts.get(1));
                             subName.setValue(name);
                         }
                         if (StringUtils.isNotBlank(currentPartName)) {
-                            currentPartName = currentPartName.replaceAll(mmi.getFieldRegExp(), mmi.getFieldReplacement());
+                            currentPartName = currentPartName.replaceAll(parts.get(0), parts.get(1));
                         }
                     }
 
@@ -644,11 +650,11 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
                                 && mmo.getConditionField().equals(code.getNodeValue())) {
                             String valueToCheck = readTextNode(subfield);
-                            Pattern pattern = Pattern.compile(mmo.getConditionValue());
+                            Pattern pattern = Pattern.compile(MetsModsImportExport.splitRegularExpression(mmo.getConditionValue()).get(0));
                             Matcher matcher = pattern.matcher(valueToCheck);
 
                             if (!matcher.find()
-                                    && !("empty".equals(mmo.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
+                                    && !("/empty/".equals(mmo.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -662,9 +668,12 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
                             String localIdentifier = readTextNode(subfield);
                             if (StringUtils.isBlank(mmo.getIdentifierConditionField())
-                                    || Pattern.compile(mmo.getIdentifierConditionField()).matcher(localIdentifier).find()) {
+                                    || Pattern.compile(MetsModsImportExport.splitRegularExpression(mmo.getIdentifierConditionField()).get(0))
+                                            .matcher(localIdentifier)
+                                            .find()) {
                                 if (StringUtils.isNotBlank(mmo.getIdentifierReplacement())) {
-                                    localIdentifier = localIdentifier.replaceAll(mmo.getIdentifierValueCondition(), mmo.getIdentifierReplacement());
+                                    List<String> parts = MetsModsImportExport.splitRegularExpression(mmo.getIdentifierReplacement());
+                                    localIdentifier = localIdentifier.replaceAll(parts.get(0), parts.get(1));
                                 }
                                 currentIdentifier = localIdentifier;
                             }
@@ -737,17 +746,18 @@ public class MarcFileformat implements Fileformat {
 
                 // In case a non-empty condition is configured but no condition field was found, skip this value
                 if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
-                        && !"empty".equals(mmo.getConditionValue()) && matches == null) {
+                        && !"/empty/".equals(mmo.getConditionValue()) && matches == null) {
                     matches = false;
                 }
 
                 //replace in first and last name entries
-                if (StringUtils.isNotBlank(mmo.getFieldRegExp())) {
+                if (StringUtils.isNotBlank(mmo.getFieldReplacement())) {
+                    List<String> parts = MetsModsImportExport.splitRegularExpression(mmo.getFieldReplacement());
                     if (StringUtils.isNotBlank(currentFirstName)) {
-                        currentFirstName = currentFirstName.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
+                        currentFirstName = currentFirstName.replaceAll(parts.get(0), parts.get(1));
                     }
                     if (StringUtils.isNotBlank(currentLastName)) {
-                        currentLastName = currentLastName.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
+                        currentLastName = currentLastName.replaceAll(parts.get(0), parts.get(1));
                     }
                 }
 
@@ -850,9 +860,9 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
                                 && mmo.getConditionField().equals(code.getNodeValue())) {
                             String valueToCheck = readTextNode(subfield);
-                            Pattern pattern = Pattern.compile(mmo.getConditionValue());
+                            Pattern pattern = Pattern.compile(MetsModsImportExport.splitRegularExpression(mmo.getConditionValue()).get(0));
                             if (!pattern.matcher(valueToCheck).find()
-                                    && !("empty".equals(mmo.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
+                                    && !("/empty/".equals(mmo.getConditionValue()) && StringUtils.isBlank(valueToCheck))) {
                                 if (matches == null) {
                                     // Only set matches = false if not previously set to true by a matching subfield
                                     matches = false;
@@ -869,9 +879,12 @@ public class MarcFileformat implements Fileformat {
                         if (StringUtils.isNotBlank(mmo.getIdentifierField()) && mmo.getIdentifierField().equals(code.getNodeValue())) {
                             String localIdentifier = readTextNode(subfield);
                             if (StringUtils.isBlank(mmo.getIdentifierConditionField())
-                                    || Pattern.compile(mmo.getIdentifierConditionField()).matcher(localIdentifier).find()) {
+                                    || Pattern.compile(MetsModsImportExport.splitRegularExpression(mmo.getIdentifierConditionField()).get(0))
+                                            .matcher(localIdentifier)
+                                            .find()) {
                                 if (StringUtils.isNotBlank(mmo.getIdentifierReplacement())) {
-                                    localIdentifier = localIdentifier.replaceAll(mmo.getIdentifierValueCondition(), mmo.getIdentifierReplacement());
+                                    List<String> parts = MetsModsImportExport.splitRegularExpression(mmo.getIdentifierReplacement());
+                                    localIdentifier = localIdentifier.replaceAll(parts.get(0), parts.get(1));
                                 }
                                 currentIdentifier = localIdentifier;
                             }
@@ -879,7 +892,7 @@ public class MarcFileformat implements Fileformat {
 
                         // In case a non-empty condition is configured but no condition field was found, skip this value
                         if (StringUtils.isNotBlank(mmo.getConditionField()) && StringUtils.isNotBlank(mmo.getConditionValue())
-                                && !"empty".equals(mmo.getConditionValue()) && matches == null) {
+                                && !"/empty/".equals(mmo.getConditionValue()) && matches == null) {
                             matches = false;
                         }
                     }
@@ -937,8 +950,9 @@ public class MarcFileformat implements Fileformat {
         if (!value.isEmpty()) {
             try {
                 md = new Metadata(prefs.getMetadataTypeByName(mmo.getInternalMetadataName()));
-                if (StringUtils.isNotBlank(mmo.getFieldRegExp())) {
-                    value = value.replaceAll(mmo.getFieldRegExp(), mmo.getFieldReplacement());
+                if (StringUtils.isNotBlank(mmo.getFieldReplacement())) {
+                    List<String> parts = MetsModsImportExport.splitRegularExpression(mmo.getFieldReplacement());
+                    value = value.replaceAll(parts.get(0), parts.get(1));
                 }
                 md.setValue(value);
                 if (!identifier.isEmpty()) {

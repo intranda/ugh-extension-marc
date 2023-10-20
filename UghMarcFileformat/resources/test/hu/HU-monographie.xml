@@ -4212,17 +4212,15 @@
         <!-- The <subfield> for the identifier -->
         <identifierField>0</identifierField>
         <!-- check if identifier matches the condition. This is needed because all identifier are written to field 0, but only the one with (DE-588) is the gnd number -->
-        <identifierConditionField>DE-588</identifierConditionField>
+        <identifierConditionField>/DE-588/</identifierConditionField>
         <!-- run the regex and keep the value of $1-->
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <!-- If <conditionField> is used, <conditionValue> must be used as well. Checks if the the subfield definied in conditionField is filled and matches the regular expression of conditionValue. If this is not the case, the metadata will not created.
                      -->
         <conditionField/>
         <conditionValue/>
         <!-- run the regex and keep the value of $1 -->
-        <fieldRegExp>[\x98\x9c]|(&lt;&lt;)|(&gt;&gt;)|(\s*[\/.,;:]$)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/[\x98\x9c]|(&lt;&lt;)|(&gt;&gt;)|(\s*[\/.,;:]$)//g</fieldReplacement>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Metadata>
@@ -4234,8 +4232,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>[\x98\x9c]|(&lt;&lt;)|(&gt;&gt;)|(\s*[\/.,;:]$)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/[\x98\x9c]|(&lt;&lt;)|(&gt;&gt;)|(\s*[\/.,;:]$)//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4265,8 +4262,7 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <separateEntries>false</separateEntries>
-        <fieldRegExp>(\x98.*\x9c)\s*|(&lt;&lt;.*&gt;&gt;)\s*|(\s*[\/.,;:]$)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/(\x98.*\x9c)\s*|(&lt;&lt;.*&gt;&gt;)\s*|(\s*[\/.,;:]$)//g</fieldReplacement>
       </Metadata>
       <Metadata>
         <Name>TitleDocParallel</Name>
@@ -4357,9 +4353,8 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <conditionField>a</conditionField>
-        <conditionValue>OCoLC</conditionValue>
-        <fieldRegExp>\(.+\)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <conditionValue>/OCoLC/</conditionValue>
+        <fieldReplacement>s/\(.+\)//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
 
@@ -4402,8 +4397,7 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <separateEntries>true</separateEntries>
-        <fieldRegExp>(\s*[\/.,;:]$)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/(\s*[\/.,;:]$)//g</fieldReplacement>
       </Metadata>
       <Metadata>
         <Name>PublisherName</Name>
@@ -4425,8 +4419,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>-->
-        <fieldRegExp>[:.,;]$</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/[:.,;]$//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4449,9 +4442,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>(\d+).*</fieldRegExp>
-<fieldReplacement>$1</fieldReplacement>
-
+        <fieldReplacement>s/(\d+).*/$1/g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4474,8 +4465,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>[.,;:\/]$</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/[.,;:\/]$//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4492,8 +4482,7 @@
           <fieldInd1>0</fieldInd1>
           <fieldInd2>0</fieldInd2>
         </field>
-        <fieldRegExp>(,.*)|(\D+)|(.*?\..+?)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/(,.*)|(\D+)|(.*?\..+?)//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4510,8 +4499,7 @@
           <fieldInd1>0</fieldInd1>
           <fieldInd2>0</fieldInd2>
         </field>
-        <fieldRegExp>(,.*)|(\D+)|(.*?\..+?)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/(,.*)|(\D+)|(.*?\..+?)//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4564,8 +4552,7 @@
 <!--           <fieldInd1>any</fieldInd1> -->
 <!--           <fieldInd2>any</fieldInd2> -->
 <!--         </field> -->
-        <fieldRegExp>\(DE-\d{3}\)\s?[\w-]+</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/\(DE-\d{3}\)\s?[\w-]+//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4582,8 +4569,7 @@
 <!--           <fieldInd1>any</fieldInd1> -->
 <!--           <fieldInd2>any</fieldInd2> -->
 <!--         </field> -->
-        <fieldRegExp>\(DE-\d{3}\)\s?[\w-]+</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/\(DE-\d{3}\)\s?[\w-]+//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4606,7 +4592,7 @@
         </field>
         <separateEntries>true</separateEntries>
         <conditionField>2</conditionField>
-        <conditionValue>^DE-600</conditionValue>
+        <conditionValue>/^DE-600/</conditionValue>
         </Metadata>
 <!--       <Metadata> -->
 <!--         <Name>DocLanguage</Name> -->
@@ -4616,9 +4602,7 @@
 <!--           <fieldInd1>any</fieldInd1> -->
 <!--           <fieldInd2>any</fieldInd2> -->
 <!--         </field> -->
-<!--         <fieldReplacement>.{35}(.{3}).*</fieldRegExp>
-<fieldReplacement>$1</fieldReplacement>
- -->
+<!--         <fieldReplacement>s/.{35}(.{3}).*/$1/g</fieldReplacement> -->
 <!--         <separateEntries>true</separateEntries> -->
 <!--       </Metadata> -->
       <Metadata>
@@ -4681,8 +4665,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>\D+</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/\D+//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4741,8 +4724,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>[.,;:]$</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/[.,;:]$//g</fieldReplacement>
         <conditionValue></conditionValue>
         <separateEntries>true</separateEntries>
       </Metadata>
@@ -4754,8 +4736,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>[.,;:]$</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/[.,;:]$//g</fieldReplacement>
       </Metadata>
       <Metadata>
         <Name>PhysicalDescriptionAccompanyingMaterial</Name>
@@ -4867,8 +4848,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>^.*mit der Signatur: >>\s*|^.*mit der Signatur:\s*</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/^.*mit der Signatur: >>\s*|^.*mit der Signatur:\s*//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4898,9 +4878,8 @@
           <fieldInd2> </fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separator>#</separator>
         <separateEntries>true</separateEntries>
         <separateSubfields>false</separateSubfields>
@@ -4916,9 +4895,8 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>true</separateEntries>
       </Corporate>
       <Metadata>
@@ -4930,9 +4908,8 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4944,9 +4921,8 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4958,9 +4934,8 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4972,9 +4947,8 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -4986,9 +4960,8 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -5000,9 +4973,8 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <!-- Subjects end -->
@@ -5016,13 +4988,12 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <separateEntries>false</separateEntries>
         <separator>; </separator>
         <conditionField>4</conditionField>
-        <conditionValue>^$</conditionValue>
+        <conditionValue>/^$/</conditionValue>
       </Person>
       <Person>
         <Name>Addressee</Name>
@@ -5039,11 +5010,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>rcp</conditionValue>
+        <conditionValue>/rcp/</conditionValue>
         <separateEntries>false</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5062,11 +5032,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>ann</conditionValue>
+        <conditionValue>/ann/</conditionValue>
         <separateEntries>false</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5085,11 +5054,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>art</conditionValue>
+        <conditionValue>/art/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5108,17 +5076,12 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        
-        <identifierRegExp>\(DE-588\)(.*)</identifierRegExp>
-        <identifierReplacement>$1</identifierReplacement>
-
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>aut</conditionValue>
+        <conditionValue>/aut/</conditionValue>
         <separateEntries>false</separateEntries>
-<fieldRegExp>[.,;:]$</fieldRegExp>
-<fieldReplacement></fieldReplacement>        
-        
+        <fieldReplacement>s/[.,;:]$//g</fieldReplacement>
         <separator>; </separator>
       </Person>
 
@@ -5137,11 +5100,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>ctg</conditionValue>
+        <conditionValue>/ctg/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5160,11 +5122,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>cli</conditionValue>
+        <conditionValue>/cli/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5183,11 +5144,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>com</conditionValue>
+        <conditionValue>/com/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5206,11 +5166,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>ctb</conditionValue>
+        <conditionValue>/ctb/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5229,11 +5188,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>cur</conditionValue>
+        <conditionValue>/cur/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5253,11 +5211,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>dto</conditionValue>
+        <conditionValue>/dto/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5276,11 +5233,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>edt</conditionValue>
+        <conditionValue>/edt/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5299,11 +5255,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>egr</conditionValue>
+        <conditionValue>/egr/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5322,11 +5277,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>hnr</conditionValue>
+        <conditionValue>/hnr/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5345,11 +5299,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>hst</conditionValue>
+        <conditionValue>/hst/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5368,11 +5321,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>ill</conditionValue>
+        <conditionValue>/ill/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5391,11 +5343,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>ltg</conditionValue>
+        <conditionValue>/ltg/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5414,11 +5365,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>opn</conditionValue>
+        <conditionValue>/opn/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5437,11 +5387,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>oth</conditionValue>
+        <conditionValue>/oth/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5460,11 +5409,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>pht</conditionValue>
+        <conditionValue>/pht/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5483,11 +5431,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>pra</conditionValue>
+        <conditionValue>/pra/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5506,11 +5453,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>prt</conditionValue>
+        <conditionValue>/prt/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5529,11 +5475,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>pbl</conditionValue>
+        <conditionValue>/pbl/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5552,11 +5497,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>rse</conditionValue>
+        <conditionValue>/rse/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5575,11 +5519,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>scl</conditionValue>
+        <conditionValue>/scl/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5598,11 +5541,10 @@
           <fieldInd2>any</fieldInd2>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>trl</conditionValue>
+        <conditionValue>/trl/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Person>
@@ -5628,11 +5570,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>rcp</conditionValue>
+        <conditionValue>/rcp/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5655,11 +5596,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>art</conditionValue>
+        <conditionValue>/art/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5682,11 +5622,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>aut</conditionValue>
+        <conditionValue>/aut/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5710,11 +5649,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>com</conditionValue>
+        <conditionValue>/com/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5737,11 +5675,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>ctb</conditionValue>
+        <conditionValue>/ctb/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5764,11 +5701,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>cur</conditionValue>
+        <conditionValue>/cur/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5791,11 +5727,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>egr</conditionValue>
+        <conditionValue>/egr/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5818,11 +5753,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>ill</conditionValue>
+        <conditionValue>/ill/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5845,11 +5779,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>orm</conditionValue>
+        <conditionValue>/orm/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5872,11 +5805,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>oth</conditionValue>
+        <conditionValue>/oth/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5899,11 +5831,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>pht</conditionValue>
+        <conditionValue>/pht/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5926,11 +5857,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>trl</conditionValue>
+        <conditionValue>/trl/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5954,11 +5884,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>dgg</conditionValue>
+        <conditionValue>/dgg/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -5981,11 +5910,10 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(.+\)(.*)</identifierRegExp>
-<identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>his</conditionValue>
+        <conditionValue>/his/</conditionValue>
         <separateEntries>true</separateEntries>
         <separator>; </separator>
       </Corporate>
@@ -6008,14 +5936,12 @@
           <fieldPartName>d</fieldPartName>
         </field>
         <identifierField>0</identifierField>
-        <identifierConditionField>DE-588</identifierConditionField>
-        <identifierRegExp>\(DE-588\)(.*)</identifierRegExp>
-        <identifierReplacement>$1</identifierReplacement>
+        <identifierConditionField>/DE-588/</identifierConditionField>
+        <identifierReplacement>s/\(.+\)//g</identifierReplacement>
         <conditionField>4</conditionField>
-        <conditionValue>isb</conditionValue>
+        <conditionValue>/isb/</conditionValue>
         <separateEntries>true</separateEntries>
-<fieldRegExp>[.,;:]$</fieldRegExp>
-<fieldReplacement></fieldReplacement> 
+        <fieldReplacement>s/(\s*[\/.,;:]$)//g</fieldReplacement>
         <separator>; </separator>
       </Corporate>
       <!-- Corporations end -->
@@ -6475,8 +6401,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>\(.+\)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/\(.+\)//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -6487,8 +6412,7 @@
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
         </field>
-        <fieldRegExp>\(.+\)</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        <fieldReplacement>s/\(.+\)//g</fieldReplacement>
         <separateEntries>true</separateEntries>
       </Metadata>
       <Metadata>
@@ -6564,8 +6488,7 @@
           			<fieldInd1>any</fieldInd1>
           			<fieldInd2>any</fieldInd2>
         		</field>
-        		<fieldRegExp>\s.*</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        		<fieldReplacement>s/\s.*//g</fieldReplacement>
         		<separateEntries>false</separateEntries>
         	</Metadata>
 		<Metadata>
@@ -6576,8 +6499,7 @@
           			<fieldInd1>any</fieldInd1>
           			<fieldInd2>any</fieldInd2>
         		</field>
-        		<fieldRegExp>\s.*</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        		<fieldReplacement>s/\s.*//g</fieldReplacement>
         		<separateEntries>false</separateEntries>
       		</Metadata>
 	</Group>
@@ -6597,8 +6519,7 @@
           			<fieldInd1>any</fieldInd1>
           			<fieldInd2>any</fieldInd2>
         		</field>
-        		<fieldRegExp>\s.*</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        		<fieldReplacement>s/\s.*//g</fieldReplacement>
         		<separateEntries>false</separateEntries>
         	</Metadata>
 		<Metadata>
@@ -6609,8 +6530,7 @@
           			<fieldInd1>any</fieldInd1>
           			<fieldInd2>any</fieldInd2>
         		</field>
-        		<fieldRegExp>\s.*</fieldRegExp>
-<fieldReplacement></fieldReplacement>
+        		<fieldReplacement>s/\s.*//g</fieldReplacement>
         		<separateEntries>false</separateEntries>
       		</Metadata>
 	</Group>

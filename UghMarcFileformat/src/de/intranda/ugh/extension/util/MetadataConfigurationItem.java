@@ -44,13 +44,11 @@ public @Data class MetadataConfigurationItem {
     private String identifierField = "";
     private String identifierConditionField = "";
 
-    private String identifierValueCondition = "";
     private String identifierReplacement = "";
 
     private String conditionField = "";
     private String conditionValue = "";
 
-    private String fieldRegExp = "";
     private String fieldReplacement = "";
 
     private boolean separateEntries = true;
@@ -95,14 +93,10 @@ public @Data class MetadataConfigurationItem {
                     if (identifierReplacement == null) {
                         identifierReplacement = "";
                     }
-                } else if ("identifierRegExp".equalsIgnoreCase(n.getNodeName())) {
-                    identifierValueCondition = MarcFileformat.readTextNode(n);
                 } else if (MarcFileformat.PREFS_MARC_CONDITION_FIELD.equalsIgnoreCase(n.getNodeName())) {
                     conditionField = MarcFileformat.readTextNode(n);
                 } else if (MarcFileformat.PREFS_MARC_CONDITION_VALUE.equalsIgnoreCase(n.getNodeName())) {
                     conditionValue = MarcFileformat.readTextNode(n);
-                } else if ("fieldRegExp".equalsIgnoreCase(n.getNodeName())) {
-                    fieldRegExp = MarcFileformat.readTextNode(n);
                 } else if (MarcFileformat.PREFS_MARC_VALUE_REPLACEMENT.equalsIgnoreCase(n.getNodeName())) {
                     fieldReplacement = MarcFileformat.readTextNode(n);
                     if (fieldReplacement == null) {
