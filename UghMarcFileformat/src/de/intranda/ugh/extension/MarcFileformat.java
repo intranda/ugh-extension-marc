@@ -238,10 +238,6 @@ public class MarcFileformat implements Fileformat {
             String message = "Can't add child to parent DocStruct! Child type '" + ds.getType().getName() + "' not allowed for parent type";
             throw new ReadException(message, e);
         }
-        //        catch (MetadataTypeNotAllowedException e) {
-        //            String message = "Can't add child to parent DocStruct! Child type must not be null";
-        //            throw new ReadException(message, e);
-        //        }
         return true;
     }
 
@@ -297,11 +293,9 @@ public class MarcFileformat implements Fileformat {
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
                     log.warn(message, e);
-                    continue;
                 } catch (DocStructHasNoTypeException e) {
                     String message = "Ignoring DocStructHasNoTypeException at OPAC import!";
                     log.warn(message, e);
-                    continue;
                 }
             }
         }
@@ -312,7 +306,6 @@ public class MarcFileformat implements Fileformat {
                 } catch (MetadataTypeNotAllowedException e) {
                     String message = "Ignoring MetadataTypeNotAllowedException at OPAC import!";
                     log.warn(message, e);
-                    continue;
                 }
             }
         }
@@ -1045,35 +1038,42 @@ public class MarcFileformat implements Fileformat {
         }
 
         DocStruct ds = null;
+
+        if (docstructList.size() == 1) {
+            try {
+                return digDoc.createDocStruct(prefs.getDocStrctTypeByName(docstructList.get(0).getInternalName()));
+            } catch (TypeNotAllowedForParentException e) {
+                log.error(e);
+            }
+        }
         try {
             for (DocstructConfigurationItem dci : docstructList) {
                 boolean match = true;
-                //        field008_21
-                if (StringUtils.isNotBlank(dci.getField008_21()) && (field008 == null || !(dci.getField008_21().toCharArray()[0] == field008[21]))) {
+                // field008_21
+                if (StringUtils.isNotBlank(dci.getField008_21()) && (field008 == null || (dci.getField008_21().toCharArray()[0] != field008[21]))) {
                     match = false;
                 }
-                //        field007_1
-                if (StringUtils.isNotBlank(dci.getField007_1()) && (field007 == null || !(dci.getField007_1().toCharArray()[0] == field007[1]))) {
+                // field007_1
+                if (StringUtils.isNotBlank(dci.getField007_1()) && (field007 == null || (dci.getField007_1().toCharArray()[0] != field007[1]))) {
                     match = false;
                 }
-                //        field007_0
+                // field007_0
 
-                if (StringUtils.isNotBlank(dci.getField007_0()) && (field007 == null || !(dci.getField007_0().toCharArray()[0] == field007[0]))) {
+                if (StringUtils.isNotBlank(dci.getField007_0()) && (field007 == null || (dci.getField007_0().toCharArray()[0] != field007[0]))) {
                     match = false;
                 }
-                // leadder 19
-                if (StringUtils.isNotBlank(dci.getLeader19()) && !(dci.getLeader19().toCharArray()[0] == leaderChars[19])) {
+                // leader 19
+                if (StringUtils.isNotBlank(dci.getLeader19()) && (dci.getLeader19().toCharArray()[0] != leaderChars[19])) {
                     match = false;
                 }
-                //        leaderChar6 and leaderChar7
-                if (!(dci.getLeader6().toCharArray()[0] == leaderChars[6]) || !(dci.getLeader7().toCharArray()[0] == leaderChars[7])) {
+                // leader char6 and leader char7
+                if ((dci.getLeader6().toCharArray()[0] != leaderChars[6]) || (dci.getLeader7().toCharArray()[0] != leaderChars[7])) {
                     match = false;
                 }
                 if (match) {
                     ds = digDoc.createDocStruct(prefs.getDocStrctTypeByName(dci.getInternalName()));
                     break;
                 }
-
             }
 
         } catch (TypeNotAllowedForParentException e) {
@@ -1150,6 +1150,6 @@ public class MarcFileformat implements Fileformat {
 
     @Override
     public void setGoobiID(String goobiId) {
-
+        // nothing
     }
 }

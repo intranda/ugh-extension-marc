@@ -58,7 +58,7 @@ public class MarcFileformatTest {
     public List<Node> getDatafields(Document doc, String namespacePrefix) {
         String field = (StringUtils.isNotEmpty(namespacePrefix) ? namespacePrefix + ":" : "") + "datafield";
         NodeList datafieldNodes = doc.getElementsByTagName(field);
-        Assert.assertFalse(datafieldNodes.getLength() == 0);
+        Assert.assertNotEquals(datafieldNodes.getLength(), 0);
 
         List<Node> datafields = new ArrayList<>(datafieldNodes.getLength());
         for (int i = 0; i < datafieldNodes.getLength(); i++) {
