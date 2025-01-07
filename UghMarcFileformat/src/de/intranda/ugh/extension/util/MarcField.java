@@ -31,7 +31,9 @@ import de.intranda.ugh.extension.MarcFileformat;
  * This copyright notice MUST APPEAR in all copies of this file!
  ******************************************************************************/
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public @Data class MarcField {
 
     private String fieldMainTag = "";
@@ -55,27 +57,27 @@ public @Data class MarcField {
             Node n = children.item(i);
 
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_MAIN_TAG)) {
+                if (MarcFileformat.PREFS_MARC_MAIN_TAG.equalsIgnoreCase(n.getNodeName())) {
                     fieldMainTag = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_SUB_TAG)) {
+                } else if (MarcFileformat.PREFS_MARC_SUB_TAG.equalsIgnoreCase(n.getNodeName())) {
                     fieldSubTags.add(MarcFileformat.readTextNode(n));
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_INDICATOR_1)) {
+                } else if (MarcFileformat.PREFS_MARC_INDICATOR_1.equalsIgnoreCase(n.getNodeName())) {
                     fieldInd1 = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_INDICATOR_2)) {
+                } else if (MarcFileformat.PREFS_MARC_INDICATOR_2.equalsIgnoreCase(n.getNodeName())) {
                     fieldInd2 = MarcFileformat.readTextNode(n);
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_FIRSTNAME)) {
+                } else if (MarcFileformat.PREFS_MARC_FIRSTNAME.equalsIgnoreCase(n.getNodeName())) {
                     firstname.add(MarcFileformat.readTextNode(n));
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_LASTNAME)) {
+                } else if (MarcFileformat.PREFS_MARC_LASTNAME.equalsIgnoreCase(n.getNodeName())) {
                     lastname.add(MarcFileformat.readTextNode(n));
-                } else if (n.getNodeName().equalsIgnoreCase(MarcFileformat.PREFS_MARC_EXPANSION)) {
+                } else if (MarcFileformat.PREFS_MARC_EXPANSION.equalsIgnoreCase(n.getNodeName())) {
                     expansion.add(MarcFileformat.readTextNode(n));
                 }
 
-                else if (n.getNodeName().equalsIgnoreCase("fieldMainName")) {
+                else if ("fieldMainName".equalsIgnoreCase(n.getNodeName())) {
                     mainName.add(MarcFileformat.readTextNode(n));
-                } else if (n.getNodeName().equalsIgnoreCase("fieldSubName")) {
+                } else if ("fieldSubName".equalsIgnoreCase(n.getNodeName())) {
                     subName.add(MarcFileformat.readTextNode(n));
-                } else if (n.getNodeName().equalsIgnoreCase("fieldPartName")) {
+                } else if ("fieldPartName".equalsIgnoreCase(n.getNodeName())) {
                     partName.add(MarcFileformat.readTextNode(n));
                 }
             }

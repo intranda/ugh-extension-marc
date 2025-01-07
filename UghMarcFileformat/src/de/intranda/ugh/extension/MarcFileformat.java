@@ -47,6 +47,7 @@ import de.intranda.ugh.extension.util.DocstructConfigurationItem;
 import de.intranda.ugh.extension.util.GroupConfigurationItem;
 import de.intranda.ugh.extension.util.MarcField;
 import de.intranda.ugh.extension.util.MetadataConfigurationItem;
+import de.intranda.ugh.extension.util.SubfieldGroupConfigurationItem;
 import lombok.extern.log4j.Log4j2;
 import ugh.dl.Corporate;
 import ugh.dl.DigitalDocument;
@@ -74,6 +75,8 @@ public class MarcFileformat implements Fileformat {
     public static final String PREFS_MARC_METADATA_NAME = "Metadata";
     public static final String PREFS_MARC_DOCTSRUCT_NAME = "Docstruct";
     public static final String PREFS_MARC_PERSON_NAME = "Person";
+    public static final String PREFS_MARC_CORPORATE_NAME = "Corporate";
+
     public static final String PREFS_MARC_GROUP_NAME = "Group";
 
     protected static final String MARC_PREFS_NODE_NAME_STRING = "Marc";
@@ -118,6 +121,7 @@ public class MarcFileformat implements Fileformat {
     private List<DocstructConfigurationItem> docstructList = new LinkedList<>();
 
     private List<GroupConfigurationItem> groupList = new LinkedList<>();
+    private List<SubfieldGroupConfigurationItem> subfieldGroupList = new LinkedList<>();
 
     public MarcFileformat(Prefs prefs) {
         this.prefs = prefs;
@@ -151,10 +155,14 @@ public class MarcFileformat implements Fileformat {
                 } else if (PREFS_MARC_GROUP_NAME.equalsIgnoreCase(n.getNodeName())) {
                     GroupConfigurationItem item = new GroupConfigurationItem(n);
                     groupList.add(item);
-                } else if ("Corporate".equalsIgnoreCase(n.getNodeName())) {
+                } else if (PREFS_MARC_CORPORATE_NAME.equalsIgnoreCase(n.getNodeName())) {
                     MetadataConfigurationItem metadata = new MetadataConfigurationItem(n);
                     corporationList.add(metadata);
+                } else if ("SubfieldGroup".equalsIgnoreCase(n.getNodeName())) {
+                    SubfieldGroupConfigurationItem item = new SubfieldGroupConfigurationItem(n);
+                    subfieldGroupList.add(item);
                 }
+
             }
         }
     }
@@ -349,53 +357,136 @@ public class MarcFileformat implements Fileformat {
         for (GroupConfigurationItem gci : groupList) {
             List<Metadata> mList = new ArrayList<>();
             List<Person> pList = new ArrayList<>();
+            List<Corporate> cList = new ArrayList<>();
+
             if (!gci.getMetadataList().isEmpty()) {
                 mList = parseMetadata(datafields, gci.getMetadataList());
             }
             if (!gci.getPersonList().isEmpty()) {
                 pList = parsePersons(datafields, gci.getPersonList());
             }
-            if (mList.isEmpty() && pList.isEmpty()) {
+            if (!gci.getCorporationList().isEmpty()) {
+                cList = parseCorporations(datafields, gci.getCorporationList());
+            }
+
+            if (mList.isEmpty() && pList.isEmpty() && cList.isEmpty()) {
                 continue;
             }
 
+            MetadataGroup mg = null;
             try {
-                MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName(gci.getGroupName()));
-                for (Metadata md : mList) {
-                    List<Metadata> mdl = mg.getMetadataByType(md.getType().getName());
-                    boolean added = false;
-                    for (Metadata metadata : mdl) {
-                        if (StringUtils.isBlank(metadata.getValue()) && StringUtils.isBlank(metadata.getAuthorityValue())) {
-                            added = true;
-                            metadata.setValue(md.getValue());
-                            metadata.setAutorityFile(md.getAuthorityID(), md.getAuthorityURI(), md.getAuthorityValue());
-                        }
-                    }
-                    if (!added) {
-                        mg.addMetadata(md);
-                    }
-                }
-                for (Person p : pList) {
-                    List<Person> pl = mg.getPersonByType(p.getType().getName());
-                    boolean added = false;
-                    for (Person per : pl) {
-
-                        if (StringUtils.isBlank(per.getFirstname()) && StringUtils.isBlank(per.getLastname())
-                                && StringUtils.isBlank(per.getAuthorityValue())) {
-                            added = true;
-                            per.setFirstname(p.getFirstname());
-                            per.setLastname(p.getLastname());
-                            per.setAutorityFile(p.getAuthorityID(), p.getAuthorityURI(), p.getAuthorityValue());
-                        }
-                    }
-                    if (!added) {
-                        mg.addPerson(p);
-                    }
-                }
-                groups.add(mg);
+                mg = new MetadataGroup(prefs.getMetadataGroupTypeByName(gci.getGroupName()));
             } catch (MetadataTypeNotAllowedException e) {
                 log.error(e);
             }
+            if (mg != null) {
+                for (Metadata md : mList) {
+                    try {
+                        mg.addMetadata(md);
+                    } catch (MetadataTypeNotAllowedException e) {
+                        log.info(e);
+                    }
+                }
+            }
+            for (Person p : pList) {
+                try {
+                    mg.addPerson(p);
+                } catch (MetadataTypeNotAllowedException e) {
+                    log.info(e);
+                }
+            }
+            for (Corporate c : cList) {
+                try {
+                    mg.addCorporate(c);
+                } catch (MetadataTypeNotAllowedException e) {
+                    log.info(e);
+                }
+            }
+            groups.add(mg);
+
+        }
+
+        groups.addAll(parseSubfieldGroups(datafields));
+
+        return groups;
+    }
+
+    private List<MetadataGroup> parseSubfieldGroups(List<Node> datafields) {
+        List<MetadataGroup> groups = new ArrayList<>();
+
+        for (SubfieldGroupConfigurationItem item : subfieldGroupList) {
+
+            // find all matching datafields
+            List<Node> matchingNodes = new ArrayList<>();
+            for (Node node : datafields) {
+                NamedNodeMap nnm = node.getAttributes();
+                Node tagNode = nnm.getNamedItem("tag");
+                Node ind1Node = nnm.getNamedItem("ind1");
+                Node ind2Node = nnm.getNamedItem("ind2");
+                String ind1Value = ind1Node.getNodeValue().trim();
+                String ind2Value = ind2Node.getNodeValue().trim();
+
+                if (!item.getFieldMainTag().equals(tagNode.getNodeValue())) {
+                    continue;
+                }
+                boolean matchesInd1 = false;
+                boolean matchesInd2 = false;
+                if ("any".equals(item.getFieldInd1()) || item.getFieldInd1().trim().equals(ind1Value)) {
+                    matchesInd1 = true;
+                }
+                if ("any".equals(item.getFieldInd2()) || item.getFieldInd2().trim().equals(ind2Value)) {
+                    matchesInd2 = true;
+                }
+                if (!matchesInd1 || !matchesInd2) {
+                    continue;
+                }
+                matchingNodes.add(node);
+
+            }
+            // for each found datafield
+
+            for (Node node : matchingNodes) {
+                // check if subfields contain data
+
+                List<Node> nodeList = List.of(node);
+
+                List<Metadata> mList = new ArrayList<>();
+                List<Person> pList = new ArrayList<>();
+                List<Corporate> cList = new ArrayList<>();
+
+                if (!item.getMetadataList().isEmpty()) {
+                    mList = parseMetadata(nodeList, item.getMetadataList());
+                }
+                if (!item.getPersonList().isEmpty()) {
+                    pList = parsePersons(nodeList, item.getPersonList());
+                }
+                if (!item.getCorporationList().isEmpty()) {
+                    cList = parseCorporations(nodeList, item.getCorporationList());
+                }
+
+                if (!mList.isEmpty() || !pList.isEmpty() || !cList.isEmpty()) {
+                    // if yes, create group
+                    try {
+                        MetadataGroup mg = new MetadataGroup(prefs.getMetadataGroupTypeByName(item.getGroupName()));
+                        for (Metadata md : mList) {
+                            mg.addMetadata(md);
+                        }
+                        for (Person p : pList) {
+                            mg.addPerson(p);
+                        }
+                        for (Corporate c : cList) {
+                            mg.addCorporate(c);
+                        }
+
+                        groups.add(mg);
+                    } catch (MetadataTypeNotAllowedException e) {
+                        log.error(e);
+                    }
+
+                }
+
+            }
+
         }
 
         return groups;
@@ -949,7 +1040,7 @@ public class MarcFileformat implements Fileformat {
                 }
                 md.setValue(value);
                 if (!identifier.isEmpty()) {
-                    md.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
+                    md.setAuthorityFile("gnd", "http://d-nb.info/gnd/", identifier);
                 }
 
             } catch (MetadataTypeNotAllowedException e) {
@@ -980,7 +1071,7 @@ public class MarcFileformat implements Fileformat {
 
                 if (!identifier.isEmpty()) {
                     // TODO alternative zu gnd
-                    person.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
+                    person.setAuthorityFile("gnd", "http://d-nb.info/gnd/", identifier);
                 }
 
             } catch (MetadataTypeNotAllowedException e) {
@@ -1005,7 +1096,7 @@ public class MarcFileformat implements Fileformat {
 
                 if (!identifier.isEmpty()) {
                     // TODO alternative zu gnd
-                    corporate.setAutorityFile("gnd", "http://d-nb.info/gnd/", identifier);
+                    corporate.setAuthorityFile("gnd", "http://d-nb.info/gnd/", identifier);
                 }
 
             } catch (MetadataTypeNotAllowedException e) {

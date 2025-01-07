@@ -1,10 +1,14 @@
 package de.intranda.ugh.extension;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -23,10 +28,24 @@ import org.xml.sax.SAXException;
 
 import ugh.dl.Corporate;
 import ugh.dl.Metadata;
+import ugh.dl.MetadataGroup;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
 
 public class MarcFileformatTest {
+
+    @BeforeClass
+    public static void setUpClass() {
+        String resourcesFolder = "resources/test/"; // for junit tests in eclipse
+
+        if (!Files.exists(Paths.get(resourcesFolder))) {
+            resourcesFolder = "target/test-classes/"; // to run mvn test from cli or in jenkins
+        }
+
+        String log4jFile = resourcesFolder + "log4j2.xml";
+
+        System.setProperty("log4j.configurationFile", log4jFile);
+    }
 
     /**
      * 
@@ -125,10 +144,6 @@ public class MarcFileformatTest {
         Assert.assertEquals(2, subjects.size());
         Assert.assertEquals("Literatur und Sprachen#Deutsche Sprache und Literatur", subjects.get(0).getValue());
         Assert.assertEquals("Geschichte", subjects.get(1).getValue());
-
-        //        List<Metadata> format = metadataList.stream().filter(md -> md.getType().getName().equals("FormatSourcePrint")).collect(Collectors.toList());
-        //        Assert.assertEquals(1, format.size());
-        //        Assert.assertEquals("96 Seiten", format.get(0).getValue());
 
         List<Metadata> lang = metadataList.stream().filter(md -> "DocLanguage".equals(md.getType().getName())).collect(Collectors.toList());
         Assert.assertEquals(1, lang.size());
@@ -287,7 +302,7 @@ public class MarcFileformatTest {
     }
 
     @Test
-    public void parseCorporation() throws Exception {
+    public void testParseCorporation() throws Exception {
         Document doc = loadMarcDocument("resources/test/corporation.xml");
         Assert.assertNotNull(doc);
         List<Node> datafields = getDatafields(doc, null);
@@ -306,6 +321,129 @@ public class MarcFileformatTest {
         assertEquals("Province of Baltimore (Md.).", fixture.getSubNames().get(0).getValue());
         assertEquals("Provincial Council", fixture.getSubNames().get(1).getValue());
         assertEquals("1869; 10th", fixture.getPartName());
+    }
+
+    @Test
+    public void testWrite() throws Exception {
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+        assertFalse(mfc.write(""));
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+        assertFalse(mfc.update(""));
+    }
+
+    @Test
+    public void testIsWritable() throws Exception {
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+        assertFalse(mfc.isWritable());
+    }
+
+    @Test
+    public void testIsExportable() throws Exception {
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+        assertFalse(mfc.isExportable());
+    }
+
+    @Test
+    public void testDisplayName() throws Exception {
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+        assertEquals("MARC", mfc.getDisplayName());
+    }
+
+    @Test
+    public void testMetadataWithRulesetWithoutGroups() throws Exception {
+        Document doc = loadMarcDocument("resources/test/group.xml");
+        Assert.assertNotNull(doc);
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        mfc.read(doc.getDocumentElement());
+        List<MetadataGroup> groups = mfc.getDigitalDocument().getLogicalDocStruct().getAllMetadataGroups();
+        assertNull(groups);
+    }
+
+    @Test
+    public void testMetadataWithRulesetWithGroups() throws Exception {
+        Document doc = loadMarcDocument("resources/test/group.xml");
+        Assert.assertNotNull(doc);
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset_group.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        mfc.read(doc.getDocumentElement());
+        List<MetadataGroup> groups = mfc.getDigitalDocument().getLogicalDocStruct().getAllMetadataGroups();
+        // everything is in one big group
+        assertEquals(1, groups.size());
+
+        MetadataGroup fixture = groups.get(0);
+
+        assertEquals("PublisherGroup", fixture.getType().getName());
+
+        assertEquals(5, fixture.getMetadataList().size());
+    }
+
+    @Test
+    public void testMetadataWithRulesetForGroupsWithinSubElements() throws Exception {
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset_subelement_group.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+
+        mfc.read("resources/test/group.xml");
+        List<MetadataGroup> groups = mfc.getDigitalDocument().getLogicalDocStruct().getAllMetadataGroups();
+        // now we have two different groups
+        assertEquals(2, groups.size());
+
+        // first group
+        MetadataGroup fixture = groups.get(0);
+
+        assertEquals("PublisherGroup", fixture.getType().getName());
+        assertEquals(3, fixture.getMetadataList().size());
+
+        Metadata m1 = fixture.getMetadataList().get(0);
+        Metadata m2 = fixture.getMetadataList().get(1);
+        Metadata m3 = fixture.getMetadataList().get(2);
+
+        assertEquals("PlaceOfPublication", m1.getType().getName());
+        assertEquals("Berlin", m1.getValue());
+        assertEquals("PublisherName", m2.getType().getName());
+        assertEquals("Zentral- und Landesbibliothek Berlin", m2.getValue().trim());
+        assertEquals("PublicationYear", m3.getType().getName());
+        assertEquals("2019", m3.getValue().trim());
+
+        // second group
+
+        fixture = groups.get(1);
+        assertEquals("PublisherGroup", fixture.getType().getName());
+        assertEquals(3, fixture.getMetadataList().size());
+
+        m1 = fixture.getMetadataList().get(0);
+        m2 = fixture.getMetadataList().get(1);
+        m3 = fixture.getMetadataList().get(2);
+
+        assertEquals("PlaceOfPublication", m1.getType().getName());
+        assertEquals("Berlin", m1.getValue());
+        assertEquals("PublisherName", m2.getType().getName());
+        assertEquals("Mosse", m2.getValue().trim());
+        assertEquals("PublicationYear", m3.getType().getName());
+        assertEquals("1898", m3.getValue().trim());
+
     }
 
 }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+        <record>
+          <leader>01529nam a2200361 ib4500</leader>
+	<controlfield tag="001">34220059</controlfield>
+	<controlfield tag="003">DE-609</controlfield>
+	<controlfield tag="005">20191015150454.0</controlfield>
+	<controlfield tag="007">cr |||</controlfield>
+	<controlfield tag="008">190318s2019 ||||||||||||||||||||ger||
+	</controlfield>
+	<datafield tag="024" ind1="7" ind2=" ">
+		<subfield code="a">urn:nbn:de:kobv:109-1-15363882</subfield>
+		<subfield code="2">urn</subfield>
+	</datafield>
+	<datafield tag="040" ind1=" " ind2=" ">
+		<subfield code="e">rda</subfield>
+	</datafield>
+	<datafield tag="041" ind1=" " ind2=" ">
+		<subfield code="a">ger</subfield>
+	</datafield>
+	<datafield tag="044" ind1=" " ind2=" ">
+		<subfield code="c">XA-DE-BE</subfield>
+	</datafield>
+	<datafield tag="100" ind1="1" ind2=" ">
+		<subfield code="a">Kutschmann, Theodor</subfield>
+		<subfield code="0">(DE-609)15530569</subfield>
+		<subfield code="0">(DE-588)115747876X</subfield>
+		<subfield code="4">aut</subfield>
+	</datafield>
+	<datafield tag="245" ind1="1" ind2="0">
+		<subfield code="a">Erste Ausstellung des Verbandes Deutscher
+			Illustratoren in den Räumen der Königlichen Akademie der Künste
+			Berlin</subfield>
+		<subfield code="b">vom 1. April bis 1. Mai 1898</subfield>
+		<subfield code="h">Elektronische Ressource</subfield>
+		<subfield code="c">[Th. Kutschmann]</subfield>
+	</datafield>
+	<datafield tag="264" ind1=" " ind2="1">
+		<subfield code="a">Berlin</subfield>
+		<subfield code="b">Zentral- und Landesbibliothek Berlin
+		</subfield>
+		<subfield code="c">2019</subfield>
+	</datafield>
+	<datafield tag="264" ind1=" " ind2="4">
+		<subfield code="a">Berlin</subfield>
+		<subfield code="b">Mosse</subfield>
+		<subfield code="c">1898</subfield>
+	</datafield>
+	<datafield tag="300" ind1=" " ind2=" ">
+		<subfield code="a">1 Online-Ressource (20 Seiten)</subfield>
+		<subfield code="b">Illustrationen</subfield>
+	</datafield>
+	<datafield tag="336" ind1=" " ind2=" ">
+		<subfield code="a">text</subfield>
+		<subfield code="b">txt</subfield>
+		<subfield code="2">rdacontent</subfield>
+	</datafield>
+	<datafield tag="337" ind1=" " ind2=" ">
+		<subfield code="a">computer</subfield>
+		<subfield code="b">c</subfield>
+		<subfield code="2">rdamedia</subfield>
+	</datafield>
+	<datafield tag="338" ind1=" " ind2=" ">
+		<subfield code="a">online resource</subfield>
+		<subfield code="b">cr</subfield>
+		<subfield code="2">rdacarrier</subfield>
+	</datafield>
+	<datafield tag="500" ind1=" " ind2=" ">
+		<subfield code="a">Digitalisierter Druck</subfield>
+	</datafield>
+	<datafield tag="650" ind1=" " ind2="7">
+		<subfield code="a">Illustration</subfield>
+		<subfield code="0">(DE-609)00101176</subfield>
+		<subfield code="2">local</subfield>
+	</datafield>
+	<datafield tag="651" ind1=" " ind2="7">
+		<subfield code="a">Berlin</subfield>
+		<subfield code="g">1898</subfield>
+		<subfield code="0">(DE-609)00923573</subfield>
+		<subfield code="2">local</subfield>
+	</datafield>
+	<datafield tag="655" ind1=" " ind2="7">
+		<subfield code="a">Ausstellung</subfield>
+		<subfield code="0">(DE-609)00004295</subfield>
+		<subfield code="2">local</subfield>
+	</datafield>
+	<datafield tag="689" ind1="0" ind2="0">
+		<subfield code="A">f</subfield>
+		<subfield code="a">Illustration </subfield>
+	</datafield>
+	<datafield tag="689" ind1="0" ind2="1">
+		<subfield code="A">f</subfield>
+		<subfield code="a">Ausstellung </subfield>
+	</datafield>
+	<datafield tag="689" ind1="0" ind2="2">
+		<subfield code="A">f</subfield>
+		<subfield code="a">Berlin &lt;1898&gt;</subfield>
+		<subfield code="5">DE-101</subfield>
+	</datafield>
+	<datafield tag="710" ind1="2" ind2=" ">
+		<subfield code="0">(DE-609)12469976</subfield>
+		<subfield code="0">(DE-588)5088613-7</subfield>
+		<subfield code="a">Verband Deutscher Illustratoren</subfield>
+		<subfield code="4">oth</subfield>
+	</datafield>
+	<datafield tag="787" ind1="0" ind2="8">
+		<subfield code="a">[Th. Kutschmann]</subfield>
+		<subfield code="i">Bezug: Elektronische Reproduktion von
+		</subfield>
+		<subfield code="t">Erste Ausstellung des Verbandes Deutscher
+			Illustratoren in den Räumen der Königlichen Akademie der Künste
+			Berlin</subfield>
+		<subfield code="w">(DE-609)12234599</subfield>
+		<subfield code="w">(DE-101)497321</subfield>
+	</datafield>
+	<datafield tag="852" ind1=" " ind2=" ">
+		<subfield code="a">609</subfield>
+	</datafield>
+	<datafield tag="856" ind1="4" ind2=" ">
+		<subfield code="8">00</subfield>
+		<subfield code="u">https://nbn-resolving.de/urn:nbn:de:kobv:109-1-15363882
+		</subfield>
+		<subfield code="y">Link zum Volltext</subfield>
+	</datafield>
+</record>
+</collection>
