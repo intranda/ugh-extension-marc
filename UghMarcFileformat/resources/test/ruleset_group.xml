@@ -1149,8 +1149,8 @@
     <Name>PublisherGroup</Name>
     <language name="de">PublisherGroup</language>
     <language name="en">PublisherGroup</language>
-    <metadata DefaultDisplay="true">PublisherPerson</metadata>
-    <metadata DefaultDisplay="true">PublisherName</metadata>
+    <metadata DefaultDisplay="true" num="*">PublisherPerson</metadata>
+    <metadata DefaultDisplay="true" num="*">PublisherName</metadata>
     <metadata DefaultDisplay="true" num="+">PlaceOfPublication</metadata>
     <metadata DefaultDisplay="true" num="1m">PublicationYear</metadata>
   </Group>
@@ -3883,14 +3883,14 @@
         <picaSubTag>a</picaSubTag>
       </Metadata>
       <Metadata>
+        <Name>shelfmarksource</Name>
         <picaMainTag>209A</picaMainTag>
         <picaSubTag>a</picaSubTag>
-        <Name>shelfmarksource</Name>
       </Metadata>
       <Metadata>
+        <Name>shelfmarksource</Name>
         <picaMainTag>009A</picaMainTag>
         <picaSubTag>a</picaSubTag>
-        <Name>shelfmarksource</Name>
       </Metadata>
       <DocStruct>
         <Name>Periodical</Name>
@@ -4734,8 +4734,6 @@
         </field>
         <field>
           <fieldMainTag>700</fieldMainTag>
-          <firstname>c</firstname>
-          <firstname>b</firstname>
           <expansion>a</expansion>
           <fieldInd1>any</fieldInd1>
           <fieldInd2>any</fieldInd2>
