@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -989,23 +988,40 @@ public class MarcFileformat implements Fileformat {
                                 }
                             }
                         } else if (mmo.isSeparateEntries()) {
-                            String currentValue = subfieldValues.stream().collect(Collectors.joining(mmo.getSeparator()));
+                            String currentValue = getStringValue(mmo, subfieldValues);
+
                             Metadata md = createMetadata(mmo, currentValue, currentIdentifier);
                             if (md != null) {
                                 metadata.add(md);
                             }
                         } else {
-                            String currentValue = subfieldValues.stream().collect(Collectors.joining(mmo.getSeparator()));
+                            StringBuilder sb = new StringBuilder();
+                            for (String val : subfieldValues) {
+                                if (sb.length() > 0) {
+                                    sb.append(mmo.getSeparator());
+                                }
+                                sb.append(val);
+                            }
+                            String currentValue = sb.toString();
                             matchedValueList.add(currentValue);
                             if (StringUtils.isNotBlank(currentIdentifier)) {
                                 singleEntityIdentifier = currentIdentifier;
                             }
                         }
                     }
+                }
+
+                if (mmo.isSeparateMainfields()) {
+                    String currentValue = getStringValue(mmo, matchedValueList);
+                    Metadata md = createMetadata(mmo, currentValue, singleEntityIdentifier);
+                    if (md != null) {
+                        metadata.add(md);
+                    }
+                    singleEntityIdentifier = "";
+                    matchedValueList.clear();
 
                 }
             }
-
             // Single entity for all occurrences
             if (!mmo.isSeparateEntries()) {
                 // Concatenated value
@@ -1026,6 +1042,18 @@ public class MarcFileformat implements Fileformat {
         }
 
         return metadata;
+    }
+
+    public String getStringValue(MetadataConfigurationItem mmo, List<String> subfieldValues) {
+        StringBuilder sb = new StringBuilder();
+        for (String val : subfieldValues) {
+            if (sb.length() > 0) {
+                sb.append(mmo.getSeparator());
+            }
+            sb.append(val);
+        }
+        String currentValue = sb.toString();
+        return currentValue;
     }
 
     private Metadata createMetadata(MetadataConfigurationItem mmo, String value, String identifier) {

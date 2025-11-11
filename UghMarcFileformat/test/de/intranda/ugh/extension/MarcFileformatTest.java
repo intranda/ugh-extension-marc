@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import ugh.dl.Corporate;
+import ugh.dl.DocStruct;
 import ugh.dl.Metadata;
 import ugh.dl.MetadataGroup;
 import ugh.dl.Person;
@@ -446,4 +447,24 @@ public class MarcFileformatTest {
 
     }
 
+    @Test
+    public void testSeparateMainFields() throws Exception {
+        Document doc = loadMarcDocument("resources/test/1843702525.xml");
+        Assert.assertNotNull(doc);
+
+        Prefs prefs = new Prefs();
+        Assert.assertTrue(prefs.loadPrefs("resources/test/ruleset.xml"));
+        MarcFileformat mfc = new MarcFileformat(prefs);
+        mfc.read(doc.getDocumentElement());
+        DocStruct logical = mfc.getDigitalDocument().getLogicalDocStruct();
+        assertEquals("Periodical", logical.getType().getName());
+
+        List<? extends Metadata> mdl = logical.getAllMetadataByType(prefs.getMetadataTypeByName("TitleDocMainSeries"));
+
+        assertEquals(2, mdl.size());
+
+        assertEquals("Gesplittet in: Landes-Regierungsblatt für das Herzogthum Steiermark. 1. Abtheilung", mdl.get(0).getValue());
+        assertEquals("Gesplittet in: Landes-Regierungsblatt für das Herzogthum Steiermark. 2. Abtheilung", mdl.get(1).getValue());
+
+    }
 }

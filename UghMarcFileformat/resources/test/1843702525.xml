@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record xmlns="http://www.loc.gov/MARC21/slim">
+  <leader>     cas a22      c 4500</leader>
+  <controlfield tag="001">1843702525</controlfield>
+  <controlfield tag="003">DE-627</controlfield>
+  <controlfield tag="005">20240523224027.0</controlfield>
+  <controlfield tag="007">cr |||||||||||</controlfield>
+  <controlfield tag="008">230427d18501852au z| p|o     0   |0ger c</controlfield>
+  <datafield tag="016" ind1="7" ind2=" ">
+    <subfield code="a">1287162525</subfield>
+    <subfield code="2">DE-101</subfield>
+  </datafield>
+  <datafield tag="016" ind1="7" ind2=" ">
+    <subfield code="a">3157030-6</subfield>
+    <subfield code="2">DE-600</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(DE-627)1843702525</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(DE-599)ZDB3157030-6</subfield>
+  </datafield>
+  <datafield tag="035" ind1=" " ind2=" ">
+    <subfield code="a">(OCoLC)1411698963</subfield>
+  </datafield>
+  <datafield tag="040" ind1=" " ind2=" ">
+    <subfield code="a">DE-627</subfield>
+    <subfield code="b">ger</subfield>
+    <subfield code="c">DE-627</subfield>
+    <subfield code="e">rda</subfield>
+  </datafield>
+  <datafield tag="041" ind1=" " ind2=" ">
+    <subfield code="a">ger</subfield>
+  </datafield>
+  <datafield tag="044" ind1=" " ind2=" ">
+    <subfield code="c">XA-AT</subfield>
+  </datafield>
+  <datafield tag="082" ind1="0" ind2="4">
+    <subfield code="a">340</subfield>
+    <subfield code="q">DE-600</subfield>
+  </datafield>
+  <datafield tag="084" ind1=" " ind2=" ">
+    <subfield code="a">86.10</subfield>
+    <subfield code="2">bkl</subfield>
+  </datafield>
+  <datafield tag="110" ind1="2" ind2=" ">
+    <subfield code="a">Steiermark</subfield>
+    <subfield code="e">VerfasserIn</subfield>
+    <subfield code="0">(DE-588)4057092-7</subfield>
+    <subfield code="0">(DE-627)106152440</subfield>
+    <subfield code="0">(DE-576)209120339</subfield>
+    <subfield code="4">aut</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Allgemeines Landesgesetz- und Regierungsblatt für das Herzogthum Steiermark</subfield>
+    <subfield code="b">vom Jahre ...</subfield>
+  </datafield>
+  <datafield tag="246" ind1="3" ind2="0">
+    <subfield code="a">Herzogtum</subfield>
+  </datafield>
+  <datafield tag="247" ind1="1" ind2="0">
+    <subfield code="a">Allgemeines Landesgesetz- und Regierungsblatt für das Kronland Steiermark</subfield>
+    <subfield code="f">Haupttitel 1. Jahrgang (1850)-2. Jahrgang (1851)</subfield>
+    <subfield code="g">e</subfield>
+  </datafield>
+  <datafield tag="264" ind1="3" ind2="1">
+    <subfield code="a">Graz</subfield>
+    <subfield code="b">[Verlag nicht ermittelbar]</subfield>
+    <subfield code="c">1850-1852</subfield>
+  </datafield>
+  <datafield tag="336" ind1=" " ind2=" ">
+    <subfield code="a">Text</subfield>
+    <subfield code="b">txt</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield tag="337" ind1=" " ind2=" ">
+    <subfield code="a">Computermedien</subfield>
+    <subfield code="b">c</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield tag="338" ind1=" " ind2=" ">
+    <subfield code="a">Online-Ressource</subfield>
+    <subfield code="b">cr</subfield>
+    <subfield code="2">rdacarrier</subfield>
+  </datafield>
+  <datafield tag="362" ind1="0" ind2=" ">
+    <subfield code="a">1. Jahrgang (1850)-3. Jahrgang (1852)</subfield>
+  </datafield>
+  <datafield tag="363" ind1="0" ind2="0">
+    <subfield code="a">1</subfield>
+    <subfield code="i">1850</subfield>
+  </datafield>
+  <datafield tag="363" ind1="1" ind2="0">
+    <subfield code="i">1852</subfield>
+    <subfield code="a">3</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Im Index als 1. bis 3. Jahrgang bezeichnet</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Gesehen am 27.04.2023</subfield>
+  </datafield>
+  <datafield tag="500" ind1=" " ind2=" ">
+    <subfield code="a">Reproduktion</subfield>
+  </datafield>
+  <datafield tag="506" ind1="0" ind2=" ">
+    <subfield code="q">AT-OeNB</subfield>
+    <subfield code="a">Open Access</subfield>
+    <subfield code="e">Controlled Vocabulary for Access Rights</subfield>
+    <subfield code="u">http://purl.org/coar/access_right/c_abf2</subfield>
+    <subfield code="f">Unrestricted online access</subfield>
+    <subfield code="2">star</subfield>
+  </datafield>
+  <datafield tag="530" ind1=" " ind2=" ">
+    <subfield code="a">Online-Ausgabe: Wien : Österreichische Nationalbibliothek, [2011?]. Online-Ressource. (ALEX - Historische Rechts- und Gesetzestexte)</subfield>
+  </datafield>
+  <datafield tag="533" ind1=" " ind2=" ">
+    <subfield code="a">Reproduktion</subfield>
+    <subfield code="b">Wien</subfield>
+    <subfield code="c">Österreichische Nationalbibliothek</subfield>
+    <subfield code="d">2011-2011</subfield>
+    <subfield code="e">Online-Ressource</subfield>
+    <subfield code="f">ALEX - Historische Rechts- und Gesetzestexte</subfield>
+    <subfield code="n">Online-Ausgabe: Wien : Österreichische Nationalbibliothek, [2011?]. Online-Ressource. (ALEX - Historische Rechts- und Gesetzestexte)</subfield>
+    <subfield code="7">|20112011||||||</subfield>
+  </datafield>
+  <datafield tag="540" ind1=" " ind2=" ">
+    <subfield code="q">AT-OeNB</subfield>
+    <subfield code="a">Freier Zugang - Rechte Dritter vorbehalten</subfield>
+  </datafield>
+  <datafield tag="583" ind1="1" ind2=" ">
+    <subfield code="a">Archivierung/Langzeitarchivierung gewährleistet</subfield>
+    <subfield code="2">pdager</subfield>
+    <subfield code="5">AT-ÖNB</subfield>
+  </datafield>
+  <datafield tag="655" ind1=" " ind2="7">
+    <subfield code="a">Zeitschrift</subfield>
+    <subfield code="0">(DE-588)4067488-5</subfield>
+    <subfield code="0">(DE-627)10454466X</subfield>
+    <subfield code="0">(DE-576)20917000X</subfield>
+    <subfield code="2">gnd-content</subfield>
+  </datafield>
+  <datafield tag="655" ind1=" " ind2="7">
+    <subfield code="a">Amtliche Publikation</subfield>
+    <subfield code="0">(DE-588)4142300-8</subfield>
+    <subfield code="0">(DE-627)105614165</subfield>
+    <subfield code="0">(DE-576)209717653</subfield>
+    <subfield code="2">gnd-content</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2="0">
+    <subfield code="D">g</subfield>
+    <subfield code="0">(DE-588)4057092-7</subfield>
+    <subfield code="0">(DE-627)106152440</subfield>
+    <subfield code="0">(DE-576)209120339</subfield>
+    <subfield code="a">Steiermark</subfield>
+    <subfield code="2">gnd</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2="1">
+    <subfield code="D">s</subfield>
+    <subfield code="0">(DE-588)4583172-5</subfield>
+    <subfield code="0">(DE-627)325244332</subfield>
+    <subfield code="0">(DE-576)212387677</subfield>
+    <subfield code="a">Ortsrecht</subfield>
+    <subfield code="2">gnd</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2="2">
+    <subfield code="D">s</subfield>
+    <subfield code="0">(DE-588)4173443-9</subfield>
+    <subfield code="0">(DE-627)105379905</subfield>
+    <subfield code="0">(DE-576)209950285</subfield>
+    <subfield code="a">Partikularrecht</subfield>
+    <subfield code="2">gnd</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2="3">
+    <subfield code="D">g</subfield>
+    <subfield code="0">(DE-588)4043271-3</subfield>
+    <subfield code="0">(DE-627)10420317X</subfield>
+    <subfield code="0">(DE-576)209054964</subfield>
+    <subfield code="a">Österreich</subfield>
+    <subfield code="2">gnd</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2="4">
+    <subfield code="D">g</subfield>
+    <subfield code="0">(DE-588)4075613-0</subfield>
+    <subfield code="0">(DE-627)104653647</subfield>
+    <subfield code="0">(DE-576)209198680</subfield>
+    <subfield code="a">Österreich-Ungarn</subfield>
+    <subfield code="2">gnd</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2="5">
+    <subfield code="D">s</subfield>
+    <subfield code="0">(DE-588)4048737-4</subfield>
+    <subfield code="0">(DE-627)106189719</subfield>
+    <subfield code="0">(DE-576)20907907X</subfield>
+    <subfield code="a">Recht</subfield>
+    <subfield code="2">gnd</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2="6">
+    <subfield code="D">g</subfield>
+    <subfield code="0">(DE-588)4070370-8</subfield>
+    <subfield code="0">(DE-627)104529369</subfield>
+    <subfield code="0">(DE-576)209180447</subfield>
+    <subfield code="a">Deutsches Sprachgebiet</subfield>
+    <subfield code="2">gnd</subfield>
+  </datafield>
+  <datafield tag="689" ind1="0" ind2=" ">
+    <subfield code="5">(DE-627)</subfield>
+  </datafield>
+  <datafield tag="776" ind1="0" ind2="8">
+    <subfield code="i">Elektronische Reproduktion von</subfield>
+    <subfield code="a">Steiermark</subfield>
+    <subfield code="t">Allgemeines Landesgesetz- und Regierungsblatt für das Herzogthum Steiermark</subfield>
+    <subfield code="d">Graz : [Verlag nicht ermittelbar], 1850</subfield>
+    <subfield code="w">(DE-627)167684620</subfield>
+    <subfield code="w">(DE-600)560843-0</subfield>
+    <subfield code="w">(DE-576)062941844</subfield>
+  </datafield>
+  <datafield tag="780" ind1="0" ind2="0">
+    <subfield code="i">Fortsetzung von</subfield>
+    <subfield code="a">Steiermark [Tg1]</subfield>
+    <subfield code="t">Provinzial-Gesetzsammlung für das Herzogthum Steyermark</subfield>
+  </datafield>
+  <datafield tag="785" ind1="0" ind2="6">
+    <subfield code="i">Gesplittet in</subfield>
+    <subfield code="a">Steiermark [Tg1]</subfield>
+    <subfield code="t">Landes-Regierungsblatt für das Herzogthum Steiermark. 1. Abtheilung</subfield>
+  </datafield>
+  <datafield tag="785" ind1="0" ind2="6">
+    <subfield code="i">Gesplittet in</subfield>
+    <subfield code="a">Steiermark [Tg1]</subfield>
+    <subfield code="t">Landes-Regierungsblatt für das Herzogthum Steiermark. 2. Abtheilung</subfield>
+  </datafield>
+  <datafield tag="856" ind1="4" ind2="0">
+    <subfield code="u">https://alex.onb.ac.at/cgi-content/alex?aid=lgm</subfield>
+    <subfield code="x">Langzeitarchivierung Nationalbibliothek; 1. (1850)-3. (1852)</subfield>
+  </datafield>
+  <datafield tag="936" ind1="b" ind2="k">
+    <subfield code="a">86.10</subfield>
+    <subfield code="j">Recht einzelner Länder, Gebiete und Völker</subfield>
+    <subfield code="q">ARK</subfield>
+    <subfield code="0">(DE-627)106422499</subfield>
+  </datafield>
+  <datafield tag="951" ind1=" " ind2=" ">
+    <subfield code="a">JT</subfield>
+  </datafield>
+</record>

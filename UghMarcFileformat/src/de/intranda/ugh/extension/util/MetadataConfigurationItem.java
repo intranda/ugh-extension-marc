@@ -31,9 +31,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.intranda.ugh.extension.MarcFileformat;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-public @Data class MetadataConfigurationItem {
+@Getter
+@Setter
+public class MetadataConfigurationItem {
 
     private String internalMetadataName;
 
@@ -53,6 +56,9 @@ public @Data class MetadataConfigurationItem {
 
     private boolean separateEntries = true;
     private Boolean separateSubfields = null; //a null value means that the value of separateEntries should be used
+    private boolean separateMainfields = false;
+
+    private String separationType = null;
 
     private boolean abortAfterFirstMatch = true;
 
@@ -109,12 +115,32 @@ public @Data class MetadataConfigurationItem {
                     } else {
                         abortAfterFirstMatch = false;
                     }
+                } else if ("separationType".equalsIgnoreCase(n.getNodeName())) {
+                    separationType = MarcFileformat.readTextNode(n);
                 }
-
+            }
+        }
+        if (separationType != null) {
+            if ("subfield".equalsIgnoreCase(separationType)) {
+                separateEntries = false;
+                separateSubfields = true;
+                separateMainfields = false;
+            } else if ("mainfield".equalsIgnoreCase(separationType)) {
+                separateEntries = false;
+                separateSubfields = false;
+                separateMainfields = true;
+            } else if ("none".equalsIgnoreCase(separationType)) {
+                separateEntries = false;
+                separateSubfields = false;
+                separateMainfields = false;
+            } else {
+                separateEntries = true;
+                separateSubfields = false;
+                separateMainfields = false;
             }
         }
     }
-
+    
     public boolean isSeparateSubfields() {
         return Optional.ofNullable(separateSubfields).orElse(separateEntries);
     }

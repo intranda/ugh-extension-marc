@@ -1561,7 +1561,7 @@
     <metadata num="*">Description</metadata>
     <metadata num="1o">relatedSeries</metadata>
     <metadata num="1o">CatalogIDMainSeries</metadata>
-    <metadata num="1o">TitleDocMainSeries</metadata>
+    <metadata num="*">TitleDocMainSeries</metadata>
     <metadata num="1o">SeriesOrder</metadata>
   </DocStrctType>
   <DocStrctType>
@@ -4375,6 +4375,26 @@
         </field>
         <separateEntries>true</separateEntries>
       </Metadata>
+      
+       <Metadata>
+        <Name>TitleDocMainSeries</Name>
+        <field>
+          <fieldMainTag>785</fieldMainTag>
+          <fieldSubTag>i</fieldSubTag>
+          <fieldInd1>any</fieldInd1>
+          <fieldInd2>any</fieldInd2>
+        </field>
+        <field>
+          <fieldMainTag>785</fieldMainTag>
+          <fieldSubTag>t</fieldSubTag>
+          <fieldInd1>any</fieldInd1>
+          <fieldInd2>any</fieldInd2>
+        </field>
+        <separator>: </separator>
+        <separationType>mainfield</separationType>
+        <fieldReplacement>s/^(.*?)( : ){0,1}$/$1/g</fieldReplacement>
+      </Metadata>     
+      
       <Metadata>
         <Name>shelfmarksource</Name>
         <field>
